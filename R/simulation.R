@@ -255,9 +255,13 @@ run_trial_lca_gi <- function(
   )
   noise_fun <- noise_factory(trial_setting)
 
+  # default Z to 0 if not provided
+  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
+
   sim_result <- accumulate_evidence_lca_gi(
     item_params$A,
     item_params$V,
+    Z,
     item_params$ndt,
     item_params$beta,
     item_params$k,

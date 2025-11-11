@@ -2,6 +2,7 @@ test_that("acc  expect_true(\"rt\" %in% names(result))mulate_evidence_lca_gi ret
   result <- accumulate_evidence_lca_gi(
     A = c(10),
     V = c(1),
+    Z = c(0),
     ndt = c(1),
     beta = c(0.1),
     k = c(0.05),
@@ -21,6 +22,7 @@ test_that(
     result <- accumulate_evidence_lca_gi(
       A = c(100), # Very high threshold
       V = c(0), # Zero drift
+      Z = c(0),
       ndt = c(1),
       beta = c(0.1),
       k = c(0.05),
@@ -42,6 +44,7 @@ test_that("accumulate_evidence_lca_gi handles multiple items", {
   result <- accumulate_evidence_lca_gi(
     A = c(5, 8, 10),
     V = c(2, 1, 0.5),
+    Z = c(0, 0, 0),
     ndt = c(0.5, 0.8, 1.0),
     beta = c(0.1, 0.15, 0.2),
     k = c(0.05, 0.08, 0.1),
@@ -63,6 +66,7 @@ test_that("accumulate_evidence_lca_gi works with positive noise", {
   result <- accumulate_evidence_lca_gi(
     A = c(10),
     V = c(0.5),
+    Z = c(0),
     ndt = c(1),
     beta = c(0.1),
     k = c(0.05),
@@ -85,6 +89,7 @@ test_that("accumulate_evidence_lca_gi works with negative noise", {
   result <- accumulate_evidence_lca_gi(
     A = c(5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     beta = c(0.1),
     k = c(0.05),
@@ -105,6 +110,7 @@ test_that("accumulate_evidence_lca_gi validates A parameter length", {
     accumulate_evidence_lca_gi(
       A = c(5, 8, 10, 12), # Too many thresholds
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1, 0.15),
       k = c(0.05, 0.08),
@@ -123,6 +129,7 @@ test_that("accumulate_evidence_lca_gi validates A length >= max_reached", {
     accumulate_evidence_lca_gi(
       A = c(5), # Only 1 threshold but max_reached is 2
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1, 0.15),
       k = c(0.05, 0.08),
@@ -141,6 +148,7 @@ test_that("accumulate_evidence_lca_gi validates max_reached parameter", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1, 0.15),
       k = c(0.05, 0.08),
@@ -159,6 +167,7 @@ test_that("accumulate_evidence_lca_gi validates max_reached <= n_items", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1, 0.15),
       k = c(0.05, 0.08),
@@ -177,6 +186,7 @@ test_that("accumulate_evidence_lca_gi validates ndt parameter length", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5), # Length mismatch with V
       beta = c(0.1, 0.15),
       k = c(0.05, 0.08),
@@ -195,6 +205,7 @@ test_that("accumulate_evidence_lca_gi validates beta parameter length", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1), # Length mismatch with V
       k = c(0.05, 0.08),
@@ -213,6 +224,7 @@ test_that("accumulate_evidence_lca_gi validates k parameter length", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       beta = c(0.1, 0.15),
       k = c(0.05), # Length mismatch with V
@@ -231,6 +243,7 @@ test_that("accumulate_evidence_lca_gi validates dt parameter", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
+    Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -249,6 +262,7 @@ test_that("accumulate_evidence_lca_gi validates noise_func parameter", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
+    Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -267,6 +281,7 @@ test_that("accumulate_evidence_lca_gi validates noise function return length", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
+    Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -285,6 +300,7 @@ test_that("accumulate_evidence_lca_gi works with random noise", {
   result <- accumulate_evidence_lca_gi(
     A = c(8),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     beta = c(0.1),
     k = c(0.05),
@@ -303,6 +319,7 @@ test_that("accumulate_evidence_lca_gi handles timeout correctly", {
   result <- accumulate_evidence_lca_gi(
     A = c(100, 200), # Very high thresholds
     V = c(0.1, 0.1), # Very slow drift
+    Z = c(0, 0),
     ndt = c(0.5, 0.8),
     beta = c(0.1, 0.15),
     k = c(0.05, 0.08),
@@ -324,6 +341,7 @@ test_that("accumulate_evidence_lca_gi respects max_reached limit", {
   result <- accumulate_evidence_lca_gi(
     A = c(1, 2), # Low thresholds, easy to reach
     V = c(2, 2), # High drift rates
+    Z = c(0, 0),
     ndt = c(0.1, 0.1),
     beta = c(0.05, 0.05), # Low inhibition
     k = c(0.02, 0.02), # Low leakage
@@ -344,6 +362,7 @@ test_that("accumulate_evidence_lca_gi returns 1-based item indices", {
   result <- accumulate_evidence_lca_gi(
     A = c(2, 3, 4), # Provide thresholds for all items
     V = c(1, 0.5, 2), # Different drift rates
+    Z = c(0, 0, 0),
     ndt = c(0.1, 0.1, 0.1),
     beta = c(0.1, 0.15, 0.2),
     k = c(0.05, 0.08, 0.1),
@@ -364,6 +383,7 @@ test_that("accumulate_evidence_lca_gi reaction times include ndt", {
   result <- accumulate_evidence_lca_gi(
     A = c(1), # Low threshold for quick response
     V = c(10), # High drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     beta = c(0.05), # Low inhibition
     k = c(0.02), # Low leakage
@@ -384,6 +404,7 @@ test_that("accumulate_evidence_lca_gi leakage affects accumulation", {
   result_high_leak <- accumulate_evidence_lca_gi(
     A = c(2.5),
     V = c(10),
+    Z = c(0),
     ndt = c(0),
     beta = c(0),
     k = c(5), # High leakage
@@ -397,6 +418,7 @@ test_that("accumulate_evidence_lca_gi leakage affects accumulation", {
   result_low_leak <- accumulate_evidence_lca_gi(
     A = c(10),
     V = c(10),
+    Z = c(0),
     ndt = c(0),
     beta = c(0), # Low inhibition
     k = c(0.5), # Low leakage
@@ -415,6 +437,7 @@ test_that("accumulate_evidence_lca_gi inhibition affects competition", {
   result_high_inhibition <- accumulate_evidence_lca_gi(
     A = c(10, 10),
     V = c(1.5, 1),
+    Z = c(0, 0),
     ndt = c(0, 0),
     beta = c(1, 0), # High inhibition
     k = c(0, 0),
@@ -433,6 +456,7 @@ test_that("accumulate_evidence_lca_gi inhibition disappears after reached", {
   result_high_inhibition <- accumulate_evidence_lca_gi(
     A = c(10, 10),
     V = c(1, 1),
+    Z = c(0, 0),
     ndt = c(0, 0),
     beta = c(1, 0), # High inhibition
     k = c(0, 0),
@@ -452,6 +476,7 @@ test_that("accumulate_evidence_lca_gi maintains evidence floor at zero", {
   result <- accumulate_evidence_lca_gi(
     A = c(50), # High threshold
     V = c(0.1), # Low drift
+    Z = c(0),
     ndt = c(0.1),
     beta = c(2.0), # Very high inhibition
     k = c(2.0), # Very high leakage
@@ -471,6 +496,7 @@ test_that("accumulate_evidence_lca_gi sequential thresholds work correctly", {
   result <- accumulate_evidence_lca_gi(
     A = c(2, 4, 6), # Increasing thresholds
     V = c(1, 1, 1), # Equal drift rates
+    Z = c(0, 0, 0),
     ndt = c(0.1, 0.1, 0.1),
     beta = c(0.1, 0.1, 0.1),
     k = c(0.05, 0.05, 0.05),
@@ -492,6 +518,7 @@ test_that("accumulate_evidence_lca_gi handles asymmetric item parameters", {
   result <- accumulate_evidence_lca_gi(
     A = c(5, 10),
     V = c(0.5, 2), # Different drift rates
+    Z = c(0, 0),
     ndt = c(1, 0.2), # Different non-decision times
     beta = c(0.1, 0.3), # Different inhibition strengths
     k = c(0.02, 0.15), # Different leakage rates
@@ -514,6 +541,7 @@ test_that("accumulate_evidence_lca_gi handles zero drift rate", {
   result <- accumulate_evidence_lca_gi(
     A = c(5),
     V = c(0), # Zero drift
+    Z = c(0),
     ndt = c(0.5),
     beta = c(0.1),
     k = c(0.05),
@@ -534,6 +562,7 @@ test_that("accumulate_evidence_lca_gi calculation, single item, no competition",
   result <- accumulate_evidence_lca_gi(
     A = c(10), # Threshold
     V = c(1), # Drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     beta = c(0.1), # Low inhibition (no competition)
     k = c(0.05), # Low leakage
