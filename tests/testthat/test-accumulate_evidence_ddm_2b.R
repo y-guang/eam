@@ -3,6 +3,7 @@ test_that("accumulate_evidence_ddm_2b returns expected output", {
     A_upper = c(10),
     A_lower = c(-10),
     V = c(1),
+    Z = c(0),
     ndt = c(1),
     max_t = 30,
     dt = 0.01,
@@ -23,6 +24,7 @@ test_that(
       A_upper = c(10),
       A_lower = c(-10),
       V = c(0),
+      Z = c(0),
       ndt = c(1),
       max_t = 5,
       dt = 0.01,
@@ -46,6 +48,7 @@ test_that("accumulate_evidence_ddm_2b handles multiple items", {
     A_upper = c(5, 8, 10),
     A_lower = c(-5, -8, -10),
     V = c(2, 1, 0.5),
+    Z = c(0, 0, 0),
     ndt = c(0.5, 0.8, 1.0),
     max_t = 20,
     dt = 0.01,
@@ -69,6 +72,7 @@ test_that("accumulate_evidence_ddm_2b works with multiplicative evidence noise",
     A_upper = c(5),
     A_lower = c(-5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -88,6 +92,7 @@ test_that("accumulate_evidence_ddm_2b works with multiplicative noise on t", {
     A_upper = c(5),
     A_lower = c(-5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -107,6 +112,7 @@ test_that("accumulate_evidence_ddm_2b works with positive noise", {
     A_upper = c(10),
     A_lower = c(-10),
     V = c(0.5),
+    Z = c(0),
     ndt = c(1),
     max_t = 30,
     dt = 0.01,
@@ -130,6 +136,7 @@ test_that("accumulate_evidence_ddm_2b works with negative noise", {
     A_upper = c(5),
     A_lower = c(-5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -154,6 +161,7 @@ test_that("accumulate_evidence_ddm_2b validates A_upper parameter length", {
       A_upper = c(5, 8, 10, 12), # Too many thresholds
       A_lower = c(-5, -8),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       max_t = 20,
       dt = 0.01,
@@ -172,6 +180,7 @@ test_that("accumulate_evidence_ddm_2b validates A_upper and A_lower length match
       A_upper = c(5, 8),
       A_lower = c(-5), # Different length from A_upper
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       max_t = 20,
       dt = 0.01,
@@ -190,6 +199,7 @@ test_that("accumulate_evidence_ddm_2b validates max_reached parameter", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       max_t = 20,
       dt = 0.01,
@@ -208,6 +218,7 @@ test_that("accumulate_evidence_ddm_2b validates ndt parameter length", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5), # Length mismatch with V
       max_t = 20,
       dt = 0.01,
@@ -226,6 +237,7 @@ test_that("accumulate_evidence_ddm_2b validates dt parameter", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0, # Invalid: must be > 0
@@ -244,6 +256,7 @@ test_that("accumulate_evidence_ddm_2b validates noise_mechanism parameter", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -262,6 +275,7 @@ test_that("accumulate_evidence_ddm_2b validates noise_func parameter", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -279,6 +293,7 @@ test_that("accumulate_evidence_ddm_2b validates noise function return length", {
       A_upper = c(5),
       A_lower = c(-5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -297,6 +312,7 @@ test_that("accumulate_evidence_ddm_2b works with random noise", {
     A_upper = c(8),
     A_lower = c(-8),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -316,6 +332,7 @@ test_that("accumulate_evidence_ddm_2b handles timeout correctly", {
     A_upper = c(100, 200), # Very high thresholds
     A_lower = c(-100, -200), # Very low thresholds
     V = c(0.1, 0.1), # Very slow drift
+    Z = c(0, 0),
     ndt = c(0.5, 0.8),
     max_t = 2, # Short timeout
     dt = 0.01,
@@ -338,6 +355,7 @@ test_that("accumulate_evidence_ddm_2b respects max_reached limit", {
     A_upper = c(1, 2), # Low thresholds, easy to reach
     A_lower = c(-1, -2),
     V = c(2, 2), # High drift rates
+    Z = c(0, 0),
     ndt = c(0.1, 0.1),
     max_t = 20,
     dt = 0.01,
@@ -360,6 +378,7 @@ test_that("accumulate_evidence_ddm_2b returns 1-based item indices", {
     A_upper = c(2, 3, 4), # Provide thresholds for all items
     A_lower = c(-2, -3, -4),
     V = c(1, 0.5, 2), # Different drift rates
+    Z = c(0, 0, 0),
     ndt = c(0.1, 0.1, 0.1),
     max_t = 20,
     dt = 0.01,
@@ -380,6 +399,7 @@ test_that("accumulate_evidence_ddm_2b reaction times include ndt", {
     A_upper = c(1), # Low threshold for quick response
     A_lower = c(-1),
     V = c(10), # High drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     max_t = 20,
     dt = 0.01,
@@ -400,6 +420,7 @@ test_that("accumulate_evidence_ddm_2b choice correctly indicate bound reached", 
     A_upper = c(5),
     A_lower = c(-50), # Make lower bound very unlikely
     V = c(2), # Positive drift toward upper
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -417,6 +438,7 @@ test_that("accumulate_evidence_ddm_2b choice correctly indicate bound reached", 
     A_upper = c(50), # Make upper bound very unlikely
     A_lower = c(-5),
     V = c(-2), # Negative drift toward lower
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -436,6 +458,7 @@ test_that("accumulate_evidence_ddm_2b calculation, linear accumulation, single i
     A_upper = c(10), # Upper threshold
     A_lower = c(-100), # Very low lower threshold to avoid reaching it
     V = c(1), # Positive drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     max_t = 20,
     dt = 0.01,
@@ -456,6 +479,7 @@ test_that("accumulate_evidence_ddm_2b calculation, linear accumulation, single i
     A_upper = c(100), # Very high upper threshold to avoid reaching it
     A_lower = c(-10), # Lower threshold
     V = c(-1), # Negative drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     max_t = 20,
     dt = 0.01,
@@ -481,6 +505,7 @@ test_that("accumulate_evidence_ddm_2b calculation, list linear accumulation", {
     A_upper = A_upper,
     A_lower = A_lower,
     V = V,
+    Z = rep(0, length(V)),
     ndt = ndt,
     max_t = 20,
     dt = 0.01,
@@ -513,6 +538,7 @@ test_that("accumulate_evidence_ddm_2b average rt close to prediction", {
       A_upper = A_upper,
       A_lower = A_lower,
       V = V,
+      Z = rep(0, n_items),
       ndt = ndt,
       max_t = 30,
       dt = 0.01,
@@ -536,6 +562,7 @@ test_that("accumulate_evidence_ddm_2b with symmetric bounds and zero drift", {
     A_upper = c(5),
     A_lower = c(-5),
     V = c(0), # Zero drift
+    Z = c(0),
     ndt = c(0.5),
     max_t = 30,
     dt = 0.01,
