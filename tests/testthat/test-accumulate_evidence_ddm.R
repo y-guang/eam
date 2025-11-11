@@ -2,6 +2,7 @@ test_that("accumulate_evidence_ddm returns expected output", {
   result <- accumulate_evidence_ddm(
     A = c(10),
     V = c(1),
+    Z = c(0),
     ndt = c(1),
     max_t = 30,
     dt = 0.01,
@@ -20,6 +21,7 @@ test_that(
     result <- accumulate_evidence_ddm(
       A = c(10),
       V = c(0),
+      Z = c(0),
       ndt = c(1),
       max_t = 5,
       dt = 0.01,
@@ -40,6 +42,7 @@ test_that("accumulate_evidence_ddm handles multiple items", {
   result <- accumulate_evidence_ddm(
     A = c(5, 8, 10),
     V = c(2, 1, 0.5),
+    Z = c(0, 0, 0),
     ndt = c(0.5, 0.8, 1.0),
     max_t = 20,
     dt = 0.01,
@@ -60,6 +63,7 @@ test_that("accumulate_evidence_ddm works with multiplicative noise on t", {
   result <- accumulate_evidence_ddm(
     A = c(5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -77,6 +81,7 @@ test_that("accumulate_evidence_ddm works with positive noise", {
   result <- accumulate_evidence_ddm(
     A = c(10),
     V = c(0.5),
+    Z = c(0),
     ndt = c(1),
     max_t = 30,
     dt = 0.01,
@@ -98,6 +103,7 @@ test_that("accumulate_evidence_ddm works with negative noise", {
   result <- accumulate_evidence_ddm(
     A = c(5),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -116,6 +122,7 @@ test_that("accumulate_evidence_ddm validates A parameter length", {
     accumulate_evidence_ddm(
       A = c(5, 8, 10, 12), # Too many thresholds
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       max_t = 20,
       dt = 0.01,
@@ -133,6 +140,7 @@ test_that("accumulate_evidence_ddm validates max_reached parameter", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5, 0.8),
       max_t = 20,
       dt = 0.01,
@@ -150,6 +158,7 @@ test_that("accumulate_evidence_ddm validates ndt parameter length", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1, 2),
+      Z = c(0, 0),
       ndt = c(0.5), # Length mismatch with V
       max_t = 20,
       dt = 0.01,
@@ -167,6 +176,7 @@ test_that("accumulate_evidence_ddm validates dt parameter", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0, # Invalid: must be > 0
@@ -184,6 +194,7 @@ test_that("accumulate_evidence_ddm validates noise_mechanism parameter", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -201,6 +212,7 @@ test_that("accumulate_evidence_ddm validates noise_func parameter", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -218,6 +230,7 @@ test_that("accumulate_evidence_ddm validates noise function return length", {
     accumulate_evidence_ddm(
       A = c(5),
       V = c(1),
+      Z = c(0),
       ndt = c(0.5),
       max_t = 20,
       dt = 0.01,
@@ -235,6 +248,7 @@ test_that("accumulate_evidence_ddm works with random noise", {
   result <- accumulate_evidence_ddm(
     A = c(8),
     V = c(1),
+    Z = c(0),
     ndt = c(0.5),
     max_t = 20,
     dt = 0.01,
@@ -252,6 +266,7 @@ test_that("accumulate_evidence_ddm handles timeout correctly", {
   result <- accumulate_evidence_ddm(
     A = c(100, 200), # Very high thresholds
     V = c(0.1, 0.1), # Very slow drift
+    Z = c(0, 0),
     ndt = c(0.5, 0.8),
     max_t = 2, # Short timeout
     dt = 0.01,
@@ -271,6 +286,7 @@ test_that("accumulate_evidence_ddm respects max_reached limit", {
   result <- accumulate_evidence_ddm(
     A = c(1, 2), # Low thresholds, easy to reach
     V = c(2, 2), # High drift rates
+    Z = c(0, 0),
     ndt = c(0.1, 0.1),
     max_t = 20,
     dt = 0.01,
@@ -290,6 +306,7 @@ test_that("accumulate_evidence_ddm returns 1-based item indices", {
   result <- accumulate_evidence_ddm(
     A = c(2, 3, 4), # Provide thresholds for all items
     V = c(1, 0.5, 2), # Different drift rates
+    Z = c(0, 0, 0),
     ndt = c(0.1, 0.1, 0.1),
     max_t = 20,
     dt = 0.01,
@@ -309,6 +326,7 @@ test_that("accumulate_evidence_ddm reaction times include ndt", {
   result <- accumulate_evidence_ddm(
     A = c(1), # Low threshold for quick response
     V = c(10), # High drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     max_t = 20,
     dt = 0.01,
@@ -327,6 +345,7 @@ test_that("accumulate_evidence_ddm calculation, linear accumulation, single item
   result <- accumulate_evidence_ddm(
     A = c(10), # Low threshold for quick response
     V = c(1), # High drift rate
+    Z = c(0),
     ndt = c(2), # 2 second non-decision time
     max_t = 20,
     dt = 0.01,
@@ -349,6 +368,7 @@ test_that("accumulate_evidence_ddm calculation, list linear accumulation", {
   result <- accumulate_evidence_ddm(
     A = A,
     V = V,
+    Z = rep(0, length(V)),
     ndt = ndt,
     max_t = 20,
     dt = 0.01,
@@ -374,6 +394,7 @@ test_that("accumulate_evidence_ddm average rt close to prediction", {
     result <- accumulate_evidence_ddm(
       A = A,
       V = V,
+      Z = rep(0, n_items),
       ndt = ndt,
       max_t = 30,
       dt = 0.01,

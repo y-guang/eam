@@ -131,9 +131,13 @@ run_trial_ddm <- function(
   )
   noise_fun <- noise_factory(trial_setting)
 
+  # default Z to 0 if not provided
+  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
+
   sim_result <- accumulate_evidence_ddm(
     item_params$A,
     item_params$V,
+    Z,
     item_params$ndt,
     max_t,
     dt,

@@ -27,6 +27,7 @@ inline void swap_erase_at(size_t index,
 List accumulate_evidence_ddm(
   NumericVector A,
   NumericVector V,
+  NumericVector Z,
   NumericVector ndt,
   double max_t,
   double dt,
@@ -50,6 +51,9 @@ List accumulate_evidence_ddm(
   }
   if (ndt.size() != n_items) {
     stop("Length of ndt must be equal to number of items");
+  }
+  if (Z.size() != n_items) {
+    stop("Length of Z must be equal to number of items");
   }
   if (dt <= 0 || max_t <= 0) {
     stop("dt and max_t must be > 0");
@@ -78,7 +82,7 @@ List accumulate_evidence_ddm(
   }
 
   // Initialize status
-  std::vector<double> evidence(n_items, 0.0);
+  std::vector<double> evidence(Z.begin(), Z.end());
   std::vector<int> item_idx(n_items);
   std::iota(item_idx.begin(), item_idx.end(), 0);
   std::vector<double> passed_t(ndt.begin(), ndt.end());
