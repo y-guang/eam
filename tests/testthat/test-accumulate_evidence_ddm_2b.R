@@ -349,6 +349,126 @@ test_that("accumulate_evidence_ddm_2b handles timeout correctly", {
   expect_true(length(result$choice) == 0)
 })
 
+# Test Z parameter validation - missing
+test_that("accumulate_evidence_ddm_2b validates missing Z parameter", {
+  expect_error(
+    accumulate_evidence_ddm_2b(
+      A_upper = c(5, 10),
+      A_lower = c(-5, -10),
+      V = c(1, 2),
+      # Z missing
+      ndt = c(0.5, 0.5),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_mechanism = "add",
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "argument \"Z\" is missing"
+  )
+})
+
+# Test Z parameter validation - length mismatch
+test_that("accumulate_evidence_ddm_2b validates Z length mismatch", {
+  expect_error(
+    accumulate_evidence_ddm_2b(
+      A_upper = c(5, 10),
+      A_lower = c(-5, -10),
+      V = c(1, 2),
+      Z = c(0), # Wrong length (1 instead of 2)
+      ndt = c(0.5, 0.5),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_mechanism = "add",
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "Length of Z must be equal to number of items"
+  )
+})
+
+# Test Z parameter functional effect - starting higher for upper boundary
+test_that("accumulate_evidence_ddm_2b Z parameter affects RT (higher start, upper boundary)", {
+  set.seed(123)
+
+  # Test with Z = 0 (default)
+  result_z0 <- accumulate_evidence_ddm_2b(
+    A_upper = c(10),
+    A_lower = c(-10),
+    V = c(2),
+    Z = c(0),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  set.seed(123)
+
+  # Test with Z = 5 (starting halfway to upper threshold)
+  result_z5 <- accumulate_evidence_ddm_2b(
+    A_upper = c(10),
+    A_lower = c(-10),
+    V = c(2),
+    Z = c(5),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Higher starting point should result in shorter RT for upper boundary
+  # Both should reach upper boundary with positive drift
+  expect_equal(result_z0$choice[1], 1)
+  expect_equal(result_z5$choice[1], 1)
+  expect_true(result_z5$rt[1] < result_z0$rt[1])
+})
+
+# Test Z parameter functional effect - starting negative favors lower boundary
+test_that("accumulate_evidence_ddm_2b Z parameter affects RT (negative start, lower boundary)", {
+  set.seed(789)
+
+  # Test with Z = 0 (default)
+  result_z0 <- accumulate_evidence_ddm_2b(
+    A_upper = c(10),
+    A_lower = c(-10),
+    V = c(-2), # Negative drift toward lower boundary
+    Z = c(0),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  set.seed(789)
+
+  # Test with Z = -5 (starting halfway to lower threshold)
+  result_z_neg <- accumulate_evidence_ddm_2b(
+    A_upper = c(10),
+    A_lower = c(-10),
+    V = c(-2), # Negative drift toward lower boundary
+    Z = c(-5),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Negative starting point should result in shorter RT for lower boundary
+  # Both should reach lower boundary with negative drift
+  expect_equal(result_z0$choice[1], -1)
+  expect_equal(result_z_neg$choice[1], -1)
+  expect_true(result_z_neg$rt[1] < result_z0$rt[1])
+})
+
 # Test max_reached limit
 test_that("accumulate_evidence_ddm_2b respects max_reached limit", {
   result <- accumulate_evidence_ddm_2b(

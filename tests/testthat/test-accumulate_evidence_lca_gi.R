@@ -243,7 +243,7 @@ test_that("accumulate_evidence_lca_gi validates dt parameter", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
-    Z = c(0),
+      Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -262,7 +262,7 @@ test_that("accumulate_evidence_lca_gi validates noise_func parameter", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
-    Z = c(0),
+      Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -281,7 +281,7 @@ test_that("accumulate_evidence_lca_gi validates noise function return length", {
     accumulate_evidence_lca_gi(
       A = c(5),
       V = c(1),
-    Z = c(0),
+      Z = c(0),
       ndt = c(0.5),
       beta = c(0.1),
       k = c(0.05),
@@ -413,7 +413,7 @@ test_that("accumulate_evidence_lca_gi leakage affects accumulation", {
     max_reached = 1,
     noise_func = function(n, dt) rep(0, n)
   )
-  
+
   # Low leakage: v / k > A, should reach threshold
   result_low_leak <- accumulate_evidence_lca_gi(
     A = c(10),
@@ -428,7 +428,7 @@ test_that("accumulate_evidence_lca_gi leakage affects accumulation", {
     noise_func = function(n, dt) rep(0, n)
   )
   expect_equal(length(result_high_leak$rt), 0) # Should not reach
-  expect_equal(length(result_low_leak$rt), 1)  # Should reach
+  expect_equal(length(result_low_leak$rt), 1) # Should reach
 })
 
 # Test inhibition effect (beta parameter)
@@ -448,7 +448,7 @@ test_that("accumulate_evidence_lca_gi inhibition affects competition", {
   )
 
   expect_equal(length(result_high_inhibition$item_idx), 1)
-  expect_equal(result_high_inhibition$item_idx, 2) 
+  expect_equal(result_high_inhibition$item_idx, 2)
 })
 
 test_that("accumulate_evidence_lca_gi inhibition disappears after reached", {
@@ -578,4 +578,118 @@ test_that("accumulate_evidence_lca_gi calculation, single item, no competition",
   # Time should be reasonable (ndt + accumulation time)
   expect_true(result$rt[1] >= 2) # At least ndt
   expect_true(result$rt[1] < 30) # Should reach before timeout
+})
+
+# Test Z parameter validation - missing
+test_that("accumulate_evidence_lca_gi validates missing Z parameter", {
+  expect_error(
+    accumulate_evidence_lca_gi(
+      A = c(10, 10),
+      V = c(1, 2),
+      # Z missing
+      ndt = c(0.5, 0.5),
+      beta = c(0.5, 0.5),
+      k = c(0.1, 0.1),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "argument \"Z\" is missing"
+  )
+})
+
+# Test Z parameter validation - length mismatch
+test_that("accumulate_evidence_lca_gi validates Z length mismatch", {
+  expect_error(
+    accumulate_evidence_lca_gi(
+      A = c(10, 10),
+      V = c(1, 2),
+      Z = c(0), # Wrong length (1 instead of 2)
+      ndt = c(0.5, 0.5),
+      beta = c(0.5, 0.5),
+      k = c(0.1, 0.1),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "Length of Z must be equal to number of items"
+  )
+})
+
+# Test Z parameter functional effect - starting higher
+test_that("accumulate_evidence_lca_gi Z parameter affects RT (higher start)", {
+  set.seed(123)
+
+  # Test with Z = 0 (default)
+  result_z0 <- accumulate_evidence_lca_gi(
+    A = c(10),
+    V = c(2),
+    Z = c(0),
+    ndt = c(0.5),
+    beta = c(0.1),
+    k = c(0.1),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  set.seed(123)
+
+  # Test with Z = 5 (starting halfway to threshold)
+  result_z5 <- accumulate_evidence_lca_gi(
+    A = c(10),
+    V = c(2),
+    Z = c(5),
+    ndt = c(0.5),
+    beta = c(0.1),
+    k = c(0.1),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Higher starting point should result in shorter RT
+  expect_true(result_z5$rt[1] < result_z0$rt[1])
+})
+
+# Test Z parameter functional effect - differential starting points
+test_that("accumulate_evidence_lca_gi Z parameter affects competition (differential starts)", {
+  set.seed(456)
+
+  # Test with equal starting points
+  result_equal <- accumulate_evidence_lca_gi(
+    A = c(10, 10),
+    V = c(1.5, 1.5),
+    Z = c(0, 0), # Equal starting points
+    ndt = c(0.5, 0.5),
+    beta = c(0.1, 0.1),
+    k = c(0.05, 0.05),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+  set.seed(456)
+
+  # Test with item 1 starting higher
+  result_biased <- accumulate_evidence_lca_gi(
+    A = c(10, 10),
+    V = c(1.5, 1.5), # Equal drift rates
+    Z = c(5, 0), # Item 1 starts halfway to threshold
+    ndt = c(0.5, 0.5),
+    beta = c(0.1, 0.1),
+    k = c(0.05, 0.05),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Item 1 starting higher should win and have shorter RT
+  expect_equal(result_biased$item_idx[1], 1)
+  expect_true(result_biased$rt[1] < result_equal$rt[1])
 })

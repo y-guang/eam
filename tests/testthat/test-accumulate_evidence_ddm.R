@@ -409,3 +409,111 @@ test_that("accumulate_evidence_ddm average rt close to prediction", {
   avg_simulated_reaction_time <- mean(all_reaction_time)
   expect_true(abs(avg_simulated_reaction_time - avg_predicted_reaction_time) < 1) # Within 1 second
 })
+
+# Test Z parameter validation - missing
+test_that("accumulate_evidence_ddm validates missing Z parameter", {
+  expect_error(
+    accumulate_evidence_ddm(
+      A = c(5, 10),
+      V = c(1, 2),
+      # Z missing
+      ndt = c(0.5, 0.5),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_mechanism = "add",
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "argument \"Z\" is missing"
+  )
+})
+
+# Test Z parameter validation - length mismatch
+test_that("accumulate_evidence_ddm validates Z length mismatch", {
+  expect_error(
+    accumulate_evidence_ddm(
+      A = c(5, 10),
+      V = c(1, 2),
+      Z = c(0), # Wrong length (1 instead of 2)
+      ndt = c(0.5, 0.5),
+      max_t = 20,
+      dt = 0.01,
+      max_reached = 1,
+      noise_mechanism = "add",
+      noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+    ),
+    "Length of Z must be equal to number of items"
+  )
+})
+
+# Test Z parameter functional effect - starting higher
+test_that("accumulate_evidence_ddm Z parameter affects RT (higher start)", {
+  set.seed(123)
+
+  # Test with Z = 0 (default)
+  result_z0 <- accumulate_evidence_ddm(
+    A = c(10),
+    V = c(2),
+    Z = c(0),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  set.seed(123)
+
+  # Test with Z = 5 (starting halfway to threshold)
+  result_z5 <- accumulate_evidence_ddm(
+    A = c(10),
+    V = c(2),
+    Z = c(5),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Higher starting point should result in shorter RT
+  expect_true(result_z5$rt[1] < result_z0$rt[1])
+})
+
+# Test Z parameter functional effect - starting negative
+test_that("accumulate_evidence_ddm Z parameter affects RT (negative start)", {
+  set.seed(456)
+
+  # Test with Z = 0 (default)
+  result_z0 <- accumulate_evidence_ddm(
+    A = c(10),
+    V = c(2),
+    Z = c(0),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  set.seed(456)
+
+  # Test with Z = -3 (starting below zero)
+  result_z_neg <- accumulate_evidence_ddm(
+    A = c(10),
+    V = c(2),
+    Z = c(-3),
+    ndt = c(0.5),
+    max_t = 20,
+    dt = 0.01,
+    max_reached = 1,
+    noise_mechanism = "add",
+    noise_func = function(n, dt) rnorm(n, 0, sqrt(dt))
+  )
+
+  # Negative starting point should result in longer RT
+  expect_true(result_z_neg$rt[1] > result_z0$rt[1])
+})
