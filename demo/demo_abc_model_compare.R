@@ -106,21 +106,35 @@ summary_pipe <-
   )
 
 # summarise simulation output
-simulation_sumstat <- map_by_condition(
+simulation_sumstat_1 <- map_by_condition(
   sim_output,
   .progress = TRUE,
   .parallel = TRUE,
   function(cond_df) {
     # clean data here
     complete_df <- cond_df |>
-      dplyr::filter(V_beta_0 > 0, !is.na(rt))
+      dplyr::filter(V_beta_0 > 0, !is.na(rt), condition_idx < 250)
+    # extract the summary by calling spec directly
+    summary_pipe(complete_df)
+  }
+)
+
+simulation_sumstat_2 <- map_by_condition(
+  sim_output,
+  .progress = TRUE,
+  .parallel = TRUE,
+  function(cond_df) {
+    # clean data here
+    complete_df <- cond_df |>
+      dplyr::filter(V_beta_0 > 0, !is.na(rt), condition_idx >= 250)
     # extract the summary by calling spec directly
     summary_pipe(complete_df)
   }
 )
 
 # clean non-complete simulations
-simulation_sumstat <- simulation_sumstat[complete.cases(simulation_sumstat), ]
+simulation_sumstat_1 <- simulation_sumstat_1[complete.cases(simulation_sumstat_1), ]
+simulation_sumstat_2 <- simulation_sumstat_2[complete.cases(simulation_sumstat_2), ]
 
 # summarized observed/target data
 # pretend observed data is condition 1
@@ -130,43 +144,30 @@ observed_data <- sim_output$open_dataset() |>
   dplyr::collect()
 target_sumstat <- summary_pipe(observed_data)
 
-# Prepare data for ABC fitting
-abc_input <- build_abc_input(
+# Prepare data for ABC fitting - Model Set 1
+abc_input_1 <- build_abc_input(
   simulation_output = sim_output,
-  simulation_summary = simulation_sumstat,
+  simulation_summary = simulation_sumstat_1,
   target_summary = target_sumstat,
   param = c("A_beta_0", "A_beta_1", "V_beta_0", "V_beta_1", "ndt", "sigma")
 )
 
-#####################
-# ABC model fitting #
-#####################
-abc_rejection_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  tol = 0.5,
+# Prepare data for ABC fitting - Model Set 2
+abc_input_2 <- build_abc_input(
+  simulation_output = sim_output,
+  simulation_summary = simulation_sumstat_2,
+  target_summary = target_sumstat,
+  param = c("A_beta_0", "A_beta_1", "V_beta_0", "V_beta_1", "ndt", "sigma")
+)
+
+postpr_result <- abc_postpr(
+  sumstats = list(
+    abc_input_1$sumstat,
+    abc_input_2$sumstat
+  ),
+  target = abc_input_1$target,
+  tol = 0.05,
   method = "rejection"
 )
 
-abc_loclinear_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  tol = 0.5,
-  method = "loclinear",
-  transf = c("log", "log", "log", "none", "log", "log")
-)
-
-abc_neuralnet_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  tol = 0.05,
-  method = "neuralnet",
-  sizenet = 8,
-  maxit = 10000,
-  lambda = 1e-2,
-  kernel = "epanechnikov",
-  transf = c("log", "log", "log", "none", "log", "log")
-)
+summary(postpr_result)
