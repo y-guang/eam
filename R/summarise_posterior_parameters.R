@@ -9,10 +9,9 @@ summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
 
   # Extract any custom summary functions from dots
   # Functions passed directly are treated as custom summaries
-  summary_funs <- dots[sapply(dots, is.function)]
-
-  # Remove functions from dots so we don't process them elsewhere
-  dots <- dots[!sapply(dots, is.function)]
+  is_fun <- vapply(dots, is.function, logical(1))
+  summary_funs <- dots[is_fun]
+  dots <- dots[!is_fun]
 
   # Extract values - prefer adjusted over unadjusted
   if (!is.null(data$adj.values)) {
