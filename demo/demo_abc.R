@@ -206,3 +206,20 @@ plot_posterior_parameters(
   abc_rejection_model,
   abc_input
 )
+
+
+#################
+# re-sample ABC #
+#################
+abc_resample_result <- abc_resample(
+  abc_input$target,
+  abc_input$param,
+  abc_input$sumstat,
+  n_iterations = 100,
+  n_samples = 200,
+  tol = 0.5,
+  method = "rejection"
+)
+
+plot_resample_medians(abc_resample_result)
+summarise_resample_medians(abc_resample_result)
