@@ -29,9 +29,11 @@ resolve_symbol <- function(expr, env, n) {
 #' @return A named list of evaluated values with length n
 #' @keywords internal
 evaluate_with_dt <- function(formulas, data = list(), n) {
-  # validate data
-  if (!is.list(data)) {
-    stop("Data must be a list.")
+  # validate and convert data
+  if (is.data.frame(data)) {
+    data <- as.list(data)
+  } else if (!is.list(data)) {
+    stop("Data must be a list or data frame.")
   }
 
   # prepare for evaluation
@@ -525,7 +527,7 @@ run_simulation <- function(config, output_dir = NULL) {
   # Evaluate ALL condition parameters upfront
   prior_params <- evaluate_with_dt(
     formulas = config$prior_formulas,
-    data = list(),
+    data = config$prior_params,
     n = config$n_conditions
   )
 

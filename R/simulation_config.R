@@ -3,6 +3,7 @@
 #' This function creates a new multieam simulation configuration object that
 #' contains all parameters needed to run a simulation.
 #'
+#' @param prior_params A list or data frame of initial values for prior formulas
 #' @param prior_formulas A list of formulas defining prior distributions for
 #'   condition-level parameters
 #' @param between_trial_formulas A list of formulas defining between-trial
@@ -24,6 +25,7 @@
 #' @return A multieam_simulation_config object
 #' @export
 new_simulation_config <- function(
+    prior_params = list(),
     prior_formulas = list(),
     between_trial_formulas = list(),
     item_formulas = list(),
@@ -57,14 +59,14 @@ new_simulation_config <- function(
 
   # default chunk size
   if (is.null(n_conditions_per_chunk)) {
-    n_conditions_per_chunk <- 
-    new_simulation_config.chunk_size.heuristic(
-      n_conditions = n_conditions,
-      n_trials_per_condition = n_trials_per_condition,
-      n_items = n_items,
-      parallel = parallel,
-      n_cores = n_cores
-    )
+    n_conditions_per_chunk <-
+      new_simulation_config.chunk_size.heuristic(
+        n_conditions = n_conditions,
+        n_trials_per_condition = n_trials_per_condition,
+        n_items = n_items,
+        parallel = parallel,
+        n_cores = n_cores
+      )
   }
 
   # default random seed for parallel processing
@@ -74,6 +76,7 @@ new_simulation_config <- function(
 
   # Create configuration list
   config <- list(
+    prior_params = prior_params,
     prior_formulas = prior_formulas,
     between_trial_formulas = between_trial_formulas,
     item_formulas = item_formulas,
@@ -102,6 +105,7 @@ new_simulation_config <- function(
 validate_simulation_config <- function(config) {
   # Validate required fields exist (following function signature order)
   required_fields <- c(
+    "prior_params",
     "prior_formulas",
     "between_trial_formulas",
     "item_formulas",
@@ -126,6 +130,11 @@ validate_simulation_config <- function(config) {
       "Missing required configuration fields: ",
       paste(missing_fields, collapse = ", ")
     )
+  }
+
+  # Validate prior_params is list or data frame
+  if (!is.list(config$prior_params) && !is.data.frame(config$prior_params)) {
+    stop("prior_params must be a list or data frame")
   }
 
   # Validate formulas are lists
@@ -310,18 +319,18 @@ new_simulation_config.chunk_size.heuristic <- function(
   } else {
     n_conditions_per_chunk <- n_conditions
   }
-  
+
   # Apply data size constraint: n_items * n_trials_per_condition * n_conditions_per_chunk < 200,000
   max_chunk_data_size <- 200000
   data_per_condition <- n_items * n_trials_per_condition
   max_conditions_per_chunk <- floor(max_chunk_data_size / data_per_condition)
-  
+
   if (max_conditions_per_chunk > 0 && n_conditions_per_chunk > max_conditions_per_chunk) {
     n_conditions_per_chunk <- max_conditions_per_chunk
   }
-  
+
   # Ensure at least 1 condition per chunk
   n_conditions_per_chunk <- max(1, n_conditions_per_chunk)
-  
+
   return(n_conditions_per_chunk)
 }
