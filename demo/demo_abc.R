@@ -82,6 +82,8 @@ sim_output <- run_simulation(
 head(sim_output$open_dataset())
 # uncommented to collect all data into memory (avoid for large sims)
 # sim_output_df <- sim_output$open_dataset() |> dplyr::collect()
+# uncommented to collect all condition parameters into memory
+# sim_condition_df <- sim_output$open_evaluated_conditions() |> dplyr::collect()
 
 # define the summary procedure
 summary_pipe <-

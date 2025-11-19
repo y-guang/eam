@@ -18,6 +18,11 @@ new_simulation_output <- function(
     simulation_output_fs_proto$dataset_dir
   )
 
+  evaluated_conditions_dir <- file.path(
+    output_dir,
+    simulation_output_fs_proto$evaluated_conditions_dir
+  )
+
   # Create the output object
   ret <- list(
     simulation_config = simulation_config,
@@ -26,6 +31,13 @@ new_simulation_output <- function(
       dataset_dir <- simulation_dataset_dir
       function() {
         arrow::open_dataset(dataset_dir)
+      }
+    }),
+    evaluated_conditions_dir = evaluated_conditions_dir,
+    open_evaluated_conditions = local({
+      eval_dir <- evaluated_conditions_dir
+      function() {
+        arrow::open_dataset(eval_dir)
       }
     })
   )
