@@ -19,11 +19,14 @@ prior_formulas <- list(
 )
 
 between_trial_formulas <- list(
-  V_var ~ distributional::dist_normal(0, sigma)
+  V_var ~ distributional::dist_normal(0, sigma),
+  # random group binomial
+  group ~ distributional::dist_binomial(1, 0.5)
 )
 
 item_formulas <- list(
-  A ~ A_beta_0 + seq(1, n_items) * A_beta_1,
+  A_upper ~ A_beta_0 + seq(1, n_items) * A_beta_1,
+  A_lower ~ -1,
   V ~ V_beta_0 + seq(1, n_items) * V_beta_1 + V_var
 )
 
@@ -234,26 +237,12 @@ posterior_params <- abc_posterior_bootstrap(
   n_samples = 500
 )
 
-post_sim_config <- new_simulation_config(
-  prior_params = as.data.frame(posterior_params),
-  prior_formulas = list(noise_coef ~ 1), # exclude drawn posteriors
-  between_trial_formulas = between_trial_formulas,
-  item_formulas = item_formulas,
-  n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 500,
-  n_trials_per_condition = 100,
-  n_items = n_items,
-  max_reached = n_items,
-  max_t = 100,
-  dt = 0.01,
-  noise_mechanism = "add",
-  noise_factory = noise_factory,
-  model = "ddm",
-  parallel = TRUE,
-  n_cores = NULL, # Will use default: detectCores() - 1
-  rand_seed = NULL # Will use default random seed
-)
+# specify posterior simulation config
+post_sim_config <- sim_config
+post_sim_config$prior_params <- posterior_params
+post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
 
+# (optional) specify a path to save posterior simulations result
 temp_output_path_post <- tempfile("eam_demo_output_post")
 # remove if exists
 if (dir.exists(temp_output_path_post)) {
@@ -270,5 +259,12 @@ plot_rt(
   post_output,
   observed_data,
   facet_x = c("item_idx"),
+  facet_y = c()
+)
+
+plot_accuracy(
+  post_output,
+  observed_data,
+  facet_x = c("group"),
   facet_y = c()
 )
