@@ -5,7 +5,7 @@
 #' statistics from simulation results and formats them into matrices suitable
 #' for ABC parameter estimation.
 #'
-#' @param simulation_output A multieam_simulation_output object containing the
+#' @param simulation_output A eam_simulation_output object containing the
 #'   simulation dataset and configuration
 #' @param simulation_summary A data frame containing summary statistics for each
 #'   simulated condition. Should have a 'condition_idx' column and be created by
@@ -24,8 +24,8 @@ build_abc_input <- function(
     target_summary,
     param) {
   # Validate inputs
-  if (!inherits(simulation_output, "multieam_simulation_output")) {
-    stop("simulation_output must be a multieam_simulation_output object")
+  if (!inherits(simulation_output, "eam_simulation_output")) {
+    stop("simulation_output must be a eam_simulation_output object")
   }
 
   if (!is.data.frame(simulation_summary)) {

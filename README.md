@@ -1,6 +1,6 @@
-# multieam
+# eam
 
-multieam is a high-performance simulation infrastructure for the Drift Diffusion Model (DDM) and its generalized variants,  two-boundary models, racing models, leaky competing accumulator (LCA) models.
+eam is a high-performance simulation infrastructure for the Drift Diffusion Model (DDM) and its generalized variants,  two-boundary models, racing models, leaky competing accumulator (LCA) models.
 
 It provides a modern, consistent API for simulation-based modelling, making it easy to define, run, and evaluate large-scale evidence accumulation experiments with high computational efficiency.
 

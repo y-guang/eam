@@ -5,7 +5,7 @@
 #' and reshaping of simulation results.
 #'
 #' When called without `.data` (or with `.data = NULL`), returns a
-#' `multieam_summarise_by_spec` object that can be:
+#' `eam_summarise_by_spec` object that can be:
 #' - Combined with other specs using the `+` operator
 #' - Applied to data later by calling it as a function
 #'
@@ -17,9 +17,9 @@
 #'   columns after pivoting wider (default: "condition_idx"). Must be a subset of
 #'   .by. If different from .by, the remaining columns in .by will be pivoted across
 #'   the result.
-#' @return If `.data` is provided: A data frame with class "multieam_summarise_by_tbl"
+#' @return If `.data` is provided: A data frame with class "eam_summarise_by_tbl"
 #'   containing the summarised and potentially pivoted results.
-#'   If `.data` is NULL: A `multieam_summarise_by_spec` object for delayed evaluation.
+#'   If `.data` is NULL: A `eam_summarise_by_spec` object for delayed evaluation.
 #' @export
 summarise_by <- function(
     .data = NULL,
@@ -45,7 +45,7 @@ summarise_by <- function(
 
     # Attach the spec_list as an attribute and set the class
     attr(spec, "spec_list") <- spec_list
-    class(spec) <- c("multieam_summarise_by_spec", "function")
+    class(spec) <- c("eam_summarise_by_spec", "function")
 
     return(spec)
   }
@@ -61,14 +61,14 @@ summarise_by <- function(
 #' @param dots Quosures containing the summary expressions
 #' @param .by Character vector of column names to group by
 #' @param .wider_by Character vector of column names to keep as identifying columns
-#' @return A data frame with class "multieam_summarise_by_tbl"
+#' @return A data frame with class "eam_summarise_by_tbl"
 #' @keywords internal
 summarise_by_impl <- function(.data, dots, .by, .wider_by) {
   # Early return for empty data frames
   if (nrow(.data) == 0) {
     # Return a completely empty data frame with proper class
     result_df <- data.frame()
-    class(result_df) <- c("multieam_summarise_by_tbl", class(result_df))
+    class(result_df) <- c("eam_summarise_by_tbl", class(result_df))
     attr(result_df, "wider_by") <- .wider_by
     return(result_df)
   }
@@ -158,27 +158,27 @@ summarise_by_impl <- function(.data, dots, .by, .wider_by) {
   }
 
   # assign the class and store .wider_by as attribute
-  class(result_df) <- c("multieam_summarise_by_tbl", class(result_df))
+  class(result_df) <- c("eam_summarise_by_tbl", class(result_df))
   attr(result_df, "wider_by") <- .wider_by
 
   result_df
 }
 
-#' Join two multieam_summarise_by_tbl objects
+#' Join two eam_summarise_by_tbl objects
 #'
 #' S3 method for the + operator to join two summary tables created by
 #' \code{summarise_by}. Tables must have identical .wider_by attributes
 #' to be joined.
 #'
-#' @param e1 First multieam_summarise_by_tbl object
-#' @param e2 Second multieam_summarise_by_tbl object
-#' @return A joined data frame with class "multieam_summarise_by_tbl",
+#' @param e1 First eam_summarise_by_tbl object
+#' @param e2 Second eam_summarise_by_tbl object
+#' @return A joined data frame with class "eam_summarise_by_tbl",
 #'   preserving the .wider_by attribute from the input tables
 #' @export
-`+.multieam_summarise_by_tbl` <- function(e1, e2) {
-  # Only process if both are multieam_summarise_by_tbl
-  if (!inherits(e1, "multieam_summarise_by_tbl") ||
-    !inherits(e2, "multieam_summarise_by_tbl")) {
+`+.eam_summarise_by_tbl` <- function(e1, e2) {
+  # Only process if both are eam_summarise_by_tbl
+  if (!inherits(e1, "eam_summarise_by_tbl") ||
+    !inherits(e2, "eam_summarise_by_tbl")) {
     # Not our class duty - fall back to default
     return(NextMethod("+"))
   }
@@ -211,16 +211,16 @@ summarise_by_impl <- function(.data, dots, .by, .wider_by) {
   result <- dplyr::full_join(e1, e2, by = wider_by_1)
 
   # Preserve the class and .wider_by attribute
-  class(result) <- c("multieam_summarise_by_tbl", class(result))
+  class(result) <- c("eam_summarise_by_tbl", class(result))
   attr(result, "wider_by") <- wider_by_1
 
   result
 }
 
 #' @export
-print.multieam_summarise_by_spec <- function(x, ...) {
+print.eam_summarise_by_spec <- function(x, ...) {
   spec_list <- attr(x, "spec_list")
-  cat("<multieam_summarise_by_spec>\n")
+  cat("<eam_summarise_by_spec>\n")
   cat("Number of summarise operations:", length(spec_list), "\n")
   for (i in seq_along(spec_list)) {
     cat("\nOperation", i, ":\n")
@@ -235,7 +235,7 @@ print.multieam_summarise_by_spec <- function(x, ...) {
 #'
 #' @param spec_list A list of spec operations (the internal spec list)
 #' @param .data A data frame
-#' @return A data frame with class "multieam_summarise_by_tbl"
+#' @return A data frame with class "eam_summarise_by_tbl"
 #' @keywords internal
 apply_summarise_by_spec <- function(spec_list, .data) {
   # Apply each summarise_by operation and combine with +
@@ -259,17 +259,17 @@ apply_summarise_by_spec <- function(spec_list, .data) {
 
 #' Add two summarise_by specs together
 #'
-#' S3 method for the + operator to combine two `multieam_summarise_by_spec`
+#' S3 method for the + operator to combine two `eam_summarise_by_spec`
 #' objects into a single spec that will apply both operations.
 #'
-#' @param e1 First multieam_summarise_by_spec or multieam_summarise_by_tbl object
-#' @param e2 Second multieam_summarise_by_spec or multieam_summarise_by_tbl object
-#' @return A combined multieam_summarise_by_spec object
+#' @param e1 First eam_summarise_by_spec or eam_summarise_by_tbl object
+#' @param e2 Second eam_summarise_by_spec or eam_summarise_by_tbl object
+#' @return A combined eam_summarise_by_spec object
 #' @export
-`+.multieam_summarise_by_spec` <- function(e1, e2) {
+`+.eam_summarise_by_spec` <- function(e1, e2) {
   # Handle spec + spec
-  if (inherits(e1, "multieam_summarise_by_spec") &&
-    inherits(e2, "multieam_summarise_by_spec")) {
+  if (inherits(e1, "eam_summarise_by_spec") &&
+    inherits(e2, "eam_summarise_by_spec")) {
     # Extract the spec lists from both
     spec_list1 <- attr(e1, "spec_list")
     spec_list2 <- attr(e2, "spec_list")
@@ -284,7 +284,7 @@ apply_summarise_by_spec <- function(spec_list, .data) {
 
     # Attach the combined spec list and set the class
     attr(result, "spec_list") <- combined_spec_list
-    class(result) <- c("multieam_summarise_by_spec", "function")
+    class(result) <- c("eam_summarise_by_spec", "function")
 
     return(result)
   }

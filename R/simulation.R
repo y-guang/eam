@@ -386,7 +386,7 @@ run_condition <- function(
 #' This function processes a chunk of simulation conditions, applies the
 #' flatten_simulation_results transformation, and saves the results to disk
 #' using Arrow's write_dataset with partitioning by chunk_idx.
-#' @param config A multieam_simulation_config object containing all simulation
+#' @param config A eam_simulation_config object containing all simulation
 #' parameters
 #' @param output_dir The base output directory
 #' @param chunk_idx The chunk index for partitioning (1-based)
@@ -473,8 +473,8 @@ run_chunk <- function(config, output_dir, chunk_idx) {
 #' @export
 run_simulation_serial <- function(config, output_dir) {
   # Validate config
-  if (!inherits(config, "multieam_simulation_config")) {
-    stop("config must be a multieam_simulation_config object")
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("config must be a eam_simulation_config object")
   }
 
   # Calculate number of chunks needed
@@ -499,7 +499,7 @@ run_simulation_serial <- function(config, output_dir) {
 #' each condition having multiple trials and items. It can run either serially
 #' or in parallel based on the parallel parameter in the config. It uses the
 #' hierarchical structure: prior -> condition -> trial -> item.
-#' @param config A multieam_simulation_config object containing all simulation
+#' @param config A eam_simulation_config object containing all simulation
 #' parameters
 #' @param output_dir The directory to save out-of-core results (optional,
 #' will use temp directory if not provided)
@@ -507,8 +507,8 @@ run_simulation_serial <- function(config, output_dir) {
 #' @export
 run_simulation <- function(config, output_dir = NULL) {
   # Validate config
-  if (!inherits(config, "multieam_simulation_config")) {
-    stop("config must be a multieam_simulation_config object")
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("config must be a eam_simulation_config object")
   }
 
   if (is.null(output_dir)) {
@@ -517,7 +517,7 @@ run_simulation <- function(config, output_dir = NULL) {
       collapse = ""
     )
     output_dir <- tempfile(
-      pattern = paste0("multieam_simulation_output_", rand_hex)
+      pattern = paste0("eam_simulation_output_", rand_hex)
     )
   }
 
@@ -591,14 +591,14 @@ run_simulation <- function(config, output_dir = NULL) {
 #' each chunk on separate cores. Each condition has multiple trials and items.
 #' It uses the hierarchical structure: prior -> condition -> trial -> item.
 #' All parameters are taken from the configuration object.
-#' @param config A multieam_simulation_config object
+#' @param config A eam_simulation_config object
 #' @param output_dir The base output directory
 #' @return No return value (results saved to disk)
 #' @export
 run_simulation_parallel <- function(config, output_dir) {
   # Validate config
-  if (!inherits(config, "multieam_simulation_config")) {
-    stop("config must be a multieam_simulation_config object")
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("config must be a eam_simulation_config object")
   }
 
   # Calculate number of chunks needed
@@ -660,14 +660,14 @@ run_simulation_parallel <- function(config, output_dir) {
 }
 
 
-#' Rebuild multieam_simulation_output from an existing output directory
+#' Rebuild eam_simulation_output from an existing output directory
 #'
-#' This function reconstructs a multieam_simulation_output object from a
+#' This function reconstructs a eam_simulation_output object from a
 #' previously saved simulation output directory. It reads the saved
 #' configuration
 #' and opens the Arrow dataset.
 #' @param output_dir The directory containing the simulation results and config
-#' @return A multieam_simulation_output object
+#' @return A eam_simulation_output object
 #' @export
 load_simulation_output <- function(output_dir) {
   # Validate that output_dir exists
@@ -703,7 +703,7 @@ load_simulation_output <- function(output_dir) {
   config <- readRDS(config_path)
 
   # Validate config
-  if (!inherits(config, "multieam_simulation_config")) {
+  if (!inherits(config, "eam_simulation_config")) {
     stop("Invalid simulation config found in: ", config_path)
   }
 

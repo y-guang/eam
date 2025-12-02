@@ -1,6 +1,6 @@
 #' Create a new simulation configuration
 #'
-#' This function creates a new multieam simulation configuration object that
+#' This function creates a new eam simulation configuration object that
 #' contains all parameters needed to run a simulation.
 #'
 #' @param prior_params A list or data frame of initial values for prior formulas
@@ -22,7 +22,7 @@
 #' @param parallel Whether to run in parallel (default: FALSE)
 #' @param n_cores Number of cores for parallel processing (default: NULL)
 #' @param rand_seed Random seed for parallel processing (default: NULL)
-#' @return A multieam_simulation_config object
+#' @return A eam_simulation_config object
 #' @export
 new_simulation_config <- function(
     prior_params = list(),
@@ -99,7 +99,7 @@ new_simulation_config <- function(
   validate_simulation_config(config)
 
   # Create S3 object
-  structure(config, class = "multieam_simulation_config")
+  structure(config, class = "eam_simulation_config")
 }
 
 validate_simulation_config <- function(config) {
@@ -260,14 +260,14 @@ validate_simulation_config <- function(config) {
   invisible(config)
 }
 
-#' Print method for multieam simulation configuration
+#' Print method for eam simulation configuration
 #'
-#' @param x A multieam_simulation_config object
+#' @param x A eam_simulation_config object
 #' @param ... Additional arguments (ignored)
 #' @return Invisibly returns the input object
 #' @export
-print.multieam_simulation_config <- function(x, ...) {
-  cat("Multieam Simulation Configuration\n")
+print.eam_simulation_config <- function(x, ...) {
+  cat("eam Simulation Configuration\n")
   cat("=================================\n")
   cat("Model:", x$model, "\n")
   cat("Conditions:", x$n_conditions, "\n")

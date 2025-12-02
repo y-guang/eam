@@ -3,7 +3,7 @@ test_that("evaluate_with_dt works with numeric", {
   test_formulas <- list(
     a ~ 5
   )
-  result <- multieam:::evaluate_with_dt(test_formulas, data = list(), n = 1)
+  result <- eam:::evaluate_with_dt(test_formulas, data = list(), n = 1)
   expect_equal(result$a, 5)
 })
 
@@ -11,7 +11,7 @@ test_that("evaluate_with_dt works with numeric vec", {
   test_formulas <- list(
     a ~ 5
   )
-  result <- multieam:::evaluate_with_dt(test_formulas, data = list(), n = 7)
+  result <- eam:::evaluate_with_dt(test_formulas, data = list(), n = 7)
   expect_equal(length(result$a), 7)
   expect_true(all(result$a == 5))
 })
@@ -21,7 +21,7 @@ test_that("evaluate_with_dt works with chain", {
     a ~ 1,
     b ~ a + 2
   )
-  result <- multieam:::evaluate_with_dt(test_formulas, data = list(), n = 1)
+  result <- eam:::evaluate_with_dt(test_formulas, data = list(), n = 1)
   expect_equal(result$a, 1)
   expect_equal(result$b, 3)
 })
@@ -34,7 +34,7 @@ test_that("run_trial with simple parameters", {
     ndt ~ 0.01
   )
 
-  res <- multieam:::run_trial_ddm(
+  res <- eam:::run_trial_ddm(
     trial_setting = list(),
     item_formulas = trial_formulas,
     n_items = n_items,
@@ -66,7 +66,7 @@ test_that("run_trial with varying parameters", {
     ndt ~ distributional::dist_uniform(-1e-5, 1e-5)
   )
 
-  res <- multieam:::run_trial_ddm(
+  res <- eam:::run_trial_ddm(
     trial_setting = list(),
     item_formulas = trial_formulas,
     n_items = n_items,

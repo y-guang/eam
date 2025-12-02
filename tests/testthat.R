@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(multieam)
+library(eam)
 
-test_check("multieam")
+test_check("eam")

@@ -58,7 +58,7 @@ sim_config <- new_simulation_config(
 print(sim_config)
 
 # create temporary output path
-temp_output_path <- tempfile("multieam_demo_output")
+temp_output_path <- tempfile("eam_demo_output")
 # remove if exists
 if (dir.exists(temp_output_path)) {
   unlink(temp_output_path, recursive = TRUE)

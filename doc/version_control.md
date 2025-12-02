@@ -1,7 +1,7 @@
 for stable repo
 
 ```bash
-git remote add upstream git@github.com:y-guang/multieam-dev.git
+git remote add upstream git@github.com:y-guang/eam-dev.git
 git fetch upstream main
 ```
 

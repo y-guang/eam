@@ -1,12 +1,12 @@
-#' Create a multieam_simulation_output object
+#' Create a eam_simulation_output object
 #'
 #' @keywords internal
 new_simulation_output <- function(
     simulation_config,
     output_dir) {
   # validate inputs
-  if (!inherits(simulation_config, "multieam_simulation_config")) {
-    stop("simulation_config must be a multieam_simulation_config object")
+  if (!inherits(simulation_config, "eam_simulation_config")) {
+    stop("simulation_config must be a eam_simulation_config object")
   }
 
   if (!dir.exists(output_dir)) {
@@ -43,7 +43,7 @@ new_simulation_output <- function(
   )
 
   # Create S3 object
-  structure(ret, class = "multieam_simulation_output")
+  structure(ret, class = "eam_simulation_output")
 }
 
 #' Map a function by condition across simulation output chunks
@@ -52,7 +52,7 @@ new_simulation_output <- function(
 #' through them one by one, filtering and collecting data by chunk, then
 #' applying a user-defined function by condition within each chunk.
 #'
-#' @param simulation_output A multieam_simulation_output object containing the
+#' @param simulation_output A eam_simulation_output object containing the
 #' dataset and configuration
 #' @param .f A function to apply to each condition's data. The function should
 #' accept a data frame representing one condition's results
@@ -77,8 +77,8 @@ map_by_condition <- function(
   # TODO: persist results to disk if too large
 
   # Validate input
-  if (!inherits(simulation_output, "multieam_simulation_output")) {
-    stop("simulation_output must be a multieam_simulation_output object")
+  if (!inherits(simulation_output, "eam_simulation_output")) {
+    stop("simulation_output must be a eam_simulation_output object")
   }
 
   if (!is.function(.f)) {
@@ -151,7 +151,7 @@ map_by_condition <- function(
     parallel::clusterEvalQ(cl, {
       library(dplyr)
       library(arrow)
-      library(multieam)
+      library(eam)
     })
 
     # Run parallel processing

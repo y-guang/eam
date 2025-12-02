@@ -22,7 +22,7 @@ test_that("run_condition with basic setup", {
     }
   }
 
-  res <- multieam:::run_condition(
+  res <- eam:::run_condition(
     condition_setting = list(),
     between_trial_formulas = between_trial_formulas,
     item_formulas = item_formulas,
@@ -84,7 +84,7 @@ test_that("run_condition with distributional parameters", {
     }
   }
 
-  res <- multieam:::run_condition(
+  res <- eam:::run_condition(
     condition_setting = list(),
     between_trial_formulas = between_trial_formulas,
     item_formulas = item_formulas,
@@ -139,7 +139,7 @@ test_that("run_condition with condition setting input", {
 
   condition_setting <- list(base_difficulty = 2.5)
 
-  res <- multieam:::run_condition(
+  res <- eam:::run_condition(
     condition_setting = condition_setting,
     between_trial_formulas = between_trial_formulas,
     item_formulas = item_formulas,
@@ -181,7 +181,7 @@ test_that("run_condition with noise", {
     }
   }
 
-  res <- multieam:::run_condition(
+  res <- eam:::run_condition(
     condition_setting = list(),
     between_trial_formulas = between_trial_formulas,
     item_formulas = item_formulas,

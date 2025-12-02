@@ -9,7 +9,7 @@ plot_cv_recovery <- function(data, ...) {
   UseMethod("plot_cv_recovery")
 }
 
-theme_multieam <- ggplot2::theme_minimal() +
+theme_eam <- ggplot2::theme_minimal() +
   ggplot2::theme(
     plot.title = ggplot2::element_text(hjust = 0.5),
     panel.grid.major = ggplot2::element_blank(),
@@ -128,7 +128,7 @@ plot_cv_recovery.cv4abc <- function(data, ...) {
           vjust = 1.5,
           size = 3
         ) +
-        theme_multieam
+        theme_eam
 
       # Plot 2: Density of residuals (estimate - true)
       p2 <- ggplot2::ggplot(plot_df, ggplot2::aes(x = residual)) +
@@ -146,7 +146,7 @@ plot_cv_recovery.cv4abc <- function(data, ...) {
           x = "Estimate - True",
           y = "Density"
         ) +
-        theme_multieam
+        theme_eam
 
 
       # Add plots to list for this tolerance
