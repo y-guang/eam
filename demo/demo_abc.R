@@ -225,3 +225,110 @@ abc_resample_result <- abc_resample(
 
 plot_resample_medians(abc_resample_result)
 summarise_resample_medians(abc_resample_result)
+
+#############
+# posterior #
+#############
+posterior_params <- abc_posterior_bootstrap(
+  abc_neuralnet_model,
+  n_samples = 500
+)
+
+post_sim_config <- new_simulation_config(
+  prior_params = as.data.frame(posterior_params),
+  prior_formulas = list(noise_coef ~ 1), # exclude drawn posteriors
+  between_trial_formulas = between_trial_formulas,
+  item_formulas = item_formulas,
+  n_conditions_per_chunk = NULL, # automatic chunking
+  n_conditions = 500,
+  n_trials_per_condition = 100,
+  n_items = n_items,
+  max_reached = n_items,
+  max_t = 100,
+  dt = 0.01,
+  noise_mechanism = "add",
+  noise_factory = noise_factory,
+  model = "ddm",
+  parallel = TRUE,
+  n_cores = NULL, # Will use default: detectCores() - 1
+  rand_seed = NULL # Will use default random seed
+)
+
+temp_output_path_post <- tempfile("multieam_demo_output_post")
+# remove if exists
+if (dir.exists(temp_output_path_post)) {
+  unlink(temp_output_path_post, recursive = TRUE)
+}
+
+post_output <- run_simulation(
+  config = sim_config,
+  output_dir = temp_output_path_post
+)
+
+post_output$open_dataset() |>
+  dplyr::select(item_idx, rt) |>
+  dplyr::collect() |>
+  ggplot2::ggplot() +
+  ggplot2::geom_density(ggplot2::aes(x = rt), fill = "blue") +
+  ggplot2::facet_wrap(~item_idx) +
+  ggplot2::theme_minimal()
+
+plot_rt <- function(
+    simulated_output,
+    observed_df,
+    facet_x = c("item_idx"),
+    facet_y = c()) {
+  # Determine all columns to select
+  cols_to_select <- unique(c("rt", "item_idx", facet_x, facet_y))
+
+  # Get simulated data from output object
+  simulated_df <- simulated_output$open_dataset() |>
+    dplyr::select(dplyr::all_of(cols_to_select)) |>
+    dplyr::collect() |>
+    dplyr::mutate(source = "posterior")
+
+  # Get observed data with same columns
+  observed_df <- observed_df |>
+    dplyr::select(dplyr::all_of(cols_to_select)) |>
+    dplyr::mutate(source = "observed")
+
+  # Combine both dataframes
+  combined_df <- dplyr::bind_rows(simulated_df, observed_df)
+
+  # Plot densities
+  p <- combined_df |>
+    ggplot2::ggplot() +
+    ggplot2::geom_density(ggplot2::aes(x = rt, fill = source), alpha = 0.6) +
+    ggplot2::scale_fill_manual(values = c(posterior = "blue", observed = "red"))
+
+  # Add faceting: use facet_grid if both x and y specified, otherwise facet_wrap
+  if (length(facet_y) > 0) {
+    facet_formula <- stats::as.formula(paste(
+      paste(facet_y, collapse = " + "),
+      "~",
+      paste(facet_x, collapse = " + ")
+    ))
+    p <- p + ggplot2::facet_grid(facet_formula)
+  } else {
+    facet_formula <- stats::as.formula(paste("~", paste(facet_x, collapse = " + ")))
+    p <- p + ggplot2::facet_wrap(facet_formula)
+  }
+
+  p <- p +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(fill = "Source")
+
+  return(p)
+}
+
+
+plot_rt(
+  post_output,
+  observed_data,
+  facet_x = c("item_idx"),
+  facet_y = c()
+)
+
+plot_accuracy(
+  
+)
