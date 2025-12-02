@@ -1,3 +1,9 @@
+#' @useDynLib eam, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+# placeholder for Roxygen2 to recognize the useDynLib directive
+# DO NOT remove me.
+NULL
+
 #' Run a single trial of the DDM simulation
 #'
 #' This function runs a single trial of the DDM simulation using the provided
