@@ -3,7 +3,7 @@
 #' @param abc_result An abc object from abc::abc
 #' @param n_samples Number of bootstrap samples to draw (default 1000)
 #' @param replace Logical, whether to sample with replacement (default TRUE)
-#' @return Matrix of bootstrapped parameter values
+#' @return Data frame of bootstrapped parameter values
 #' @export
 abc_posterior_bootstrap <- function(
     abc_result,
@@ -27,6 +27,6 @@ abc_posterior_bootstrap <- function(
   # Draw bootstrap sample indices
   sample_idx <- sample(n_available, n_samples, replace = replace)
 
-  # Return bootstrapped parameter matrix
-  params[sample_idx, , drop = FALSE]
+  # Return bootstrapped parameter data frame
+  as.data.frame(params[sample_idx, , drop = FALSE])
 }
