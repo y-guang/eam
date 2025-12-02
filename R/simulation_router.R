@@ -1,9 +1,9 @@
-#' Extract all left-hand side variable names from config formulas
+#' Extract all left-hand side variable names from config formulas and prior_params
 #'
 #' @param config A list containing simulation configuration parameters
-#' @return A character vector of all LHS variable names
+#' @return A character vector of all LHS variable names from formulas and prior_params columns
 #' @keywords internal
-get_config_formulas_lhs_names <- function(config) {
+get_config_env_names <- function(config) {
   # Extract LHS names from item_formulas (list of formulas)
   item_names <- sapply(config$item_formulas, function(f) {
     rlang::as_name(rlang::f_lhs(f))
@@ -19,8 +19,15 @@ get_config_formulas_lhs_names <- function(config) {
     rlang::as_name(rlang::f_lhs(f))
   })
 
+  # Extract column names from prior_params (data frame) if it exists
+  prior_params_names <- if (!is.null(config$prior_params)) {
+    names(config$prior_params)
+  } else {
+    character(0)
+  }
+
   # Combine all names
-  all_names <- c(item_names, between_trial_names, prior_names)
+  all_names <- c(item_names, between_trial_names, prior_names, prior_params_names)
 
   return(all_names)
 }
@@ -32,7 +39,7 @@ get_config_formulas_lhs_names <- function(config) {
 #' @return Backend name if this detector handles the config, NULL otherwise
 #' @keywords internal
 detect_backend_ddm <- function(model_lower, config) {
-  lhs_names <- get_config_formulas_lhs_names(config)
+  lhs_names <- get_config_env_names(config)
 
   switch(model_lower,
     "ddm-1b" = "ddm",
@@ -50,7 +57,7 @@ detect_backend_ddm <- function(model_lower, config) {
 #' @return Backend name if this detector handles the config, NULL otherwise
 #' @keywords internal
 detect_backend_ddm_2b <- function(model_lower, config) {
-  lhs_names <- get_config_formulas_lhs_names(config)
+  lhs_names <- get_config_env_names(config)
 
   switch(model_lower,
     "ddm-2b" = "ddm-2b",
