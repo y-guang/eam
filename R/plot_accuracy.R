@@ -23,60 +23,6 @@ plot_accuracy <- function(
   )
 }
 
-#' Plot accuracy for DDM-2B model (internal)
-#'
-#' @param simulated_output Simulation output object
-#' @param observed_df Observed data frame
-#' @param x Variable for x-axis
-#' @param facet_x Variables for faceting columns
-#' @param facet_y Variables for faceting rows
-#' @return A ggplot2 object
-#' @keywords internal
-plot_accuracy_ddm_2b <- function(
-    simulated_output,
-    observed_df,
-    x = "item_idx",
-    facet_x = c(),
-    facet_y = c()) {
-  # Avoid NSE warnings
-  choice <- correct <- NULL
-
-  # Determine all columns to select
-  cols_to_select <- unique(c("choice", "item_idx", x, facet_x, facet_y))
-
-  # Get simulated data from output object
-  simulated_df <- simulated_output$open_dataset() |>
-    dplyr::select(dplyr::all_of(cols_to_select)) |>
-    dplyr::collect() |>
-    dplyr::mutate(
-      source = "posterior",
-      correct = choice == 1 # upper bound hit
-    )
-
-  # Get observed data with same columns
-  observed_df <- observed_df |>
-    dplyr::select(dplyr::all_of(cols_to_select)) |>
-    dplyr::mutate(
-      source = "observed",
-      correct = choice == 1 # upper bound hit
-    )
-
-  # Combine both dataframes
-  combined_df <- dplyr::bind_rows(simulated_df, observed_df)
-
-  # Calculate accuracy by grouping variables
-  grouping_vars <- unique(c(x, facet_x, facet_y, "source"))
-
-  accuracy_df <- combined_df |>
-    dplyr::group_by(dplyr::across(dplyr::all_of(grouping_vars))) |>
-    dplyr::summarise(
-      accuracy = mean(correct, na.rm = TRUE),
-      .groups = "drop"
-    )
-
-  plot_accuracy_graph(accuracy_df, x, facet_x, facet_y)
-}
-
 #' Plot accuracy graph (internal)
 #'
 #' @param accuracy_df Data frame with accuracy values
@@ -129,4 +75,58 @@ plot_accuracy_graph <- function(
     )
 
   return(p)
+}
+
+#' Plot accuracy for DDM-2B model (internal)
+#'
+#' @param simulated_output Simulation output object
+#' @param observed_df Observed data frame
+#' @param x Variable for x-axis
+#' @param facet_x Variables for faceting columns
+#' @param facet_y Variables for faceting rows
+#' @return A ggplot2 object
+#' @keywords internal
+plot_accuracy_ddm_2b <- function(
+    simulated_output,
+    observed_df,
+    x = "item_idx",
+    facet_x = c(),
+    facet_y = c()) {
+  # Avoid NSE warnings
+  choice <- correct <- NULL
+
+  # Determine all columns to select
+  cols_to_select <- unique(c("choice", "item_idx", x, facet_x, facet_y))
+
+  # Get simulated data from output object
+  simulated_df <- simulated_output$open_dataset() |>
+    dplyr::select(dplyr::all_of(cols_to_select)) |>
+    dplyr::collect() |>
+    dplyr::mutate(
+      source = "posterior",
+      correct = choice == 1 # upper bound hit
+    )
+
+  # Get observed data with same columns
+  observed_df <- observed_df |>
+    dplyr::select(dplyr::all_of(cols_to_select)) |>
+    dplyr::mutate(
+      source = "observed",
+      correct = choice == 1 # upper bound hit
+    )
+
+  # Combine both dataframes
+  combined_df <- dplyr::bind_rows(simulated_df, observed_df)
+
+  # Calculate accuracy by grouping variables
+  grouping_vars <- unique(c(x, facet_x, facet_y, "source"))
+
+  accuracy_df <- combined_df |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(grouping_vars))) |>
+    dplyr::summarise(
+      accuracy = mean(correct, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  plot_accuracy_graph(accuracy_df, x, facet_x, facet_y)
 }
