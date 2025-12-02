@@ -1,7 +1,17 @@
+#' Summarise posterior parameters
+#'
+#' Compute summary statistics for posterior parameter distributions.
+#'
+#' @param data An object containing posterior samples
+#' @param ... Additional arguments passed to methods
+#' @export
 summarise_posterior_parameters <- function(data, ...) {
   UseMethod("summarise_posterior_parameters")
 }
 
+#' @rdname summarise_posterior_parameters
+#' @method summarise_posterior_parameters abc
+#' @param ci_level Confidence interval level (default: 0.95)
 #' @export
 summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
   # check the parameters

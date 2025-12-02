@@ -18,6 +18,8 @@ theme_eam <- ggplot2::theme_minimal() +
     axis.ticks = ggplot2::element_line(color = "black")
   )
 
+#' @rdname plot_cv_recovery
+#' @method plot_cv_recovery cv4abc
 #' @export
 plot_cv_recovery.cv4abc <- function(data, ...) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {

@@ -9,6 +9,8 @@ plot_cv_pair_correlation <- function(data, ...) {
   UseMethod("plot_cv_pair_correlation")
 }
 
+#' @rdname plot_cv_pair_correlation
+#' @method plot_cv_pair_correlation cv4abc
 #' @export
 plot_cv_pair_correlation.cv4abc <- function(data, ...) {
   # check the parameters

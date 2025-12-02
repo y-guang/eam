@@ -9,6 +9,9 @@ plot_posterior_parameters <- function(data, ...) {
   UseMethod("plot_posterior_parameters")
 }
 
+#' @rdname plot_posterior_parameters
+#' @method plot_posterior_parameters abc
+#' @param abc_input Optional abc_input object containing prior samples
 #' @export
 plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
