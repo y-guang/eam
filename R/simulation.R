@@ -96,190 +96,6 @@ evaluate_with_dt <- function(formulas, data = list(), n) {
   return(res_list)
 }
 
-#' Run a single trial of the DDM simulation
-#'
-#' This function runs a single trial of the DDM simulation using the provided
-#' item formulas and trial settings. It's a wrapper around the core C++ function
-#' @param trial_setting A list of named values representing the trial settings
-#' @param item_formulas A list of formulas defining the item parameters
-#' @param n_items The number of items to simulate
-#' @param max_reached The threshold for evidence accumulation
-#' @param max_t The maximum time to simulate
-#' @param dt The step size for each increment
-#' @param noise_mechanism The noise mechanism to use ("add" or "mult")
-#' @param noise_factory A function that takes trial_setting and returns a noise
-#' function with signature function(n, dt)
-#' @param trajectories Whether to return full output including trajectories.
-#' @return A list containing the simulation results
-#' @note After evaluation, parameters A, V, and ndt are expected to be
-#' numeric vectors of length n_items. And they are matched by position. So,
-#' the first element of A, V, and ndt corresponds to the first item, and so on.
-#' @keywords internal
-run_trial_ddm <- function(
-    trial_setting,
-    item_formulas,
-    n_items,
-    max_reached,
-    max_t,
-    dt,
-    noise_mechanism,
-    noise_factory,
-    trajectories = FALSE) {
-  # prepare
-  item_params <- evaluate_with_dt(
-    item_formulas,
-    data = trial_setting,
-    n = n_items
-  )
-  noise_fun <- noise_factory(trial_setting)
-
-  # default Z to 0 if not provided
-  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
-
-  sim_result <- accumulate_evidence_ddm(
-    item_params$A,
-    item_params$V,
-    Z,
-    item_params$ndt,
-    max_t,
-    dt,
-    max_reached,
-    noise_mechanism,
-    noise_fun
-  )
-
-  if (trajectories) {
-    sim_result$.item_params <- item_params
-  }
-
-  sim_result
-}
-
-
-#' Run a single trial of the 2-boundary DDM simulation
-#'
-#' This function runs a single trial of the 2-boundary DDM simulation using the
-#' provided item formulas and trial settings. It's a wrapper around the core C++
-#' function for 2-boundary DDM.
-#' @param trial_setting A list of named values representing the trial settings
-#' @param item_formulas A list of formulas defining the item parameters
-#' @param n_items The number of items to simulate
-#' @param max_reached The threshold for evidence accumulation
-#' @param max_t The maximum time to simulate
-#' @param dt The step size for each increment
-#' @param noise_mechanism The noise mechanism to use ("add", "mult_evidence",
-#' or "mult_t")
-#' @param noise_factory A function that takes trial_setting and returns a noise
-#' function with signature function(n, dt)
-#' @param trajectories Whether to return full output including trajectories.
-#' @return A list containing the simulation results
-#' @note After evaluation, parameters A_upper, A_lower, V, and ndt are expected
-#' to be numeric vectors of length n_items. And they are matched by position.
-#' So, the first element of A_upper, A_lower, V, and ndt corresponds to the
-#' first item, and so on.
-#' @keywords internal
-run_trial_ddm_2b <- function(
-    trial_setting,
-    item_formulas,
-    n_items,
-    max_reached,
-    max_t,
-    dt,
-    noise_mechanism,
-    noise_factory,
-    trajectories = FALSE) {
-  # prepare
-  item_params <- evaluate_with_dt(
-    item_formulas,
-    data = trial_setting,
-    n = n_items
-  )
-  noise_fun <- noise_factory(trial_setting)
-
-  # default Z to 0 if not provided
-  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
-
-  sim_result <- accumulate_evidence_ddm_2b(
-    item_params$A_upper,
-    item_params$A_lower,
-    item_params$V,
-    Z,
-    item_params$ndt,
-    max_t,
-    dt,
-    max_reached,
-    noise_mechanism,
-    noise_fun
-  )
-
-  if (trajectories) {
-    sim_result$.item_params <- item_params
-  }
-
-  sim_result
-}
-
-
-#' Run a single trial of the LCA-GI simulation
-#'
-#' This function runs a single trial of the LCA-GI (Leaky Competing Accumulator
-#' with Global Inhibition) simulation using the provided item formulas and trial
-#' settings. It's a wrapper around the core C++ function for LCA-GI.
-#' @param trial_setting A list of named values representing the trial settings
-#' @param item_formulas A list of formulas defining the item parameters
-#' @param n_items The number of items to simulate
-#' @param max_reached The threshold for evidence accumulation
-#' @param max_t The maximum time to simulate
-#' @param dt The step size for each increment
-#' @param noise_factory A function that takes trial_setting and returns a noise
-#' function with signature function(n, dt)
-#' @param trajectories Whether to return full output including trajectories.
-#' @return A list containing the simulation results
-#' @note After evaluation, parameters A, V, ndt, beta, and k are expected
-#' to be numeric vectors of length n_items. And they are matched by position.
-#' So, the first element of A, V, ndt, beta, and k corresponds to the first
-#' item, and so on.
-#' @keywords internal
-run_trial_lca_gi <- function(
-    trial_setting,
-    item_formulas,
-    n_items,
-    max_reached,
-    max_t,
-    dt,
-    noise_factory,
-    trajectories = FALSE) {
-  # prepare
-  item_params <- evaluate_with_dt(
-    item_formulas,
-    data = trial_setting,
-    n = n_items
-  )
-  noise_fun <- noise_factory(trial_setting)
-
-  # default Z to 0 if not provided
-  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
-
-  sim_result <- accumulate_evidence_lca_gi(
-    item_params$A,
-    item_params$V,
-    Z,
-    item_params$ndt,
-    item_params$beta,
-    item_params$k,
-    max_t,
-    dt,
-    max_reached,
-    noise_fun
-  )
-
-  if (trajectories) {
-    sim_result$.item_params <- item_params
-  }
-
-  sim_result
-}
-
 
 #' Run a given condition with multiple trials
 #'
@@ -493,6 +309,82 @@ run_simulation_serial <- function(config, output_dir) {
 }
 
 
+#' Run a full simulation across multiple conditions in parallel
+#'
+#' This function runs a complete simulation across multiple conditions using
+#' parallel processing. It splits the conditions into chunks and processes
+#' each chunk on separate cores. Each condition has multiple trials and items.
+#' It uses the hierarchical structure: prior -> condition -> trial -> item.
+#' All parameters are taken from the configuration object.
+#' @param config A eam_simulation_config object
+#' @param output_dir The base output directory
+#' @return No return value (results saved to disk)
+#' @export
+run_simulation_parallel <- function(config, output_dir) {
+  # Validate config
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("config must be a eam_simulation_config object")
+  }
+
+  # Calculate number of chunks needed
+  n_chunks <- ceiling(config$n_conditions / config$n_conditions_per_chunk)
+
+  # Create chunk data for parallel processing
+  chunked_data <- lapply(seq_len(n_chunks), function(chunk_idx) {
+    list(chunk_idx = chunk_idx)
+  })
+
+  # setup parallel cluster
+  cl <- parallel::makeCluster(min(config$n_cores, length(chunked_data)))
+  on.exit(parallel::stopCluster(cl))
+
+  # export necessary objects to cluster
+  parallel::clusterExport(
+    cl, c(
+      # functions
+      "run_condition", "run_trial_ddm", "run_trial_ddm_2b", "run_trial_lca_gi",
+      "evaluate_with_dt", "resolve_symbol", "accumulate_evidence_ddm",
+      "accumulate_evidence_ddm_2b", "accumulate_evidence_lca_gi",
+      "flatten_simulation_results", "run_chunk"
+    ),
+    envir = environment()
+  )
+
+  # set RNG seed for parallel workers
+  parallel::clusterSetRNGStream(cl, iseed = config$rand_seed)
+
+  # run parallel processing with progress bar
+  if (requireNamespace("pbapply", quietly = TRUE)) {
+    pbapply::pblapply(
+      chunked_data,
+      function(chunk_data) {
+        run_chunk(
+          config = config,
+          output_dir = output_dir,
+          chunk_idx = chunk_data$chunk_idx
+        )
+      },
+      cl = cl
+    )
+  } else {
+    message("Install 'pbapply' package for progress bar support")
+    parallel::parLapply(
+      cl,
+      chunked_data,
+      function(chunk_data) {
+        run_chunk(
+          config = config,
+          output_dir = output_dir,
+          chunk_idx = chunk_data$chunk_idx
+        )
+      }
+    )
+  }
+
+  invisible(NULL)
+}
+
+
 #' Run a full simulation across multiple conditions
 #'
 #' This function runs a complete simulation across multiple conditions, with
@@ -581,137 +473,4 @@ run_simulation <- function(config, output_dir = NULL) {
   )
 
   ret
-}
-
-
-#' Run a full simulation across multiple conditions in parallel
-#'
-#' This function runs a complete simulation across multiple conditions using
-#' parallel processing. It splits the conditions into chunks and processes
-#' each chunk on separate cores. Each condition has multiple trials and items.
-#' It uses the hierarchical structure: prior -> condition -> trial -> item.
-#' All parameters are taken from the configuration object.
-#' @param config A eam_simulation_config object
-#' @param output_dir The base output directory
-#' @return No return value (results saved to disk)
-#' @export
-run_simulation_parallel <- function(config, output_dir) {
-  # Validate config
-  if (!inherits(config, "eam_simulation_config")) {
-    stop("config must be a eam_simulation_config object")
-  }
-
-  # Calculate number of chunks needed
-  n_chunks <- ceiling(config$n_conditions / config$n_conditions_per_chunk)
-
-  # Create chunk data for parallel processing
-  chunked_data <- lapply(seq_len(n_chunks), function(chunk_idx) {
-    list(chunk_idx = chunk_idx)
-  })
-
-  # setup parallel cluster
-  cl <- parallel::makeCluster(min(config$n_cores, length(chunked_data)))
-  on.exit(parallel::stopCluster(cl))
-
-  # export necessary objects to cluster
-  parallel::clusterExport(
-    cl, c(
-      # functions
-      "run_condition", "run_trial_ddm", "run_trial_ddm_2b", "run_trial_lca_gi",
-      "evaluate_with_dt", "resolve_symbol", "accumulate_evidence_ddm",
-      "accumulate_evidence_ddm_2b", "accumulate_evidence_lca_gi",
-      "flatten_simulation_results", "run_chunk"
-    ),
-    envir = environment()
-  )
-
-  # set RNG seed for parallel workers
-  parallel::clusterSetRNGStream(cl, iseed = config$rand_seed)
-
-  # run parallel processing with progress bar
-  if (requireNamespace("pbapply", quietly = TRUE)) {
-    pbapply::pblapply(
-      chunked_data,
-      function(chunk_data) {
-        run_chunk(
-          config = config,
-          output_dir = output_dir,
-          chunk_idx = chunk_data$chunk_idx
-        )
-      },
-      cl = cl
-    )
-  } else {
-    message("Install 'pbapply' package for progress bar support")
-    parallel::parLapply(
-      cl,
-      chunked_data,
-      function(chunk_data) {
-        run_chunk(
-          config = config,
-          output_dir = output_dir,
-          chunk_idx = chunk_data$chunk_idx
-        )
-      }
-    )
-  }
-
-  invisible(NULL)
-}
-
-
-#' Rebuild eam_simulation_output from an existing output directory
-#'
-#' This function reconstructs a eam_simulation_output object from a
-#' previously saved simulation output directory. It reads the saved
-#' configuration
-#' and opens the Arrow dataset.
-#' @param output_dir The directory containing the simulation results and config
-#' @return A eam_simulation_output object
-#' @export
-load_simulation_output <- function(output_dir) {
-  # Validate that output_dir exists
-  if (!dir.exists(output_dir)) {
-    stop("Output directory does not exist: ", output_dir)
-  }
-
-  # Check for config file
-  config_path <- file.path(
-    output_dir,
-    simulation_output_fs_proto$config_file
-  )
-  if (!file.exists(config_path)) {
-    stop(
-      "Simulation config not found in output directory: ", config_path,
-      "\nTypically, this simulation did not complete successfully."
-    )
-  }
-
-  # Check for simulation dataset directory
-  simulation_dataset_dir <- file.path(
-    output_dir,
-    simulation_output_fs_proto$dataset_dir
-  )
-  if (!dir.exists(simulation_dataset_dir)) {
-    stop(
-      "Simulation dataset directory not found: ", simulation_dataset_dir,
-      "\nThat means, this simulation output directory is incomplete."
-    )
-  }
-
-  # Load the config
-  config <- readRDS(config_path)
-
-  # Validate config
-  if (!inherits(config, "eam_simulation_config")) {
-    stop("Invalid simulation config found in: ", config_path)
-  }
-
-  # Rebuild the output object
-  ret <- new_simulation_output(
-    simulation_config = config,
-    output_dir = output_dir
-  )
-
-  return(ret)
 }

@@ -297,3 +297,60 @@ init_simulation_output_dir <- function(output_dir) {
 
   invisible(output_dir)
 }
+
+
+#' Rebuild eam_simulation_output from an existing output directory
+#'
+#' This function reconstructs a eam_simulation_output object from a
+#' previously saved simulation output directory. It reads the saved
+#' configuration
+#' and opens the Arrow dataset.
+#' @param output_dir The directory containing the simulation results and config
+#' @return A eam_simulation_output object
+#' @export
+load_simulation_output <- function(output_dir) {
+  # Validate that output_dir exists
+  if (!dir.exists(output_dir)) {
+    stop("Output directory does not exist: ", output_dir)
+  }
+
+  # Check for config file
+  config_path <- file.path(
+    output_dir,
+    simulation_output_fs_proto$config_file
+  )
+  if (!file.exists(config_path)) {
+    stop(
+      "Simulation config not found in output directory: ", config_path,
+      "\nTypically, this simulation did not complete successfully."
+    )
+  }
+
+  # Check for simulation dataset directory
+  simulation_dataset_dir <- file.path(
+    output_dir,
+    simulation_output_fs_proto$dataset_dir
+  )
+  if (!dir.exists(simulation_dataset_dir)) {
+    stop(
+      "Simulation dataset directory not found: ", simulation_dataset_dir,
+      "\nThat means, this simulation output directory is incomplete."
+    )
+  }
+
+  # Load the config
+  config <- readRDS(config_path)
+
+  # Validate config
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("Invalid simulation config found in: ", config_path)
+  }
+
+  # Rebuild the output object
+  ret <- new_simulation_output(
+    simulation_config = config,
+    output_dir = output_dir
+  )
+
+  return(ret)
+}
