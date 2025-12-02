@@ -62,13 +62,14 @@ sim_config <- new_simulation_config(
 print(sim_config)
 
 # output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
+temp_base_path <- tempfile("eam_demo")
 # remove if exists
-if (dir.exists(temp_output_path)) {
-  unlink(temp_output_path, recursive = TRUE)
+if (dir.exists(temp_base_path)) {
+  unlink(temp_base_path, recursive = TRUE)
 }
-cat("Temporary output path:\n")
-cat(temp_output_path, "\n")
+temp_output_path <- file.path(temp_base_path, "output")
+cat("Temporary base path:\n")
+cat(temp_base_path, "\n")
 
 ##################
 # run simulation #
@@ -238,23 +239,20 @@ posterior_params <- abc_posterior_bootstrap(
 )
 
 # specify posterior simulation config
+# or you can re-create a new config from scratch with posterior_params
 post_sim_config <- sim_config
 post_sim_config$prior_params <- posterior_params
 post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
 
 # (optional) specify a path to save posterior simulations result
-temp_output_path_post <- tempfile("eam_demo_output_post")
-# remove if exists
-if (dir.exists(temp_output_path_post)) {
-  unlink(temp_output_path_post, recursive = TRUE)
-}
+temp_output_path_post <- file.path(temp_base_path, "posterior_output")
 
 post_output <- run_simulation(
   config = sim_config,
   output_dir = temp_output_path_post
 )
 
-
+# plot the posterior rt and accuracy
 plot_rt(
   post_output,
   observed_data,
