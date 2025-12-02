@@ -18,7 +18,7 @@
 #' @param dt Time step size (default: 0.001)
 #' @param noise_mechanism Noise mechanism ("add", "mult", "mult_evidence", or "mult_t")
 #' @param noise_factory Function that creates noise functions
-#' @param model Model type ("ddm", "ddm-2b", or "lca-gi")
+#' @param model Model name or alias (e.g., "ddm", "ddm-2b", "lca-gi", "lca", "2b")
 #' @param parallel Whether to run in parallel (default: FALSE)
 #' @param n_cores Number of cores for parallel processing (default: NULL)
 #' @param rand_seed Random seed for parallel processing (default: NULL)
@@ -95,6 +95,9 @@ new_simulation_config <- function(
     rand_seed = rand_seed
   )
 
+  # Route model to backend
+  config <- route_model_to_backend(config)
+
   # Validate the configuration
   validate_simulation_config(config)
 
@@ -119,6 +122,7 @@ validate_simulation_config <- function(config) {
     "noise_mechanism",
     "noise_factory",
     "model",
+    "backend",
     "parallel",
     "n_cores",
     "rand_seed"
@@ -218,12 +222,6 @@ validate_simulation_config <- function(config) {
     stop("noise_factory must be a function")
   }
 
-  # Validate model
-  valid_models <- c("ddm", "ddm-2b", "lca-gi")
-  if (!config$model %in% valid_models) {
-    stop("model must be one of: ", paste(valid_models, collapse = ", "))
-  }
-
   # Validate boolean parameters
   if (!is.logical(config$parallel) ||
     length(config$parallel) != 1 ||
@@ -270,6 +268,7 @@ print.eam_simulation_config <- function(x, ...) {
   cat("eam Simulation Configuration\n")
   cat("=================================\n")
   cat("Model:", x$model, "\n")
+  cat("Backend:", x$backend, "\n")
   cat("Conditions:", x$n_conditions, "\n")
   cat("Trials per condition:", x$n_trials_per_condition, "\n")
   cat("Items per trial:", x$n_items, "\n")

@@ -113,7 +113,7 @@ evaluate_with_dt <- function(formulas, data = list(), n) {
 #' @param noise_mechanism The noise mechanism to use ("add" or "mult")
 #' @param noise_factory A function that takes condition_setting and returns a
 #' noise function with signature function(n, dt)
-#' @param model The model to use ("ddm", "ddm-2b", or "lca-gi")
+#' @param backend The backend implementation to use ("ddm", "ddm-2b", or "lca-gi")
 #' @param trajectories Whether to return full output including trajectories.
 #' @return A list containing the simulation results and condition parameters
 #' @keywords internal
@@ -128,11 +128,11 @@ run_condition <- function(
     dt,
     noise_mechanism,
     noise_factory,
-    model,
+    backend,
     trajectories = FALSE) {
-  # validate model parameter
-  if (!model %in% c("ddm", "ddm-2b", "lca-gi")) {
-    stop("model must be either 'ddm', 'ddm-2b', or 'lca-gi'")
+  # validate backend parameter
+  if (!backend %in% c("ddm", "ddm-2b", "lca-gi")) {
+    stop("backend must be either 'ddm', 'ddm-2b', or 'lca-gi'")
   }
 
   # prepare
@@ -147,11 +147,11 @@ run_condition <- function(
     trial_params_list[[i]] <- lapply(cond_params, function(x) x[i])
   }
 
-  # run trials based on model type
+  # run trials based on backend type
   cond_res <- lapply(
     trial_params_list,
     function(trial_setting) {
-      switch(model,
+      switch(backend,
         "ddm" = run_trial_ddm(
           trial_setting = trial_setting,
           item_formulas = item_formulas,
@@ -192,7 +192,7 @@ run_condition <- function(
   return(list(
     result = cond_res,
     cond_params = cond_params,
-    model = model
+    backend = backend
   ))
 }
 
@@ -251,7 +251,7 @@ run_chunk <- function(config, output_dir, chunk_idx) {
         dt = config$dt,
         noise_mechanism = config$noise_mechanism,
         noise_factory = config$noise_factory,
-        model = config$model,
+        backend = config$backend,
         trajectories = FALSE
       )
 

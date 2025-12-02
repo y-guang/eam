@@ -29,7 +29,7 @@ res <- run_condition(
   dt = 0.01,
   noise_mechanism = "add",
   noise_factory = noise_factory,
-  model = "ddm",
+  backend = "ddm",
   trajectories = FALSE
 )
 
@@ -45,6 +45,6 @@ res <- run_condition(
 #   dt = 0.01,
 #   noise_mechanism = "add",
 #   noise_factory = noise_factory,
-#   model = "ddm",
+#   backend = "ddm",
 #   trajectories = FALSE
 # ), simplify = FALSE)

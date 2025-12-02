@@ -66,7 +66,6 @@ preallocate_columns <- function(
 
   # Define all column names
   all_cols <- c(
-    "model",
     "condition_idx",
     "trial_idx",
     "rank_idx",
@@ -111,9 +110,6 @@ preallocate_columns <- function(
     }
   }
   
-  # Pre-allocate model column (always character)
-  dt_lists$model <- character(total_rows)
-
   return(dt_lists)
 }
 
@@ -170,9 +166,6 @@ fill_data_table <- function(
         dt_lists[[param_name]][row_indices] <-
           cond_params[[param_name]][trial_idx]
       }
-      
-      # Fill model column
-      dt_lists$model[row_indices] <- condition$model
 
       current_row <- current_row + n_items_this_trial
     }
@@ -191,8 +184,8 @@ fill_data_table <- function(
 #'
 #' @param sim_results The output from run_simulation(), a list of conditions
 #' @return A data.table with columns: condition_idx, trial_idx, rank_idx,
-#' all columns from trial results (excluding .item_params), all variables
-#' from cond_params, and model
+#' all columns from trial results (excluding .item_params), and all variables
+#' from cond_params
 #' @export
 flatten_simulation_results <- function(sim_results) {
   # Extract column names from simulation structure
