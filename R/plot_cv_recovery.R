@@ -22,13 +22,6 @@ theme_eam <- ggplot2::theme_minimal() +
 #' @method plot_cv_recovery cv4abc
 #' @export
 plot_cv_recovery.cv4abc <- function(data, ...) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("ggplot2 package is required for plotting. Please install it.")
-  }
-  if (!requireNamespace("gridExtra", quietly = TRUE)) {
-    stop("gridExtra package is required for plotting. Please install it.")
-  }
-
   plot_per_parameter <- 2
   # check the parameters
   dots <- rlang::list2(...)

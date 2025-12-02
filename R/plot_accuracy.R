@@ -46,7 +46,7 @@ plot_accuracy_graph <- function(
   p <- accuracy_df |>
     ggplot2::ggplot() +
     ggplot2::geom_bar(
-      ggplot2::aes_string(x = x, y = y, fill = "source"),
+      ggplot2::aes(x = .data[[x]], y = .data[[y]], fill = .data[["source"]]),
       stat = "identity",
       position = "dodge"
     ) +
@@ -73,7 +73,7 @@ plot_accuracy_graph <- function(
     ggplot2::theme_minimal() +
     ggplot2::labs(
       x = x,
-      y = stringr::str_to_title(gsub("_", " ", y)),
+      y = gsub("_", " ", y),
       fill = "Source"
     )
 

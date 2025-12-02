@@ -1,6 +1,6 @@
 Package: eam
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Evidence Accumulation Modeling
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -13,12 +13,30 @@ LinkingTo: Rcpp
 Imports:
   Rcpp,
   dplyr,
-  arrow
+  tidyr,
+  arrow,
+  rlang,
+  distributional,
+  stats,
+  parallel,
+  codetools,
+  grDevices,
+  graphics,
+  ggplot2,
+  gridExtra,
+  data.table,
+  purrr,
+  scales
+Suggests:
+    testthat (>= 3.0.0),
+    pbapply,
+    abc
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Suggests:
-    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.1.0)

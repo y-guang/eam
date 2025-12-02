@@ -133,13 +133,6 @@ plot_resample_medians <- function(
     n_rows = 2,
     n_cols = 2,
     interactive = FALSE) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("ggplot2 package is required for plotting. Please install it.")
-  }
-  if (!requireNamespace("gridExtra", quietly = TRUE)) {
-    stop("gridExtra package is required for plotting. Please install it.")
-  }
-
   # Validate input: should be a list of abc results
   if (!is.list(data) || length(data) == 0) {
     stop("data must be a non-empty list of abc results from abc_resample")
@@ -231,13 +224,6 @@ plot_resample_forest <- function(
     n_cols = 2,
     interactive = FALSE,
     ci_level = 0.95) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("ggplot2 package is required for plotting. Please install it.")
-  }
-  if (!requireNamespace("gridExtra", quietly = TRUE)) {
-    stop("gridExtra package is required for plotting. Please install it.")
-  }
-
   # Validate input: should be a list of abc results
   if (!is.list(data) || length(data) == 0) {
     stop("data must be a non-empty list of abc results from abc_resample")

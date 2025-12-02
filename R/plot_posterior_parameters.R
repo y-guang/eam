@@ -14,13 +14,6 @@ plot_posterior_parameters <- function(data, ...) {
 #' @param abc_input Optional abc_input object containing prior samples
 #' @export
 plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("ggplot2 package is required for plotting. Please install it.")
-  }
-  if (!requireNamespace("gridExtra", quietly = TRUE)) {
-    stop("gridExtra package is required for plotting. Please install it.")
-  }
-
   # Get posterior samples - prefer adj.values, fallback to unadj.values
   posterior <- NULL
   if (!is.null(data$adj.values)) {
