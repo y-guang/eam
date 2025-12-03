@@ -1,12 +1,19 @@
 Package: eam
 Type: Package
-Title: Evidence Accumulation Modeling
+Title: Evidence Accumulation Models
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
-      role = c("aut", "cre")
+      "Guangyu", "Zhu",
+      email = "guangyu.frank@gmail.com",
+      role = c("aut"),
+      comment = c(ORCID = "0009-0005-1571-1782")
+    ),
+    person(
+      "Guang", "Yang",
+      email = "guang.spike.yang@gmail.com",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0009-0005-7675-3249")
     )
   )
 LinkingTo: Rcpp
