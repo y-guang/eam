@@ -286,7 +286,7 @@ run_chunk <- function(config, output_dir, chunk_idx) {
 #' @param config simulation config object
 #' @param output_dir The base output directory
 #' @return No return value (results saved to disk)
-#' @export
+#' @keywords internal
 run_simulation_serial <- function(config, output_dir) {
   # Validate config
   if (!inherits(config, "eam_simulation_config")) {
@@ -319,7 +319,7 @@ run_simulation_serial <- function(config, output_dir) {
 #' @param config A eam_simulation_config object
 #' @param output_dir The base output directory
 #' @return No return value (results saved to disk)
-#' @export
+#' @keywords internal
 run_simulation_parallel <- function(config, output_dir) {
   # Validate config
   if (!inherits(config, "eam_simulation_config")) {
