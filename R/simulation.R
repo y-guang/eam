@@ -396,6 +396,40 @@ run_simulation_parallel <- function(config, output_dir) {
 #' will use temp directory if not provided)
 #' @return A S3 object of class eam_simulation_output containing the output
 #' information
+#' @details
+#' This function uses an out-of-core approach to handle potentially large
+#' simulation results. Instead of returning a data frame directly, it persists
+#' the data to disk and returns an \code{eam_simulation_output} object that
+#' contains metadata and file system paths.
+#'
+#' To access the simulation data, use the following methods on the returned
+#' object:
+#' \itemize{
+#'   \item \code{open_dataset()} - Returns an Arrow Dataset containing the
+#'   simulation results, e.g. \code{sim_output$open_dataset()}
+#'   \item \code{open_evaluated_conditions()} - Returns an Arrow Dataset
+#'   containing the evaluated condition parameters, e.g.
+#'   \code{sim_output$open_evaluated_conditions()}
+#' }
+#'
+#' Both methods return Arrow Dataset objects rather than data frames, allowing
+#' for efficient querying and filtering before loading data into memory. To
+#' convert to a data frame, use \code{dplyr::collect()} or
+#' \code{as.data.frame()}.
+#'
+#' Throughout this package, the \code{eam_simulation_output} object is used as
+#' the standard parameter for downstream analysis functions, rather than
+#' passing Arrow objects or data frames directly.
+#'
+#' For multi-item backends, at each discrete time point, only one item can
+#' reach the threshold.
+#' The precision of this detection depends on the \code{dt}
+#' parameter. This design choice was made for performance considerations. For
+#' almost all experimental scenarios, it is negligible.
+#' But users should be aware of this limitation, if it is critical, try to
+#' increase the temporal resolution by reducing \code{dt}.
+#' For implementation details,
+#' refer to the backend source code (\code{accumulate_evidence_*} functions).
 #' @examples
 #' # Define formulas for the simulation
 #' prior_formulas <- list(
@@ -426,7 +460,7 @@ run_simulation_parallel <- function(config, output_dir) {
 #'   between_trial_formulas = between_trial_formulas,
 #'   item_formulas = item_formulas,
 #'   n_conditions = 10,
-#'   n_trials_per_condition = 50,
+#'   n_trials_per_condition = 10,
 #'   n_items = 5,
 #'   max_reached = 5,
 #'   max_t = 10,
@@ -442,7 +476,16 @@ run_simulation_parallel <- function(config, output_dir) {
 #'
 #' # Access results
 #' dataset <- sim_output$open_dataset()
-#' head(dataset)
+#' dataset # an arrow dataset object
+#'
+#' # if you want to load it into memory, you can use:
+#' df <- as.data.frame(dataset)
+#' head(df)
+#'
+#' # Access evaluated condition parameters
+#' cond_dataset <- sim_output$open_evaluated_conditions()
+#' df_cond <- as.data.frame(cond_dataset)
+#' head(df_cond)
 #' @export
 run_simulation <- function(config, output_dir = NULL) {
   # Validate config
