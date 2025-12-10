@@ -5,6 +5,7 @@
 #'
 #' @param sim_results The output from run_simulation(), a list of conditions
 #' @return A list with trial_col_names and cond_param_names
+#' @keywords internal
 get_column_names <- function(sim_results) {
   # Get first condition and first trial to determine structure
   first_condition <- sim_results[[1]]
@@ -33,6 +34,7 @@ get_column_names <- function(sim_results) {
 #' @param sim_results The output from run_simulation(), a list of conditions
 #' @param first_trial_col Name of the first trial column to use for counting
 #' @return Integer, total number of rows needed
+#' @keywords internal
 calculate_total_rows <- function(sim_results, first_trial_col) {
   total_rows <- 0
   for (cond_idx in seq_along(sim_results)) {
@@ -56,6 +58,7 @@ calculate_total_rows <- function(sim_results, first_trial_col) {
 #' @param cond_param_names Character vector of condition parameter names
 #' @param total_rows Integer, total number of rows to pre-allocate
 #' @return Named list of pre-allocated vectors for each column
+#' @keywords internal
 preallocate_columns <- function(
     sim_results,
     trial_col_names,
@@ -125,6 +128,7 @@ preallocate_columns <- function(
 #' @param first_trial_col Name of the first trial column to use for item
 #' counting
 #' @return Named list of filled vectors ready for data.table creation
+#' @keywords internal
 fill_data_table <- function(
     sim_results,
     dt_lists,
@@ -186,7 +190,7 @@ fill_data_table <- function(
 #' @return A data.table with columns: condition_idx, trial_idx, rank_idx,
 #' all columns from trial results (excluding .item_params), and all variables
 #' from cond_params
-#' @export
+#' @keywords internal
 flatten_simulation_results <- function(sim_results) {
   # Extract column names from simulation structure
   column_info <- get_column_names(sim_results)
