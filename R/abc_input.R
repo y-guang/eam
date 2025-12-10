@@ -108,7 +108,7 @@ build_abc_input <- function(
       "The following parameters are not available in the output:\n  ",
       paste(missing_params, collapse = ", "),
       "\n\nAvailable columns:\n  ",
-      paste(setNames(available_cols, NULL), collapse = ", ")
+      paste(stats::setNames(available_cols, NULL), collapse = ", ")
     )
   }
 
