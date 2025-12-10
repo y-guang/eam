@@ -3,26 +3,173 @@
 #' This function creates a new eam simulation configuration object that
 #' contains all parameters needed to run a simulation.
 #'
-#' @param prior_params A list or data frame of initial values for prior formulas
+#' @details
+#' This function only creates the configuration object and does not run the
+#' simulation. To actually execute the simulation, you must pass the returned
+#' configuration object to \code{\link{run_simulation}}.
+#'
+#' \strong{Supported Models:}
+#'
+#' This package supports three evidence accumulation models. The appropriate
+#' backend is automatically selected based on the \code{model} parameter and
+#' the parameters defined in your formulas.
+#'
+#' \describe{
+#'   \item{\strong{DDM (Drift Diffusion Model)}}{
+#'     Models evidence accumulation towards a single upper threshold. Items
+#'     either reach the threshold and are recalled, or time out.
+#'
+#'     \emph{Required parameters} (must appear in \code{prior_formulas},
+#'     \code{between_trial_formulas}, or \code{item_formulas}):
+#'     \itemize{
+#'       \item \code{A} - Upper decision boundary/threshold
+#'       \item \code{V} - Drift rate (evidence accumulation rate)
+#'       \item \code{Z} - Starting point of evidence
+#'       \item \code{ndt} - Non-decision time
+#'     }
+#'
+#'     Set \code{model = "ddm"}
+#'   }
+#'   \item{\strong{RDM (Racing Diffusion Model)}}{
+#'     Models multiple racing evidence accumulators, each with upper and lower
+#'     thresholds for binary decisions (correct/incorrect).
+#'
+#'     \emph{Required parameters}:
+#'     \itemize{
+#'       \item \code{A_upper} - Upper decision boundary (correct response)
+#'       \item \code{A_lower} - Lower decision boundary (incorrect response)
+#'       \item \code{V} - Drift rate
+#'       \item \code{Z} - Starting point of evidence
+#'       \item \code{ndt} - Non-decision time
+#'     }
+#'
+#'     Set \code{model = "rdm"}. Note: If you set \code{model = "ddm"} but
+#'     define \code{A_upper} instead of \code{A}, the model will automatically
+#'     switch to RDM.
+#'   }
+#'   \item{\strong{LCA (Leaky Competing Accumulator)}}{
+#'     Models competitive evidence accumulation with leakage and mutual
+#'     inhibition between accumulators.
+#'
+#'     \emph{Required parameters}:
+#'     \itemize{
+#'       \item \code{A} - Decision threshold
+#'       \item \code{V} - Input strength/drift rate
+#'       \item \code{Z} - Starting point of evidence
+#'       \item \code{ndt} - Non-decision time
+#'       \item \code{beta} - Self-excitation/leak parameter
+#'       \item \code{k} - Lateral inhibition strength
+#'     }
+#'
+#'     Set \code{model = "lca"}
+#'   }
+#' }
+#'
+#' \strong{Note:} All required parameters must be defined at least once across
+#' \code{prior_params}, \code{prior_formulas}, \code{between_trial_formulas}, and
+#' \code{item_formulas}.
+#'
+#' \strong{Parameter Hierarchy and Formula Evaluation:}
+#'
+#' The simulation uses a hierarchical parameter system with sequential formula
+#' evaluation, allowing later formulas to reference earlier ones:
+#'
+#' \enumerate{
+#'   \item \strong{prior_params} - Initial constant values available to all formulas
+#'   \item \strong{prior_formulas} - Evaluated once per condition, can reference
+#'         \code{prior_params}. Use for condition-level parameters that vary
+#'         across conditions.
+#'   \item \strong{between_trial_formulas} - Evaluated once per trial within each
+#'         condition. Can reference both \code{prior_params} and variables from
+#'         \code{prior_formulas}. Use for trial-level variability.
+#'   \item \strong{item_formulas} - Evaluated once per item within each trial.
+#'         Can reference all previous parameters. Use for item-specific parameters.
+#' }
+#'
+#' \strong{Using Distributions:}
+#'
+#' You can use the \code{distributional} package to define random parameters.
+#' For example:
+#' \itemize{
+#'   \item \code{A ~ distributional::dist_uniform(0.5, 2.0)} - Uniform distribution
+#'   \item \code{V_condition ~ distributional::dist_normal(1.0, 0.2)} - Normal distribution
+#'   \item \code{sigma ~ 0.5} - Constant value
+#'   \item \code{V ~ distributional::dist_normal(V_condition, sigma)} - Reference earlier parameters
+#' }
+#'
+#' Each formula is evaluated sequentially, so you can build complex parameter
+#' dependencies. For instance, you might define a base drift rate \code{V} in
+#' \code{prior_formulas}, then add trial-level noise in
+#' \code{between_trial_formulas}, and finally scale by item position in
+#' \code{item_formulas}.
+#'
+#' @param prior_params A list or data frame of initial values for prior
 #' @param prior_formulas A list of formulas defining prior distributions for
 #'   condition-level parameters
 #' @param between_trial_formulas A list of formulas defining between-trial
 #'   parameters
 #' @param item_formulas A list of formulas defining item-level parameters
-#' @param n_conditions_per_chunk Number of conditions to process per chunk
+#' @param n_conditions_per_chunk Number of conditions to process per chunk (optional, typically does not need to be set. It determine the storage and in-memory size of each chunk, if you find memory issues, try reducing this number)
 #' @param n_conditions Total number of conditions to simulate
 #' @param n_trials_per_condition Number of trials per condition
 #' @param n_items Number of items per trial
 #' @param max_reached Maximum number of items that can be recalled (default: n_items)
 #' @param max_t Maximum simulation time
 #' @param dt Time step size (default: 0.001)
-#' @param noise_mechanism Noise mechanism ("add", "mult", "mult_evidence", or "mult_t")
-#' @param noise_factory Function that creates noise functions
-#' @param model Model name or alias (e.g., "ddm", "ddm-2b", "lca-gi", "lca", "2b")
+#' @param noise_mechanism Noise mechanism ("add", "mult_evidence", or "mult_t", default: "add")
+#' @param noise_factory Function that creates noise functions.
+#' @param model Model name or backend names (e.g., "ddm", "rdm", "lca")
 #' @param parallel Whether to run in parallel (default: FALSE)
-#' @param n_cores Number of cores for parallel processing (default: NULL)
+#' @param n_cores Number of cores for parallel processing (default: NULL, auto-detect)
 #' @param rand_seed Random seed for parallel processing (default: NULL)
 #' @return A eam_simulation_config object
+#' @examples
+#' # Define formulas for the simulation
+#' prior_formulas <- list(
+#'   V ~ distributional::dist_uniform(0.1, 1.0),
+#'   ndt ~ 0.3,
+#'   noise_coef ~ 1
+#' )
+#'
+#' between_trial_formulas <- list()
+#'
+#' item_formulas <- list(
+#'   A_upper ~ 1,
+#'   A_lower ~ -1,
+#'   V ~ V
+#' )
+#'
+#' # Define noise factory
+#' noise_factory <- function(context) {
+#'   noise_coef <- context$noise_coef
+#'   function(n, dt) {
+#'     noise_coef * rnorm(n, mean = 0, sd = sqrt(dt))
+#'   }
+#' }
+#'
+#' # Create configuration
+#' config <- new_simulation_config(
+#'   prior_formulas = prior_formulas,
+#'   between_trial_formulas = between_trial_formulas,
+#'   item_formulas = item_formulas,
+#'   n_conditions = 10,
+#'   n_trials_per_condition = 10,
+#'   n_items = 5,
+#'   max_reached = 5,
+#'   max_t = 10,
+#'   dt = 0.01,
+#'   noise_mechanism = "add",
+#'   noise_factory = noise_factory,
+#'   model = "ddm",
+#'   parallel = FALSE
+#' )
+#'
+#' # print the config
+#' config
+#'
+#' # Run simulation
+#' sim_output <- run_simulation(config)
+#' sim_output
 #' @export
 new_simulation_config <- function(
     prior_params = list(),
