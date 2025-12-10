@@ -5,11 +5,21 @@
 #' statistics from simulation results and formats them into matrices suitable
 #' for ABC parameter estimation.
 #'
-#' @param simulation_output A eam_simulation_output object containing the
-#'   simulation dataset and configuration
+#' @details
+#' This function provides a streamlined workflow for preparing ABC inputs, but
+#' it requires that all components be constructed using this package's functions.
+#' Specifically, \code{simulation_output} must be created by \code{\link{run_simulation}}
+#' or \code{\link{load_simulation_output}}, and both \code{simulation_summary} and
+#' \code{target_summary} must be generated using \code{\link{summarise_by}}. If
+#' your data originates from external sources or custom pipelines, you should
+#' manually construct the ABC input list instead, ensuring proper matrix formatting
+#' and column alignment as expected by \code{abc::abc}.
+#'
+#' @param simulation_output A eam_simulation_output object containing that is from
+#' \code{\link{run_simulation}} or \code{\link{load_simulation_output}}.
 #' @param simulation_summary A data frame containing summary statistics for each
 #'   simulated condition. Should have a 'condition_idx' column and be created by
-#'   \code{summarise_by} to include a 'wider_by' attribute for proper column handling.
+#'   \code{\link{summarise_by}}.
 #' @param target_summary A data frame containing target summary statistics to match
 #'   against simulation results. Should have the same summary statistic columns as
 #'   simulation_summary (excluding 'wider_by' columns).
@@ -17,6 +27,48 @@
 #'   These parameters will be used as the parameter space for ABC estimation.
 #'
 #' @return A list with components suitable for \code{abc::abc}
+#'
+#' @examples
+#' \donttest{
+#' # Load the example dataset
+#' rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
+#' sim_output <- load_simulation_output(file.path(rdm_minimal_example, "simulation"))
+#' obs_df <- read.csv(file.path(rdm_minimal_example, "observation", "observation_data.csv"))
+#'
+#' # Define summary statistics pipeline
+#' summary_pipe <- summarise_by(
+#'   .by = c("condition_idx"),
+#'   rt_mean = mean(rt)
+#' )
+#'
+#' # Calculate summary statistics for simulation and observation
+#' sim_summary <- map_by_condition(
+#'   sim_output,
+#'   .progress = FALSE,
+#'   .parallel = FALSE,
+#'   function(cond_df) {
+#'     summary_pipe(cond_df)
+#'   }
+#' )
+#' obs_summary <- summary_pipe(obs_df)
+#'
+#' # Build ABC input
+#' abc_input <- build_abc_input(
+#'   simulation_output = sim_output,
+#'   simulation_summary = sim_summary,
+#'   target_summary = obs_summary,
+#'   param = c("V_beta_1", "V_beta_group")
+#' )
+#'
+#' # Perform ABC parameter estimation using rejection method
+#' abc_rejection_model <- abc::abc(
+#'   target = abc_input$target,
+#'   param = abc_input$param,
+#'   sumstat = abc_input$sumstat,
+#'   tol = 0.5,
+#'   method = "rejection"
+#' )
+#' }
 #' @export
 build_abc_input <- function(
     simulation_output,
