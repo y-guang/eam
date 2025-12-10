@@ -113,7 +113,7 @@ extract_resample_medians <- function(resample_results) {
 
   for (i in seq_len(n_iterations)) {
     param_vals <- extract_abc_param_values(resample_results[[i]])
-    medians_matrix[i, ] <- apply(param_vals, 2, median, na.rm = TRUE)
+    medians_matrix[i, ] <- apply(param_vals, 2, stats::median, na.rm = TRUE)
   }
 
   medians_matrix

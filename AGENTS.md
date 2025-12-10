@@ -9,7 +9,8 @@
 ## Code style
 
 - Follow the tidyverse and modern style guide for all R code.
-- Alway use absolute function calls, e.g., use `dplyr::filter()` instead of `filter()`, except in user-oriented examples and vignettes, e.g. docstring @examples.
+- Always use fully qualified namespace calls for all non-base functions, e.g., use dplyr::filter() instead of filter().
+  - Exception: user-facing examples and vignettes (e.g., @examples sections) may omit namespaces for readability.
 - Adhere strictly to CRAN policies, including documentation completeness, namespace hygiene, and other constraints.
 
 ## Dev instructions

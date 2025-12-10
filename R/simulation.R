@@ -68,7 +68,7 @@ evaluate_with_dt <- function(formulas, data = list(), n) {
     res_list[[i]] <- val
   }
 
-  res_list <- modifyList(data, res_list)
+  res_list <- utils::modifyList(data, res_list)
 
   for (i in seq_along(res_list)) {
     val <- res_list[[i]]
