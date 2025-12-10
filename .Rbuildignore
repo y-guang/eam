@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^.lintr$
 ^.vscode$
-^.demo$
+^demo$
 ^AGENTS\.md$
 ^data-raw$
 ^doc$

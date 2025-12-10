@@ -29,6 +29,7 @@ inline void swap_erase_at(size_t index,
 
 //' Simulate evidence accumulation in a leaky competing accumulator model with
 //' Global Inhibition (LCA-GI)
+//' @keywords internal
 //'
 // [[Rcpp::export]]
 List accumulate_evidence_lca_gi(

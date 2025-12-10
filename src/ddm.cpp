@@ -22,6 +22,7 @@ inline void swap_erase_at(size_t index,
 }
 
 //' Simulate evidence accumulation in a drift-diffusion model
+//' @keywords internal
 //'
 // [[Rcpp::export]]
 List accumulate_evidence_ddm(
