@@ -3,3 +3,6 @@
 ^.lintr$
 ^.vscode$
 ^.demo$
+^AGENTS\.md$
+^data-raw$
+^doc$
