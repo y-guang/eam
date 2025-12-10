@@ -8,7 +8,7 @@
 #' @keywords internal
 resolve_symbol <- function(expr, env, n) {
   # evaluate expression once in the given environment
-  val <- eval(expr, env = env)
+  val <- eval(expr, envir = env)
 
   if (base::inherits(val, "distribution")) {
     out <- distributional::generate(val, n)[[1]]
