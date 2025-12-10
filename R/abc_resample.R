@@ -216,7 +216,7 @@ plot_resample_medians <- function(
 #' @param n_rows Number of rows in plot grid (default 2)
 #' @param n_cols Number of columns in plot grid (default 2)
 #' @param interactive Whether to pause between pages (default FALSE)
-#' @param ci_level quantile intervals (default 0.95 for 95% interval)
+#' @param ci_level quantile intervals (default 0.95 for 95\% interval)
 #' @export
 plot_resample_forest <- function(
     data,
