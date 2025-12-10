@@ -36,6 +36,8 @@ noise_factory <- function(context) {
 ####################
 # simulation setup #
 ####################
+base_dir <- "./inst/extdata/rdm_minimal"
+
 sim_config <- new_simulation_config(
   prior_params = prior_params,
   prior_formulas = prior_formulas,
@@ -43,8 +45,8 @@ sim_config <- new_simulation_config(
   item_formulas = item_formulas,
   # use chunk size = conditions to minimize output dataset size.
   # it is a specific trick to minimize the package size, avoid this in real use.
-  n_conditions_per_chunk = 1000,
-  n_conditions = 1000,
+  n_conditions_per_chunk = 500,
+  n_conditions = 500,
   n_trials_per_condition = 100,
   n_items = n_items,
   max_reached = n_items,
@@ -57,7 +59,7 @@ sim_config <- new_simulation_config(
   n_cores = NULL,
   rand_seed = 42
 )
-output_path <- "./inst/extdata/rdm_minimal/simulation"
+output_path <- file.path(base_dir, "simulation")
 if (dir.exists(output_path)) {
   unlink(output_path, recursive = TRUE)
 }
@@ -105,7 +107,7 @@ obs_output <- run_simulation(
 )
 
 obs_dataset <- obs_output$open_dataset()
-obs_output_path <- "./inst/extdata/rdm_minimal/observation"
+obs_output_path <- file.path(base_dir, "observation")
 dir.create(obs_output_path, showWarnings = FALSE, recursive = TRUE)
 
 obs_df <- obs_dataset |> select(
@@ -183,7 +185,7 @@ abc_model <- abc::abc(
   sumstat = abc_input$sumstat,
   tol = 0.05,
   method = "neuralnet",
-  sizenet = 4,
+  sizenet = 3,
   maxit = 1000,
   lambda = 0.05,
   kernel = "epanechnikov",
@@ -220,4 +222,3 @@ plot_accuracy(
   facet_x = c("group"),
   facet_y = c()
 )
-

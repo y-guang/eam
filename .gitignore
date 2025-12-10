@@ -7,3 +7,4 @@ R/RcppExports.R
 /blueprint/
 # TODO: remove and add before release to CRAN
 man/
+inst/extdata
