@@ -1,9 +1,23 @@
 #' Bootstrap resample ABC posterior samples
 #'
-#' @param abc_result An abc object from abc::abc
+#' @param abc_result An abc object from \code{\link[abc]{abc}}
 #' @param n_samples Number of bootstrap samples to draw (default 1000)
 #' @param replace Logical, whether to sample with replacement (default TRUE)
 #' @return Data frame of bootstrapped parameter values
+#' @examples
+#' # Load an example abc output, you should generate it by applying ABC to your data
+#' # check abc::abc for details on fitting ABC models
+#' rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
+#' abc_model <- readRDS(file.path(rdm_minimal_example, "abc", "abc_neuralnet_model.rds"))
+#'
+#' # Bootstrap resample posterior parameters
+#' posterior_params <- abc_posterior_bootstrap(
+#'   abc_model,
+#'   n_samples = 100
+#' )
+#' 
+#' # View the first few rows of the bootstrapped posterior parameters
+#' head(posterior_params)
 #' @export
 abc_posterior_bootstrap <- function(
     abc_result,

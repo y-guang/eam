@@ -110,15 +110,16 @@ obs_dataset <- obs_output$open_dataset()
 obs_output_path <- file.path(base_dir, "observation")
 dir.create(obs_output_path, showWarnings = FALSE, recursive = TRUE)
 
-obs_df <- obs_dataset |> select(
-  condition_idx,
-  trial_idx,
-  item_idx,
-  rank_idx,
-  group,
-  rt,
-  choice
-) |>
+obs_df <- obs_dataset |>
+  select(
+    condition_idx,
+    trial_idx,
+    item_idx,
+    rank_idx,
+    group,
+    rt,
+    choice
+  ) |>
   collect() |>
   mutate(
     rt = round(rt, 3)
@@ -166,8 +167,20 @@ sim_sumstat <- map_by_condition(
   }
 )
 
+dir.create(file.path(base_dir, "summary"), showWarnings = FALSE, recursive = TRUE)
+
+sim_sumstat |> write.csv(
+  file = file.path(base_dir, "summary", "simulation.csv"),
+  row.names = FALSE
+)
+
 obs_sumstat <- obs_df |>
   summary_pipe()
+
+obs_sumstat |> write.csv(
+  file = file.path(base_dir, "summary", "observation.csv"),
+  row.names = FALSE
+)
 
 abc_input <- build_abc_input(
   simulation_output = sim_output,
@@ -175,6 +188,10 @@ abc_input <- build_abc_input(
   target_summary = obs_sumstat,
   param = c("V_beta_1", "V_beta_group")
 )
+
+dir.create(file.path(base_dir, "abc"), showWarnings = FALSE, recursive = TRUE)
+
+abc_input |> saveRDS(file = file.path(base_dir, "abc", "abc_input.rds"))
 
 #####################
 # ABC model fitting #
@@ -191,6 +208,9 @@ abc_model <- abc::abc(
   kernel = "epanechnikov",
   transf = c("log", "log")
 )
+
+abc_model |> saveRDS(file = file.path(base_dir, "abc", "abc_neuralnet_model.rds"))
+
 abc_model$adj.values
 
 posterior_params <- abc_posterior_bootstrap(
@@ -198,12 +218,11 @@ posterior_params <- abc_posterior_bootstrap(
   n_samples = 100
 )
 
-posterior_params$n_items = 3
+posterior_params$n_items <- 3
 
 post_sim_config <- sim_config
 post_sim_config$prior_params <- posterior_params
-post_sim_config$prior_formulas <- list(
-)
+post_sim_config$prior_formulas <- list()
 
 post_output <- run_simulation(
   config = post_sim_config
