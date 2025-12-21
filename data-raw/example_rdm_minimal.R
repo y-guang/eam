@@ -169,17 +169,15 @@ sim_sumstat <- map_by_condition(
 
 dir.create(file.path(base_dir, "summary"), showWarnings = FALSE, recursive = TRUE)
 
-sim_sumstat |> write.csv(
-  file = file.path(base_dir, "summary", "simulation.csv"),
-  row.names = FALSE
+sim_sumstat |> saveRDS(
+  file = file.path(base_dir, "summary", "simulation.rds")
 )
 
 obs_sumstat <- obs_df |>
   summary_pipe()
 
-obs_sumstat |> write.csv(
-  file = file.path(base_dir, "summary", "observation.csv"),
-  row.names = FALSE
+obs_sumstat |> saveRDS(
+  file = file.path(base_dir, "summary", "observation.rds")
 )
 
 abc_input <- build_abc_input(
@@ -241,3 +239,16 @@ plot_accuracy(
   facet_x = c("group"),
   facet_y = c()
 )
+
+#########################
+# ABC rejection fitting #
+#########################
+abc_rejection_model <- abc::abc(
+  target = abc_input$target,
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  tol = 0.5,
+  method = "rejection"
+)
+
+abc_rejection_model |> saveRDS(file = file.path(base_dir, "abc", "abc_rejection_model.rds"))
