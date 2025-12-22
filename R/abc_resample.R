@@ -1,6 +1,8 @@
-#' ABC resample wrapper
+#' ABC with resampling
 #'
-#' Wrapper function for abc::abc that performs resampling.
+#' Performs ABC inference with resampling to assess stability and uncertainty.
+#' Each iteration draws a random sample from the simulation pool and runs ABC,
+#' producing multiple posterior estimates for comparison.
 #'
 #' @param target Target summary statistics from observed data
 #' @param param Parameter values matrix or data frame
@@ -9,6 +11,26 @@
 #' @param n_samples Number of samples to draw in each iteration
 #' @param replace Logical, whether to sample with replacement (default FALSE)
 #' @param ... Additional arguments passed to abc::abc
+#'
+#' @examples
+#' # Load ABC input data from example simulation
+#' abc_input <- readRDS(
+#'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
+#' )
+#'
+#' # Perform ABC resampling
+#' results <- abc_resample(
+#'   target = abc_input$target,
+#'   param = abc_input$param,
+#'   sumstat = abc_input$sumstat,
+#'   n_iterations = 2,
+#'   n_samples = 2,
+#'   tol = 0.5,
+#'   method = "rejection"
+#' )
+#'
+#' # check the abc results
+#' str(results)
 #' @export
 abc_resample <- function(
     target,
@@ -64,7 +86,7 @@ abc_resample <- function(
 #'
 #' @param abc_result Single abc result object
 #' @return Matrix of parameter values
-#' @noRd
+#' @keywords internal
 extract_abc_param_values <- function(abc_result) {
   if (!is.null(abc_result$adj.values)) {
     return(abc_result$adj.values)
@@ -83,7 +105,7 @@ extract_abc_param_values <- function(abc_result) {
 #'
 #' @param resample_results List of abc results from abc_resample
 #' @return Matrix where each row is an iteration and each column is parameter median
-#' @noRd
+#' @keywords internal
 extract_resample_medians <- function(resample_results) {
   # Guard: check if input is a valid list
   if (!is.list(resample_results) || length(resample_results) == 0) {
@@ -127,6 +149,28 @@ extract_resample_medians <- function(resample_results) {
 #' @param n_rows Number of rows in plot grid (default 2)
 #' @param n_cols Number of columns in plot grid (default 2)
 #' @param interactive Whether to pause between pages (default FALSE)
+#'
+#' @examples
+#' \dontrun{
+#' # Load ABC input data from example simulation
+#' abc_input <- readRDS(
+#'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
+#' )
+#'
+#' # Perform ABC resampling
+#' results <- abc_resample(
+#'   target = abc_input$target,
+#'   param = abc_input$param,
+#'   sumstat = abc_input$sumstat,
+#'   n_iterations = 100,
+#'   n_samples = 100,
+#'   tol = 0.5,
+#'   method = "rejection"
+#' )
+#' 
+#' # plot the resample medians for each parameter
+#' plot_resample_medians(results)
+#' }
 #' @export
 plot_resample_medians <- function(
     data,
@@ -217,6 +261,28 @@ plot_resample_medians <- function(
 #' @param n_cols Number of columns in plot grid (default 2)
 #' @param interactive Whether to pause between pages (default FALSE)
 #' @param ci_level quantile intervals (default 0.95 for 95\% interval)
+#'
+#' @examples
+#' \dontrun{
+#' # Load ABC input data from example simulation
+#' abc_input <- readRDS(
+#'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
+#' )
+#'
+#' # Perform ABC resampling
+#' results <- abc_resample(
+#'   target = abc_input$target,
+#'   param = abc_input$param,
+#'   sumstat = abc_input$sumstat,
+#'   n_iterations = 100,
+#'   n_samples = 100,
+#'   tol = 0.5,
+#'   method = "rejection"
+#' )
+#'
+#' # plot forest plots showing parameter ranges
+#' plot_resample_forest(results, ci_level = 0.95)
+#' }
 #' @export
 plot_resample_forest <- function(
     data,
@@ -343,6 +409,29 @@ plot_resample_forest <- function(
 #' @param ... Additional custom summary functions (named functions)
 #' @param ci_level Confidence level for intervals (default 0.95)
 #' @return Data frame with summary statistics for each parameter
+#'
+#' @examples
+#' \dontrun{
+#' # Load ABC input data from example simulation
+#' abc_input <- readRDS(
+#'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
+#' )
+#'
+#' # Perform ABC resampling
+#' results <- abc_resample(
+#'   target = abc_input$target,
+#'   param = abc_input$param,
+#'   sumstat = abc_input$sumstat,
+#'   n_iterations = 100,
+#'   n_samples = 100,
+#'   tol = 0.5,
+#'   method = "rejection"
+#' )
+#'
+#' # summarise the resample medians
+#' summary_stats <- summarise_resample_medians(results, ci_level = 0.95)
+#' print(summary_stats)
+#' }
 #' @export
 summarise_resample_medians <- function(data, ..., ci_level = 0.95) {
   # check the parameters
