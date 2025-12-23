@@ -52,6 +52,16 @@ new_simulation_output <- function(
 #' through them one by one, filtering and collecting data by chunk, then
 #' applying a user-defined function by condition within each chunk.
 #'
+#' @details
+#' This function handles out-of-core computation automatically using Apache Arrow,
+#' so you don't need to understand Arrow internals. It loads data chunk by chunk
+#' to avoid memory issues with large simulations.
+#'
+#' If you prefer to manually work with the raw Arrow dataset, you can access it
+#' via \code{simulation_output$open_dataset()}, which returns an Arrow Dataset
+#' object. You can then use \code{dplyr} verbs to filter and query before calling
+#' \code{dplyr::collect()} to load data into memory.
+#'
 #' @param simulation_output A eam_simulation_output object containing the
 #' dataset and configuration
 #' @param .f A function to apply to each condition's data. The function should
@@ -65,6 +75,34 @@ new_simulation_output <- function(
 #' @param .progress Logical, whether to show a progress bar (default: FALSE)
 #' @return A list containing the results of applying .f to each condition,
 #' with names corresponding to condition indices
+#'
+#' @examples
+#' # Load simulation output
+#' sim_output_path <- system.file(
+#'   "extdata", "rdm_minimal", "simulation",
+#'   package = "eam"
+#' )
+#' sim_output <- load_simulation_output(sim_output_path)
+#'
+#' # Define a summary pipeline
+#' summary_pipe <- summarise_by(
+#'   .by = c("condition_idx"),
+#'   rt_mean = mean(rt),
+#'   rt_quantiles = quantile(rt, probs = c(0.1, 0.5, 0.9))
+#' )
+#'
+#' \dontrun{
+#' # Apply function to each condition
+#' sim_sumstat <- map_by_condition(
+#'   sim_output,
+#'   .progress = FALSE,
+#'   .parallel = FALSE,
+#'   function(cond_df) {
+#'     summary_pipe(cond_df)
+#'   }
+#' )
+#' }
+#'
 #' @export
 map_by_condition <- function(
     simulation_output,
@@ -74,7 +112,6 @@ map_by_condition <- function(
     .parallel = NULL,
     .n_cores = NULL,
     .progress = FALSE) {
-  # TODO: persist results to disk if too large
 
   # Validate input
   if (!inherits(simulation_output, "eam_simulation_output")) {
@@ -302,11 +339,27 @@ init_simulation_output_dir <- function(output_dir) {
 #' Rebuild eam_simulation_output from an existing output directory
 #'
 #' This function reconstructs a eam_simulation_output object from a
-#' previously saved simulation output directory. It reads the saved
-#' configuration
-#' and opens the Arrow dataset.
+#' previously saved simulation output directory.
+#'
 #' @param output_dir The directory containing the simulation results and config
 #' @return A eam_simulation_output object
+#'
+#' @examples
+#' # Load simulation output from package data
+#' sim_output_path <- system.file(
+#'   "extdata", "rdm_minimal", "simulation",
+#'   package = "eam"
+#' )
+#' sim_output <- load_simulation_output(sim_output_path)
+#'
+#' # Access the configuration
+#' sim_output$simulation_config
+#' 
+#' \dontrun{
+#' # Access the dataset
+#' dataset <- sim_output$open_dataset()
+#' }
+#'
 #' @export
 load_simulation_output <- function(output_dir) {
   # Validate that output_dir exists
