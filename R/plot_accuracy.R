@@ -56,11 +56,16 @@ plot_accuracy_graph <- function(
   # Convert x variable to factor for discrete positioning
   accuracy_df[[x]] <- factor(accuracy_df[[x]])
 
+  # symbols for tidy-eval (avoid .data NOTE)
+  x_sym <- rlang::sym(x)
+  y_sym <- rlang::sym(y)
+  source_sym <- rlang::sym("source")
+
   # Create bar plot with x on x-axis and source as fill, grouped by source
   p <- accuracy_df |>
     ggplot2::ggplot() +
     ggplot2::geom_bar(
-      ggplot2::aes(x = .data[[x]], y = .data[[y]], fill = .data[["source"]]),
+      ggplot2::aes(x = !!x_sym, y = !!y_sym, fill = !!source_sym),
       stat = "identity",
       position = "dodge"
     ) +
