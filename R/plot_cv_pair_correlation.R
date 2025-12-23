@@ -1,9 +1,30 @@
-#' Plot CV pair correlation
+#' Plot CV parameter pair correlations
 #'
-#' Create a correlation matrix plot with scatter plots, correlations, and densities.
+#' Create a matrix of pairwise plots for cross-validation parameter estimates,
+#' including scatter plots with fitted trends, rank correlations, and marginal
+#' distributions.
 #'
-#' @param data An object containing parameter estimates
-#' @param ... Additional arguments passed to methods
+#' @param data An object containing parameter estimates. The expected structure
+#'   depends on the method dispatched.
+#' @param ... Additional arguments passed to class-specific methods.
+#'
+#' @return Invisibly returns `NULL`. Called for its side effect of producing plots.
+#'
+#' @seealso
+#'   \code{\link{plot_cv_pair_correlation.cv4abc}}
+#'
+#' @examples
+#' # Load CV output from saved file
+#' cv_file <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "cv", "neuralnet",
+#'   "abc_neuralnet_cv.rds",
+#'   package = "eam"
+#' )
+#' abc_neuralnet_cv <- readRDS(cv_file)
+#'
+#' # Plot parameter pair correlations
+#' plot_cv_pair_correlation(abc_neuralnet_cv)
+#'
 #' @export
 plot_cv_pair_correlation <- function(data, ...) {
   UseMethod("plot_cv_pair_correlation")
@@ -11,6 +32,14 @@ plot_cv_pair_correlation <- function(data, ...) {
 
 #' @rdname plot_cv_pair_correlation
 #' @method plot_cv_pair_correlation cv4abc
+#'
+#' @param data A \code{cv4abc} object containing true parameters and
+#'   cross-validated estimates.
+#' @param ... Additional arguments:
+#'   \describe{
+#'     \item{interactive}{Logical; whether to pause between tolerance levels and wait for input}
+#'   }
+#'
 #' @export
 plot_cv_pair_correlation.cv4abc <- function(data, ...) {
   # check the parameters

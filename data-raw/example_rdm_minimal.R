@@ -38,6 +38,11 @@ noise_factory <- function(context) {
 ####################
 base_dir <- "./inst/extdata/rdm_minimal"
 
+if (dir.exists(base_dir)) {
+  unlink(base_dir, recursive = TRUE)
+}
+dir.create(base_dir, recursive = TRUE)
+
 sim_config <- new_simulation_config(
   prior_params = prior_params,
   prior_formulas = prior_formulas,
@@ -60,9 +65,6 @@ sim_config <- new_simulation_config(
   rand_seed = 42
 )
 output_path <- file.path(base_dir, "simulation")
-if (dir.exists(output_path)) {
-  unlink(output_path, recursive = TRUE)
-}
 dir.create(output_path, recursive = TRUE)
 
 ##################
@@ -108,7 +110,7 @@ obs_output <- run_simulation(
 
 obs_dataset <- obs_output$open_dataset()
 obs_output_path <- file.path(base_dir, "observation")
-dir.create(obs_output_path, showWarnings = FALSE, recursive = TRUE)
+dir.create(obs_output_path, recursive = TRUE)
 
 obs_df <- obs_dataset |>
   select(
@@ -187,14 +189,14 @@ abc_input <- build_abc_input(
   param = c("V_beta_1", "V_beta_group")
 )
 
-dir.create(file.path(base_dir, "abc"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(base_dir, "abc"), recursive = TRUE)
 
 abc_input |> saveRDS(file = file.path(base_dir, "abc", "abc_input.rds"))
 
 #####################
 # ABC model fitting #
 #####################
-abc_model <- abc::abc(
+abc_neuralnet_model <- abc::abc(
   target = abc_input$target,
   param = abc_input$param,
   sumstat = abc_input$sumstat,
@@ -207,12 +209,52 @@ abc_model <- abc::abc(
   transf = c("log", "log")
 )
 
-abc_model |> saveRDS(file = file.path(base_dir, "abc", "abc_neuralnet_model.rds"))
+abc_rejection_model <- abc::abc(
+  target = abc_input$target,
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  tol = 0.5,
+  method = "rejection"
+)
 
-abc_model$adj.values
+abc_neuralnet_model |> saveRDS(file = file.path(base_dir, "abc", "abc_neuralnet_model.rds"))
+abc_rejection_model |> saveRDS(file = file.path(base_dir, "abc", "abc_rejection_model.rds"))
+
+####################
+# cross validation #
+####################
+abc_neuralnet_cv <- abc::cv4abc(
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  abc.out = abc_neuralnet_model,
+  nval = 10,
+  tols = c(0.05, 0.1)
+)
+
+dir.create(file.path(base_dir, "abc", "cv", "neuralnet"), showWarnings = FALSE, recursive = TRUE)
+abc_neuralnet_cv |> saveRDS(file = file.path(base_dir, "abc", "cv", "neuralnet", "abc_neuralnet_cv.rds"))
+
+plot_cv_recovery(
+  abc_neuralnet_cv,
+  n_rows = 2,
+  n_cols = 1,
+  resid_tol = 0.99,
+  interactive = FALSE
+)
+
+plot_cv_pair_correlation(
+  abc_neuralnet_cv,
+  interactive = FALSE
+)
+
+##########################
+# ABC posterior analysis #
+##########################
+
+abc_neuralnet_model$adj.values
 
 posterior_params <- abc_posterior_bootstrap(
-  abc_model,
+  abc_neuralnet_model,
   n_samples = 500
 )
 
@@ -224,7 +266,7 @@ post_sim_config$prior_formulas <- list()
 post_sim_config$n_trials_per_condition <- 10
 
 post_output_dir <- file.path(base_dir, "abc", "posterior", "neuralnet")
-dir.create(post_output_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(post_output_dir, recursive = TRUE)
 
 post_output <- run_simulation(
   config = post_sim_config,
@@ -245,15 +287,3 @@ plot_accuracy(
   facet_y = c()
 )
 
-#########################
-# ABC rejection fitting #
-#########################
-abc_rejection_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  tol = 0.5,
-  method = "rejection"
-)
-
-abc_rejection_model |> saveRDS(file = file.path(base_dir, "abc", "abc_rejection_model.rds"))
