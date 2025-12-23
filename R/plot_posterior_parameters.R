@@ -2,8 +2,33 @@
 #'
 #' Plotting posterior distributions (and optionally prior distributions) from ABC results.
 #'
-#' @param data An object containing posterior samples
-#' @param ... Additional arguments passed to methods
+#' @param data An object containing posterior samples. The expected structure
+#'   depends on the method dispatched.
+#' @param ... Additional arguments passed to class-specific methods.
+#'
+#' @return Invisibly returns `NULL`. Called for its side effect of producing plots.
+#'
+#' @seealso
+#'   \code{\link{plot_posterior_parameters.abc}}
+#'
+#' @examples
+#' # Load ABC output from saved file
+#' abc_file <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "abc_rejection_model.rds",
+#'   package = "eam"
+#' )
+#' abc_rejection_model <- readRDS(abc_file)
+#'
+#' # Load ABC input for prior comparison
+#' abc_input_file <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "abc_input.rds",
+#'   package = "eam"
+#' )
+#' abc_input <- readRDS(abc_input_file)
+#'
+#' # Plot posterior distributions with prior comparison
+#' plot_posterior_parameters(abc_rejection_model, abc_input)
+#'
 #' @export
 plot_posterior_parameters <- function(data, ...) {
   UseMethod("plot_posterior_parameters")
@@ -11,7 +36,17 @@ plot_posterior_parameters <- function(data, ...) {
 
 #' @rdname plot_posterior_parameters
 #' @method plot_posterior_parameters abc
-#' @param abc_input Optional abc_input object containing prior samples
+#'
+#' @param data An \code{abc} object containing posterior samples in
+#'   \code{adj.values} or \code{unadj.values}.
+#' @param abc_input Optional abc_input object containing prior samples for comparison.
+#' @param ... Additional arguments:
+#'   \describe{
+#'     \item{n_rows}{Integer; number of rows in the plot grid (default: 2)}
+#'     \item{n_cols}{Integer; number of columns in the plot grid (default: 2)}
+#'     \item{interactive}{Logical; whether to pause between pages and wait for input}
+#'   }
+#'
 #' @export
 plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
   # Get posterior samples - prefer adj.values, fallback to unadj.values
