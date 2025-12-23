@@ -231,8 +231,8 @@ abc_neuralnet_cv <- abc::cv4abc(
   tols = c(0.05, 0.1)
 )
 
-dir.create(file.path(base_dir, "abc", "cv", "neuralnet"), showWarnings = FALSE, recursive = TRUE)
-abc_neuralnet_cv |> saveRDS(file = file.path(base_dir, "abc", "cv", "neuralnet", "abc_neuralnet_cv.rds"))
+dir.create(file.path(base_dir, "abc", "cv"), showWarnings = FALSE, recursive = TRUE)
+abc_neuralnet_cv |> saveRDS(file = file.path(base_dir, "abc", "cv", "neuralnet.rds"))
 
 plot_cv_recovery(
   abc_neuralnet_cv,

@@ -1,9 +1,33 @@
-#' Plot CV recovery
+#' Plot CV parameter recovery
 #'
-#' Plotting parameter recovery from cross-validation results.
+#' Visualize parameter recovery from cross-validation results, showing estimated
+#' vs. true parameter values and residual distributions for each parameter.
 #'
-#' @param data An object containing recovery results
-#' @param ... Additional arguments passed to methods
+#' @param data An object containing recovery results. The expected structure
+#'   depends on the method dispatched.
+#' @param ... Additional arguments passed to class-specific methods.
+#'
+#' @return Invisibly returns `NULL`. Called for its side effect of producing plots.
+#'
+#' @seealso
+#'   \code{\link{plot_cv_recovery.cv4abc}}
+#'
+#' @examples
+#' # Load CV output from saved file
+#' cv_file <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "cv", "neuralnet.rds",
+#'   package = "eam"
+#' )
+#' abc_neuralnet_cv <- readRDS(cv_file)
+#'
+#' # Plot parameter recovery
+#' plot_cv_recovery(
+#'   abc_neuralnet_cv,
+#'   n_rows = 2,
+#'   n_cols = 1,
+#'   resid_tol = 0.99
+#' )
+#'
 #' @export
 plot_cv_recovery <- function(data, ...) {
   UseMethod("plot_cv_recovery")
@@ -20,6 +44,23 @@ theme_eam <- ggplot2::theme_minimal() +
 
 #' @rdname plot_cv_recovery
 #' @method plot_cv_recovery cv4abc
+#'
+#' @param data A \code{cv4abc} object containing true parameters and
+#'   cross-validated estimates.
+#' @param ... Additional arguments:
+#'   \describe{
+#'     \item{n_rows}{Integer; number of rows in the plot grid (default: 3)}
+#'     \item{n_cols}{Integer; number of columns in the plot grid, multiplied by 2
+#'       for paired plots (default: 1)}
+#'     \item{method}{Character; smoothing method for \code{geom_smooth} (default: "lm")}
+#'     \item{formula}{Formula; used in \code{geom_smooth} (default: y ~ x)}
+#'     \item{resid_tol}{Numeric; quantile threshold for filtering residuals by
+#'       absolute value. If specified, only observations with residuals below
+#'       this quantile are plotted (default: NULL, no filtering)}
+#'     \item{interactive}{Logical; whether to pause between pages and wait for
+#'       user input (default: FALSE)}
+#'   }
+#'
 #' @export
 plot_cv_recovery.cv4abc <- function(data, ...) {
   plot_per_parameter <- 2

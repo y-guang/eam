@@ -16,8 +16,7 @@
 #' @examples
 #' # Load CV output from saved file
 #' cv_file <- system.file(
-#'   "extdata", "rdm_minimal", "abc", "cv", "neuralnet",
-#'   "abc_neuralnet_cv.rds",
+#'   "extdata", "rdm_minimal", "abc", "cv", "neuralnet.rds",
 #'   package = "eam"
 #' )
 #' abc_neuralnet_cv <- readRDS(cv_file)
