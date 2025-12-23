@@ -209,6 +209,9 @@ run_condition <- function(
 #' @return Invisible NULL (results are saved to disk)
 #' @keywords internal
 run_chunk <- function(config, output_dir, chunk_idx) {
+  # NSE variable bindings for R CMD check
+  condition_idx <- NULL
+  
   # Reconstruct paths from output_dir using fs_proto
   evaluated_conditions_dir <- file.path(
     output_dir,
@@ -226,7 +229,7 @@ run_chunk <- function(config, output_dir, chunk_idx) {
 
   # Sort by condition_idx to ensure proper ordering
   chunk_prior_params_df <- chunk_prior_params_df |>
-    dplyr::arrange(condition_idx) # nolint: object_usage_linter
+    dplyr::arrange(condition_idx)
 
   n_conditions_in_chunk <- nrow(chunk_prior_params_df)
 

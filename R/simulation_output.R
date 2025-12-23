@@ -112,6 +112,8 @@ map_by_condition <- function(
     .parallel = NULL,
     .n_cores = NULL,
     .progress = FALSE) {
+  # NSE variable bindings for R CMD check
+  chunk_idx <- NULL
 
   # Validate input
   if (!inherits(simulation_output, "eam_simulation_output")) {
@@ -256,6 +258,9 @@ map_by_condition.parallel.heuristic <- function(chunk_indices) {
 #' @keywords internal
 map_by_condition.process_chunk <- function(open_dataset_fn, .f, ...) {
   function(chunk_idx) {
+    # NSE variable bindings for R CMD check
+    condition_idx <- NULL
+    
     # Get the dataset (either use directly or call function)
     dataset <- if (is.function(open_dataset_fn)) {
       open_dataset_fn()

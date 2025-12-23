@@ -116,7 +116,7 @@ plot_cv_recovery.cv4abc <- function(data, ...) {
 
       # Filter by residual tolerance if specified
       if (!is.null(resid_tol)) {
-        threshold <- quantile(abs(residuals), resid_tol, na.rm = TRUE)
+        threshold <- stats::quantile(abs(residuals), resid_tol, na.rm = TRUE)
         keep_idx <- abs(residuals) <= threshold
         true_vals <- true_vals[keep_idx]
         est_vals <- est_vals[keep_idx]
@@ -124,8 +124,11 @@ plot_cv_recovery.cv4abc <- function(data, ...) {
       }
 
       # Calculate correlation
-      cor_value <- cor(true_vals, est_vals, use = "complete.obs")
+      cor_value <- stats::cor(true_vals, est_vals, use = "complete.obs")
 
+      # NSE variable bindings for R CMD check
+      true <- estimate <- residual <- NULL
+      
       plot_df <- data.frame(
         true = true_vals,
         estimate = est_vals,

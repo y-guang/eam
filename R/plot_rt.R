@@ -44,6 +44,9 @@ plot_rt <- function(
     observed_df,
     facet_x = c("item_idx"),
     facet_y = c()) {
+  # NSE variable bindings for R CMD check
+  rt <- source <- NULL
+  
   # Determine all columns to select
   cols_to_select <- unique(c("rt", "item_idx", facet_x, facet_y))
 
