@@ -63,6 +63,16 @@
 #'
 #'     Set \code{model = "lca"}
 #'   }
+#'   \item{\strong{LFM (Lévy Flight Model)}}{
+#'     Uses the same parameters as \code{DDM}. See \code{DDM} above.
+#'
+#'     Set \code{model = "lfm"}
+#'   }
+#'   \item{\strong{LBA (Linear Ballistic Accumulator)}}{
+#'     Uses the same parameters as \code{RDM}. See \code{RDM} above.
+#'
+#'     Set \code{model = "lba"}
+#'   }
 #' }
 #'
 #' \strong{Note:} All required parameters must be defined at least once across
