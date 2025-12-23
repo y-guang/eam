@@ -213,7 +213,7 @@ abc_model$adj.values
 
 posterior_params <- abc_posterior_bootstrap(
   abc_model,
-  n_samples = 100
+  n_samples = 500
 )
 
 posterior_params$n_items <- 3
@@ -221,9 +221,14 @@ posterior_params$n_items <- 3
 post_sim_config <- sim_config
 post_sim_config$prior_params <- posterior_params
 post_sim_config$prior_formulas <- list()
+post_sim_config$n_trials_per_condition <- 10
+
+post_output_dir <- file.path(base_dir, "abc", "posterior", "neuralnet")
+dir.create(post_output_dir, showWarnings = FALSE, recursive = TRUE)
 
 post_output <- run_simulation(
-  config = post_sim_config
+  config = post_sim_config,
+  output_dir = post_output_dir
 )
 
 plot_rt(

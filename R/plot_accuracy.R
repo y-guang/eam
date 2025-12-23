@@ -1,13 +1,27 @@
-#' Plot accuracy comparison
+#' Plot accuracy comparison between posterior and observed data
 #'
-#' Routes to backend-specific accuracy plotting functions based on the simulation backend.
+#' Visualizes accuracy metrics comparing posterior simulation results with observed data.
+#' Creates side-by-side bar plots for easy comparison across conditions.
 #'
-#' @param simulated_output Simulation output object with backend information
+#' @param simulated_output Posterior simulation output from run_simulation()
 #' @param observed_df Observed data frame
 #' @param x Variable for x-axis (default: "item_idx")
 #' @param facet_x Variables for faceting columns
 #' @param facet_y Variables for faceting rows
 #' @return A ggplot2 object
+#' @examples
+#' # Load posterior simulation output and observed data
+#' base_dir <- system.file("extdata", "rdm_minimal", package = "eam")
+#' post_output <- load_simulation_output(file.path(base_dir, "abc", "posterior", "neuralnet"))
+#' obs_df <- read.csv(file.path(base_dir, "observation", "observation_data.csv"))
+#'
+#' # Plot accuracy comparison between posterior and observed data
+#' # The plot shows side-by-side bars comparing hit rates or accuracy
+#' plot_accuracy(
+#'   post_output,
+#'   obs_df,
+#'   facet_x = c("group")
+#' )
 #' @export
 plot_accuracy <- function(
     simulated_output,
