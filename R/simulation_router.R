@@ -44,6 +44,7 @@ detect_backend_ddm <- function(model_lower, config) {
   switch(model_lower,
     "ddm-1b" = "ddm",
     "ddm" = ,
+    "lfm" = ,
     "rdm" = {
       if ("A" %in% lhs_names) "ddm" else NULL
     },
@@ -63,6 +64,7 @@ detect_backend_ddm_2b <- function(model_lower, config) {
   switch(model_lower,
     "ddm-2b" = "ddm-2b",
     "rdm" = ,
+    "lba" = ,
     "ddm" = {
       if ("A_upper" %in% lhs_names) "ddm-2b" else NULL
     },
