@@ -15,6 +15,16 @@
 #' manually construct the ABC input list instead, ensuring proper matrix formatting
 #' and column alignment as expected by \code{abc::abc}.
 #'
+#' @section Required format for summary statistics:
+#' Both \code{simulation_summary} and \code{target_summary} must be created using
+#' \code{\link{summarise_by}}.
+#' This ensures consistent column naming and data structure required for ABC analysis.
+#' See \code{\link{summarise_by}} for details on generating properly formatted summaries,
+#' and \code{\link{map_by_condition}} for typical workflow examples.
+#' If you want more flexibility in summary statistic calculation, you can manually
+#' construct the ABC input list. It is not necessary to use this function if you
+#' are familiar with the \code{abc} package.
+#'
 #' @param simulation_output A eam_simulation_output object containing that is from
 #' \code{\link{run_simulation}} or \code{\link{load_simulation_output}}.
 #' @param simulation_summary A data frame containing summary statistics for each

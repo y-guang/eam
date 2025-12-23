@@ -1,25 +1,78 @@
 #' Summarise data by groups with optional pivoting
 #'
-#' Groups data by specified columns, applies summary expressions, and optionally
-#' pivots the results wider. This function is designed for flexible aggregation
-#' and reshaping of simulation results.
+#' This function provides a flexible way to group data, compute summary statistics,
+#' and reshape results. It works similar to `dplyr::summarise()` but with added
+#' capabilities for pivoting results wider.
 #'
-#' When called without `.data` (or with `.data = NULL`), returns a
-#' `eam_summarise_by_spec` object that can be:
-#' - Combined with other specs using the `+` operator
-#' - Applied to data later by calling it as a function
+#' You can use `summarise_by()` in two ways:
+#' 1. **Direct use**: Pass your data directly and get results immediately
+#' 2. **Build-then-apply**: Create reusable summary functions, combine them with `+`,
+#'    then apply to your data later
 #'
-#' @param .data A data frame to summarise, or NULL to create a delayed spec
-#' @param ... Summary expressions to evaluate for each group, using dplyr-style
-#'   syntax. Named arguments become column names in the output.
-#' @param .by Character vector of column names to group by (default: "condition_idx")
-#' @param .wider_by Character vector of column names to keep as identifying
-#'   columns after pivoting wider (default: "condition_idx"). Must be a subset of
-#'   .by. If different from .by, the remaining columns in .by will be pivoted across
-#'   the result.
-#' @return If `.data` is provided: A data frame with class "eam_summarise_by_tbl"
-#'   containing the summarised and potentially pivoted results.
-#'   If `.data` is NULL: A `eam_summarise_by_spec` object for delayed evaluation.
+#' The build-then-apply approach is useful when you want to compute different types
+#' of summaries (e.g., RT statistics and accuracy statistics) and automatically join
+#' them together.
+#'
+#' @section Usage with ABC workflows:
+#' If you plan to use \code{\link{build_abc_input}} for ABC analysis, you must use
+#' \code{summarise_by()} to generate summary statistics (or manually handle the arrow
+#' output format). This function typically works together with \code{\link{map_by_condition}}
+#' to process simulation results. See \code{\link{map_by_condition}} for workflow examples.
+#'
+#' @param .data A data frame to summarise, or NULL to create a reusable summary function
+#' @param ... Summary expressions using dplyr-style syntax. Named arguments become
+#'   column names in the output (e.g., `mean_rt = mean(rt)`).
+#' @param .by Character vector of grouping column names. Default is "condition_idx".
+#' @param .wider_by Character vector of columns to keep as identifiers when pivoting.
+#'   Default is "condition_idx". Must be a subset of `.by`. When `.wider_by` differs
+#'   from `.by`, the extra columns in `.by` will be spread across as column suffixes.
+#'
+#' @return
+#' - If `.data` is provided: A data frame with summarised results
+#' - If `.data` is NULL: A function that can be applied to data later
+#'
+#' @examples
+#' # Example 1: Direct use - pass data and get results immediately
+#' trial_data <- data.frame(
+#'   condition_idx = rep(1:2, each = 4),
+#'   item_idx = rep(1:2, 4),
+#'   rt = c(0.5, 0.6, 0.7, 0.8, 0.55, 0.65, 0.75, 0.85),
+#'   accuracy = c(1, 1, 0, 1, 1, 0, 1, 1)
+#' )
+#'
+#' # Compute mean RT and accuracy by condition and item
+#' result <- summarise_by(
+#'   trial_data,
+#'   mean_rt = mean(rt),
+#'   mean_acc = mean(accuracy),
+#'   .by = c("condition_idx", "item_idx"),
+#'   .wider_by = "condition_idx"
+#' )
+#' # Result has columns: condition_idx, mean_rt_item_idx_1, mean_rt_item_idx_2, etc.
+#' result
+#'
+#' # Example 2: Build-then-apply - create reusable summary functions
+#' # Build separate summary functions for different statistics
+#' rt_summary_pipe <- summarise_by(
+#'   mean_rt = mean(rt),
+#'   sd_rt = stats::sd(rt),
+#'   .by = c("condition_idx", "item_idx"),
+#'   .wider_by = "condition_idx"
+#' )
+#'
+#' acc_summary_pipe <- summarise_by(
+#'   mean_acc = mean(accuracy),
+#'   n_trials = length(accuracy),
+#'   .by = c("condition_idx", "item_idx"),
+#'   .wider_by = "condition_idx"
+#' )
+#'
+#' # Combine with + and apply to data
+#' combined_summary_pipe <- rt_summary_pipe + acc_summary_pipe
+#' result <- combined_summary_pipe(trial_data)
+#' # Result has all summaries joined by condition_idx
+#' result
+#'
 #' @export
 summarise_by <- function(
     .data = NULL,
