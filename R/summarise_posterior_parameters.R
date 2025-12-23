@@ -89,8 +89,8 @@ summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
     } else {
       # Basic summaries
       alpha <- 1 - ci_level
-      ci_lower <- quantile(values, probs = alpha / 2, na.rm = TRUE)
-      ci_upper <- quantile(values, probs = 1 - alpha / 2, na.rm = TRUE)
+      ci_lower <- stats::quantile(values, probs = alpha / 2, na.rm = TRUE)
+      ci_upper <- stats::quantile(values, probs = 1 - alpha / 2, na.rm = TRUE)
 
       # Create dynamic column names with quantile values
       ci_lower_name <- sprintf("ci_lower_%.3f", alpha / 2)
@@ -98,7 +98,7 @@ summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
 
       results[[param]] <- list(
         mean = mean(values, na.rm = TRUE),
-        median = median(values, na.rm = TRUE)
+        median = stats::median(values, na.rm = TRUE)
       )
       results[[param]][[ci_lower_name]] <- as.numeric(ci_lower)
       results[[param]][[ci_upper_name]] <- as.numeric(ci_upper)

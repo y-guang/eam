@@ -341,9 +341,9 @@ plot_resample_forest <- function(
 
       forest_data <- rbind(forest_data, data.frame(
         iteration = i,
-        lower = quantile(values, probs = lower_prob, na.rm = TRUE),
-        median = median(values, na.rm = TRUE),
-        upper = quantile(values, probs = upper_prob, na.rm = TRUE)
+        lower = stats::quantile(values, probs = lower_prob, na.rm = TRUE),
+        median = stats::median(values, na.rm = TRUE),
+        upper = stats::quantile(values, probs = upper_prob, na.rm = TRUE)
       ))
     }
 
@@ -476,8 +476,8 @@ summarise_resample_medians <- function(data, ..., ci_level = 0.95) {
     } else {
       # Basic summaries
       alpha <- 1 - ci_level
-      ci_lower <- quantile(values, probs = alpha / 2, na.rm = TRUE)
-      ci_upper <- quantile(values, probs = 1 - alpha / 2, na.rm = TRUE)
+      ci_lower <- stats::quantile(values, probs = alpha / 2, na.rm = TRUE)
+      ci_upper <- stats::quantile(values, probs = 1 - alpha / 2, na.rm = TRUE)
 
       # Create dynamic column names with quantile values
       ci_lower_name <- sprintf("ci_lower_%.3f", alpha / 2)
@@ -485,7 +485,7 @@ summarise_resample_medians <- function(data, ..., ci_level = 0.95) {
 
       results[[param]] <- list(
         mean = mean(values, na.rm = TRUE),
-        median = median(values, na.rm = TRUE)
+        median = stats::median(values, na.rm = TRUE)
       )
       results[[param]][[ci_lower_name]] <- as.numeric(ci_lower)
       results[[param]][[ci_upper_name]] <- as.numeric(ci_upper)

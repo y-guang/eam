@@ -89,7 +89,7 @@ plot_cv_pair_correlation.cv4abc <- function(data, ...) {
         {
           fit <- stats::lm(formula, data = data.frame(x = x, y = y))
           x_seq <- seq(min(x), max(x), length.out = 100)
-          pred <- predict(fit, newdata = data.frame(x = x_seq))
+          pred <- stats::predict(fit, newdata = data.frame(x = x_seq))
           graphics::lines(x_seq, pred, lwd = 2, col = "dodgerblue3")
         },
         error = function(e) {
