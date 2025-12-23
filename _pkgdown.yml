@@ -1,0 +1,9 @@
+url: https://y-guang.github.io/eam/
+template:
+  bootstrap: 5
+  light-switch: true
+
+articles:
+- title: External Articles
+  contents:
+  - template-article

@@ -8,3 +8,4 @@ R/RcppExports.R
 # TODO: remove and add before release to CRAN
 man/
 inst/extdata
+docs

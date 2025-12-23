@@ -6,13 +6,13 @@ Authors@R: c(
     person(
       "Guangyu", "Zhu",
       email = "guangyu.frank@gmail.com",
-      role = c("aut"),
+      role = c("aut", "cre"),
       comment = c(ORCID = "0009-0005-1571-1782")
     ),
     person(
       "Guang", "Yang",
       email = "guang.spike.yang@gmail.com",
-      role = c("aut", "cre"),
+      role = c("aut"),
       comment = c(ORCID = "0009-0005-7675-3249")
     )
   )
@@ -47,3 +47,4 @@ Config/testthat/edition: 3
 RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.1.0)
+URL: https://y-guang.github.io/eam/
