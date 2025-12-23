@@ -1,9 +1,31 @@
-#' Summarise posterior parameters
+#' Summarise posterior parameter distributions
 #'
-#' Compute summary statistics for posterior parameter distributions.
+#' Compute summary statistics (mean, median, confidence intervals) for posterior
+#' parameters from ABC results.
 #'
-#' @param data An object containing posterior samples
-#' @param ... Additional arguments passed to methods
+#' @param data An object containing posterior samples. The expected structure
+#'   depends on the method dispatched.
+#' @param ... Additional arguments passed to class-specific methods.
+#'
+#' @return A data frame with summary statistics for each parameter.
+#'
+#' @seealso
+#'   \code{\link{summarise_posterior_parameters.abc}}
+#'
+#' @examples
+#' # Load ABC output from saved file
+#' abc_file <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "abc_rejection_model.rds",
+#'   package = "eam"
+#' )
+#' abc_rejection_model <- readRDS(abc_file)
+#'
+#' # Summarise posterior distributions
+#' summarise_posterior_parameters(abc_rejection_model)
+#'
+#' # Custom confidence interval level
+#' summarise_posterior_parameters(abc_rejection_model, ci_level = 0.90)
+#'
 #' @export
 summarise_posterior_parameters <- function(data, ...) {
   UseMethod("summarise_posterior_parameters")
@@ -11,7 +33,13 @@ summarise_posterior_parameters <- function(data, ...) {
 
 #' @rdname summarise_posterior_parameters
 #' @method summarise_posterior_parameters abc
-#' @param ci_level Confidence interval level (default: 0.95)
+#'
+#' @param data An \code{abc} object containing posterior samples in
+#'   \code{adj.values} or \code{unadj.values}.
+#' @param ci_level Numeric; confidence interval level (default: 0.95).
+#' @param ... Additional arguments for custom summary functions. Functions passed
+#'   as named arguments will be applied to each parameter's posterior samples.
+#'
 #' @export
 summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
   # check the parameters
