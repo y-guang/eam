@@ -1,14 +1,43 @@
-#' Plot RT Distributions for Posterior and Observed Data
+#' Plot reaction time distributions
 #'
-#' Creates density plots comparing reaction time distributions between
-#' posterior simulations and observed data, with optional faceting.
+#' Visualize reaction time distributions from your model predictions.
+#' Overlay observed experimental data for reference.
 #'
-#' @param simulated_output Simulation output object with an `open_dataset()` method
-#' @param observed_df Data frame containing observed data
-#' @param facet_x Character vector of column names for x-axis faceting (default: "item_idx")
-#' @param facet_y Character vector of column names for y-axis faceting (default: empty)
+#' @param simulated_output Output from \code{\link{run_simulation}} containing
+#'   posterior predictions
+#' @param observed_df Your observed data as a data frame
+#' @param facet_x Variables to split plots horizontally. Default is \code{"item_idx"}
+#'   to show separate plots for each item
+#' @param facet_y Variables to split plots vertically. Default is none (\code{c()})
 #'
-#' @return A ggplot2 object showing density plots
+#' @return A plot showing predicted RT distributions (blue), with observed data (red) if provided
+#'
+#' @examples
+#' # Load example posterior simulation output
+#' post_output_path <- system.file(
+#'   "extdata", "rdm_minimal", "abc", "posterior", "neuralnet",
+#'   package = "eam"
+#' )
+#' post_output <- load_simulation_output(post_output_path)
+#'
+#' # Load example observed data
+#' obs_file <- system.file(
+#'   "extdata", "rdm_minimal", "observation", "observation_data.csv",
+#'   package = "eam"
+#' )
+#' obs_df <- read.csv(obs_file)
+#'
+#' # Plot RT distributions by item
+#' plot_rt(post_output, obs_df, facet_x = c("item_idx"))
+#'
+#' # Plot RT distributions by item and group
+#' plot_rt(
+#'   post_output,
+#'   obs_df,
+#'   facet_x = c("item_idx"),
+#'   facet_y = c("group")
+#' )
+#'
 #' @export
 plot_rt <- function(
     simulated_output,
