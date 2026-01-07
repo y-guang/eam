@@ -1,18 +1,18 @@
 Package: eam
 Type: Package
 Title: Evidence Accumulation Models
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(
     person(
       "Guangyu", "Zhu",
       email = "guangyu.frank@gmail.com",
-      role = c("aut", "cre"),
+      role = c("aut"),
       comment = c(ORCID = "0009-0005-1571-1782")
     ),
     person(
       "Guang", "Yang",
       email = "guang.spike.yang@gmail.com",
-      role = c("aut"),
+      role = c("aut", "cre"),
       comment = c(ORCID = "0009-0005-7675-3249")
     )
   )
@@ -38,13 +38,18 @@ Suggests:
     testthat (>= 3.0.0),
     pbapply,
     abc
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Provides tools for simulating and analysing evidence accumulation models. The package
+    includes simulation engines for several representative models, such as diffusion decision,
+    leaky competing accumulator, linear ballistic accumulator, racing diffusion, and Levy
+    flight models, and extends them to multi-response settings. It also implements
+    simulation-based inference methods for parameter estimation and model comparison,
+    including applications to covariate-dependent models. These tools support the study of
+    cognitive processes in tasks such as free recall and verbal fluency.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Config/testthat/edition: 3
 RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.1.0)
-URL: https://y-guang.github.io/eam/
+URL: https://github.com/y-guang/eam
