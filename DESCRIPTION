@@ -38,13 +38,22 @@ Suggests:
     testthat (>= 3.0.0),
     pbapply,
     abc
-Description: Provides tools for simulating and analysing evidence accumulation models. The package
-    includes simulation engines for several representative models, such as diffusion decision,
-    leaky competing accumulator, linear ballistic accumulator, racing diffusion, and Levy
-    flight models, and extends them to multi-response settings. It also implements
-    simulation-based inference methods for parameter estimation and model comparison,
-    including applications to covariate-dependent models. These tools support the study of
-    cognitive processes in tasks such as free recall and verbal fluency.
+Description: Simulation-based evidence accumulation models for analyzing responses
+  and reaction times in single- and multi-response tasks. The package includes
+  simulation engines for five representative models: the Diffusion Decision
+  Model (DDM), Leaky Competing Accumulator (LCA), Linear Ballistic Accumulator
+  (LBA), Racing Diffusion Model (RDM), and Levy Flight Model (LFM), and
+  extends these frameworks to multi-response settings. The package supports
+  user-defined functions for item-level parameterization and the incorporation
+  of covariates, enabling flexible customization and the development of new
+  model variants based on existing architectures. Inference is performed using
+  simulation-based methods, including Approximate Bayesian Computation (ABC)
+  and Amortized Bayesian Inference (ABI), which allow parameter estimation
+  without requiring tractable likelihood functions. In addition to core
+  inference tools, the package provides modules for parameter recovery,
+  posterior predictive checks, and model comparison, facilitating the study of
+  a wide range of cognitive processes in tasks involving perceptual decision
+  making, memory retrieval, and value-based decision making.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
