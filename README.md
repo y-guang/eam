@@ -17,3 +17,4 @@ It provides a modern, consistent API for simulation-based modelling, making it e
 
 ## Example
 
+Please check [demo folder](./demo) for examples.
