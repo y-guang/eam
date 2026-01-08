@@ -1,8 +1,10 @@
 # eam
 
-eam is a high-performance simulation infrastructure for the Drift Diffusion Model (DDM) and its generalized variants,  two-boundary models, racing models, leaky competing accumulator (LCA) models.
+eam is a simulation-based evidence accumulation models for analyzing responses and reaction times in single- and multi-response tasks. The package includes simulation engines for five representative models: the Diffusion Decision Model (DDM), Leaky Competing Accumulator (LCA), Linear Ballistic Accumulator (LBA), Racing Diffusion Model (RDM), and Lévy Flight Model (LFM), and extends these frameworks to multi-response settings.
 
-It provides a modern, consistent API for simulation-based modelling, making it easy to define, run, and evaluate large-scale evidence accumulation experiments with high computational efficiency.
+The package supports user-defined functions for item-level parameterization and the incorporation of covariates, enabling flexible customization and the development of new model variants based on existing architectures. Inference is performed using simulation-based methods, including Approximate Bayesian Computation (ABC) and Amortized Bayesian Inference (ABI), which allow parameter estimation without requiring tractable likelihood functions.
+
+In addition to core inference tools, the package provides modules for parameter recovery, posterior predictive checks, and model comparison. Overall, it facilitates the study of a wide range of cognitive processes in tasks involving perceptual decision making, memory retrieval, and value-based decision making.
 
 ## Features
 
@@ -15,6 +17,6 @@ It provides a modern, consistent API for simulation-based modelling, making it e
   - modern R api：Built around modern R conventions, it provides a declarative, tidy-style interface.
   - Unified data pipeline: provides a consistent set of data manipulation and summarization utilities for seamless simulation, evaluation, and visualization.
 
-## Example
+## Quick Start
 
-Please check [demo folder](./demo) for examples.
+The following example demonstrates a complete workflow. For more example, please refer to the repository demo folder. As it is quite computationally intensive, it is not included in the vignettes.
