@@ -12,6 +12,11 @@
 #' @param replace Logical, whether to sample with replacement (default FALSE)
 #' @param ... Additional arguments passed to abc::abc
 #'
+#' @return A list of length \code{n_iterations}, where each element is an object
+#'   of class \code{abc} returned by \code{\link[abc]{abc}}. Each list element
+#'   contains the ABC posterior for one bootstrap iteration, allowing assessment
+#'   of stability and uncertainty in parameter estimates.
+#'
 #' @examples
 #' # Load ABC input data from example simulation
 #' abc_input <- readRDS(
@@ -150,6 +155,9 @@ extract_resample_medians <- function(resample_results) {
 #' @param n_cols Number of columns in plot grid (default 2)
 #' @param interactive Whether to pause between pages (default FALSE)
 #'
+#' @return No return value, called for side effects (plotting). Creates density
+#'   plots displayed in the graphics device.
+#'
 #' @examples
 #' \dontrun{
 #' # Load ABC input data from example simulation
@@ -261,6 +269,9 @@ plot_resample_medians <- function(
 #' @param n_cols Number of columns in plot grid (default 2)
 #' @param interactive Whether to pause between pages (default FALSE)
 #' @param ci_level quantile intervals (default 0.95 for 95\% interval)
+#'
+#' @return No return value, called for side effects (plotting). Creates forest
+#'   plots displayed in the graphics device.
 #'
 #' @examples
 #' \dontrun{

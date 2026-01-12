@@ -132,7 +132,9 @@
 #' @param parallel Whether to run in parallel (default: FALSE)
 #' @param n_cores Number of cores for parallel processing (default: NULL, auto-detect)
 #' @param rand_seed Random seed for parallel processing (default: NULL)
-#' @return A eam_simulation_config object
+#' @return An S3 object of class \code{eam_simulation_config} containing validated
+#'   simulation parameters. This object should be passed to
+#'   \code{\link{run_simulation}} to execute the simulation.
 #' @examples
 #' # Define formulas for the simulation
 #' prior_formulas <- list(
