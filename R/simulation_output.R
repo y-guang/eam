@@ -91,7 +91,6 @@ new_simulation_output <- function(
 #'   rt_quantiles = quantile(rt, probs = c(0.1, 0.5, 0.9))
 #' )
 #'
-#' \dontrun{
 #' # Apply function to each condition
 #' sim_sumstat <- map_by_condition(
 #'   sim_output,
@@ -101,7 +100,6 @@ new_simulation_output <- function(
 #'     summary_pipe(cond_df)
 #'   }
 #' )
-#' }
 #'
 #' @export
 map_by_condition <- function(
@@ -360,10 +358,8 @@ init_simulation_output_dir <- function(output_dir) {
 #' # Access the configuration
 #' sim_output$simulation_config
 #' 
-#' \dontrun{
-#' # Access the dataset
+#' # Access the dataset (check arrow documentation for working with the dataset)
 #' dataset <- sim_output$open_dataset()
-#' }
 #'
 #' @export
 load_simulation_output <- function(output_dir) {

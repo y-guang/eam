@@ -159,7 +159,6 @@ extract_resample_medians <- function(resample_results) {
 #'   plots displayed in the graphics device.
 #'
 #' @examples
-#' \dontrun{
 #' # Load ABC input data from example simulation
 #' abc_input <- readRDS(
 #'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
@@ -178,7 +177,6 @@ extract_resample_medians <- function(resample_results) {
 #' 
 #' # plot the resample medians for each parameter
 #' plot_resample_medians(results)
-#' }
 #' @export
 plot_resample_medians <- function(
     data,
@@ -274,7 +272,6 @@ plot_resample_medians <- function(
 #'   plots displayed in the graphics device.
 #'
 #' @examples
-#' \dontrun{
 #' # Load ABC input data from example simulation
 #' abc_input <- readRDS(
 #'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
@@ -293,7 +290,6 @@ plot_resample_medians <- function(
 #'
 #' # plot forest plots showing parameter ranges
 #' plot_resample_forest(results, ci_level = 0.95)
-#' }
 #' @export
 plot_resample_forest <- function(
     data,
@@ -422,7 +418,6 @@ plot_resample_forest <- function(
 #' @return Data frame with summary statistics for each parameter
 #'
 #' @examples
-#' \dontrun{
 #' # Load ABC input data from example simulation
 #' abc_input <- readRDS(
 #'   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
@@ -442,7 +437,6 @@ plot_resample_forest <- function(
 #' # summarise the resample medians
 #' summary_stats <- summarise_resample_medians(results, ci_level = 0.95)
 #' print(summary_stats)
-#' }
 #' @export
 summarise_resample_medians <- function(data, ..., ci_level = 0.95) {
   # check the parameters
