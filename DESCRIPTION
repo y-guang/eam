@@ -1,7 +1,7 @@
 Package: eam
 Type: Package
 Title: Evidence Accumulation Models
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person(
       "Guangyu", "Zhu",
@@ -53,7 +53,15 @@ Description: Simulation-based evidence accumulation models for analyzing respons
   inference tools, the package provides modules for parameter recovery,
   posterior predictive checks, and model comparison, facilitating the study of
   a wide range of cognitive processes in tasks involving perceptual decision
-  making, memory retrieval, and value-based decision making.
+  making, memory retrieval, and value-based decision making. Key methods
+  implemented in the package are described in Ratcliff (1978) <doi:10.1037/0033-295X.85.2.59>,
+  Usher and McClelland (2001) <doi:10.1037/0033-295X.108.3.550>, Brown and Heathcote (2008)
+  <doi:10.1016/j.cogpsych.2007.12.002>, Tillman, Van Zandt and Logan (2020)
+  <doi:10.3758/s13423-020-01719-6>, Wieschen, Voss and Radev (2020)
+  <doi:10.20982/tqmp.16.2.p120>, Csilléry, François and Blum (2012)
+  <doi:10.1111/j.2041-210X.2011.00179.x>, Beaumont (2019)
+  <doi:10.1146/annurev-statistics-030718-105212>, and Sainsbury-Dale,
+  Zammit-Mangion and Huser (2024) <doi:10.1080/00031305.2023.2275927>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
