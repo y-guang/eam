@@ -1,0 +1,79 @@
+---
+title: "开发人员引导"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "./developer-guide/",
+  dev = "svg",
+  fig.ext = "svg"
+)
+```
+
+## 贡献
+
+本项目目前处于积极开发阶段，非常欢迎各位参与和贡献。
+为了保持对全球贡献者的包容性（inclusive），并确保讨论内容能够被尽可能多的开发者理解和维护，请在 issue、Pull Request 以及开发讨论中优先使用英语。
+
+## 计算密集型文档
+
+对于计算密集型的 vignettes (文档)，例如涉及模拟的教程，请采用**本地预编译**的方式以加速 github pages 的构建过程。
+
+一个经验性的建议是，如果你的文档代码运行实践超过 1 分钟这个量级，那么就应该考虑使用本地预编译的方式。
+
+### 本地预编译
+
+首先，在 `vignettes/` 目录下，将需要预编译的 Rmd 文件重命名为 `*.Rmd.orig`，例如 `tutorial.Rmd.orig`。
+
+确保在该 Rmd 文件中，将图片路径配置到 `vignettes/` 下的同名子目录，并偏好使用矢量图格式（如 SVG）以获得更好的缩放效果。一个示例配置如下：
+
+``` r
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "./developer-guide/",
+  dev = "svg",
+  fig.ext = "svg"
+)
+```
+
+然后，在本地 R 环境中，运行以下代码以生成最终的 Rmd 文件：
+
+``` r
+old <- getwd()
+setwd("vignettes")
+
+knitr::knit(
+  "tutorial.Rmd.orig",
+  output = "tutorial.Rmd"
+)
+
+setwd(old)
+```
+
+### 将文档加入 `_pkgdown`
+
+一旦你完成了预编译过程，确保在 `_pkgdown.yml` 文件中正确引用了新的 Rmd 文件。例如：
+
+``` yaml
+articles:
+- title: Tutorials
+  navbar: Tutorials
+  contents:
+  - another-document
+  - tutorial
+```
+
+### 提交更改
+
+之后，你可以尝试在本地构建 pkgdown 网站以确保一切正常：
+
+``` r
+pkgdown::build_site()
+```
+
+确保所有内容均正确后，同时提交`*.Rmd.orig` 和生成的 `*.Rmd`。
+
+此外，请不要手动修改生成的 `*.Rmd` 文件。我们应当假设这些文件是由对应的 `*.Rmd.orig` 文件自动生成的。

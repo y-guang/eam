@@ -12,6 +12,15 @@ articles:
   navbar: Tutorials
   contents:
   - template-article
+- title: Developer Guide
+  navbar: Developer Guide
+  contents:
+  - developer-guide
+- title: Chinese Translation
+  navbar: Chinese Translation
+  contents:
+  - about-zh-translation
+  - developer-guide.zh
 
 reference:
   - title: Reference
