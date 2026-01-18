@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   template-article: template-article.html
-last_built: 2026-01-18T10:18Z
+last_built: 2026-01-18T10:35Z
 urls:
   reference: https://y-guang.github.io/eam/reference
   article: https://y-guang.github.io/eam/articles
