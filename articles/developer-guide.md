@@ -18,7 +18,7 @@ please adopt a **local pre-compilation** approach to accelerate the
 GitHub Pages build process.
 
 A rule of thumb is that if your document’s code execution time exceeds
-approximately 1 minute, you should consider using local pre-compilation.
+approximately 5 minute, you should consider using local pre-compilation.
 
 ### Local Pre-compilation
 
