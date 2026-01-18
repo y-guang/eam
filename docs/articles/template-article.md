@@ -1,30 +1,30 @@
----
-title: "Template Article"
----
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+# Template Article
 
 ## Introduction
 
-It is recommended to use this template as a starting point for writing articles.
+It is recommended to use this template as a starting point for writing
+articles.
 
 ## Section 1
 
-First, let's load the eam package.
+First, let’s load the eam package.
 
-```{r}
+``` r
 library(eam)
 library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 ```
 
 and config a basic EAM model.
 
-```{r}
+``` r
 
 # define the condition data generate logic
 n_items <- 3
@@ -54,11 +54,4 @@ noise_factory <- function(context) {
     rnorm(n, mean = 0, sd = sqrt(dt))
   }
 }
-```
-
-timestamp:
-
-```{r}
-timestamp <- as.numeric(Sys.time())
-timestamp
 ```
