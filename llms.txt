@@ -1,0 +1,329 @@
+# eam
+
+eam is a simulation-based evidence accumulation models for analyzing
+responses and reaction times in single- and multi-response tasks. The
+package includes simulation engines for five representative models: the
+Diffusion Decision Model (DDM), Leaky Competing Accumulator (LCA),
+Linear Ballistic Accumulator (LBA), Racing Diffusion Model (RDM), and
+Lévy Flight Model (LFM), and extends these frameworks to multi-response
+settings.
+
+The package supports user-defined functions for item-level
+parameterization and the incorporation of covariates, enabling flexible
+customization and the development of new model variants based on
+existing architectures. Inference is performed using simulation-based
+methods, including Approximate Bayesian Computation (ABC) and Amortized
+Bayesian Inference (ABI), which allow parameter estimation without
+requiring tractable likelihood functions.
+
+In addition to core inference tools, the package provides modules for
+parameter recovery, posterior predictive checks, and model comparison.
+Overall, it facilitates the study of a wide range of cognitive processes
+in tasks involving perceptual decision making, memory retrieval, and
+value-based decision making.
+
+## Features
+
+- ⚙️ High-Performance Backend
+  - **Pure C++ core** with fast vectorization-friendly algorithms
+    designed. 100x speedup compared with naive python implementations.
+  - Memory-efficient computation, enabling more than **10 million**
+    trials on a standard desktop machine.
+  - Parallel execution with near-linear speed-up across multiple CPU
+    cores.
+- 🧩 Modern API
+  - Flexible architecture: composable api, defines several formulas, you
+    can easily customize your own models.
+  - modern R api：Built around modern R conventions, it provides a
+    declarative, tidy-style interface.
+  - Unified data pipeline: provides a consistent set of data
+    manipulation and summarization utilities for seamless simulation,
+    evaluation, and visualization.
+
+## Quick Start
+
+The following example demonstrates a complete workflow. For more
+example, please refer to the corresponding repository demo folder. As it
+is quite computationally intensive, it is not included in the vignettes.
+
+``` r
+###############
+# model setup #
+###############
+n_items <- 10
+prior_formulas <- list(
+  n_items ~ 10,
+  # parameters with distributions
+  A_beta_0 ~ distributional::dist_uniform(1.00, 10.00),
+  A_beta_1 ~ distributional::dist_uniform(1.00, 10.00),
+  # V
+  V_beta_0 ~ distributional::dist_uniform(1.0, 5.0),
+  V_beta_1 ~ distributional::dist_uniform(-0.50, -0.01),
+  # ndt
+  ndt ~ distributional::dist_uniform(0.01, 3.00),
+  # noise param
+  noise_coef ~ 1,
+  # between trial varibaility
+  sigma ~ distributional::dist_uniform(0.1, 3.00)
+)
+
+between_trial_formulas <- list(
+  V_var ~ distributional::dist_normal(0, sigma),
+  # random group binomial
+  group ~ distributional::dist_binomial(1, 0.5)
+)
+
+item_formulas <- list(
+  A_upper ~ A_beta_0 + seq(1, n_items) * A_beta_1,
+  A_lower ~ -1,
+  V ~ V_beta_0 + seq(1, n_items) * V_beta_1 + V_var
+)
+
+noise_factory <- function(context) {
+  noise_coef <- context$noise_coef
+
+  function(n, dt) {
+    noise_coef * rnorm(n, mean = 0, sd = sqrt(dt))
+  }
+}
+
+####################
+# simulation setup #
+####################
+sim_config <- new_simulation_config(
+  prior_formulas = prior_formulas,
+  between_trial_formulas = between_trial_formulas,
+  item_formulas = item_formulas,
+  n_conditions_per_chunk = NULL, # automatic chunking
+  n_conditions = 500,
+  n_trials_per_condition = 100,
+  n_items = n_items,
+  max_reached = n_items,
+  max_t = 100,
+  dt = 0.01,
+  noise_mechanism = "add",
+  noise_factory = noise_factory,
+  model = "ddm",
+  parallel = TRUE,
+  n_cores = NULL, # Will use default: detectCores() - 1
+  rand_seed = NULL # Will use default random seed
+)
+print(sim_config)
+
+# output temporary path setup
+temp_base_path <- tempfile("eam_demo")
+# remove if exists
+if (dir.exists(temp_base_path)) {
+  unlink(temp_base_path, recursive = TRUE)
+}
+temp_output_path <- file.path(temp_base_path, "output")
+cat("Temporary base path:\n")
+cat(temp_base_path, "\n")
+
+##################
+# run simulation #
+##################
+sim_output <- run_simulation(
+  config = sim_config,
+  output_dir = temp_output_path
+)
+
+#####################
+# abc model prepare #
+#####################
+# preview the output data variables
+head(sim_output$open_dataset())
+# uncommented to collect all data into memory (avoid for large sims)
+# sim_output_df <- sim_output$open_dataset() |> dplyr::collect()
+# uncommented to collect all condition parameters into memory
+# sim_condition_df <- sim_output$open_evaluated_conditions() |> dplyr::collect()
+
+# define the summary procedure
+summary_pipe <-
+  summarise_by(
+    .by = c("condition_idx"),
+    # single value
+    rt_mean = mean(rt),
+    # named vector
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.5, 0.9)),
+    # regression coefficients
+    lm_coef = lm(rt ~ item_idx)$coefficients,
+    # complex functions
+    aic = {
+      model <- glm(rt ~ item_idx, family = gaussian())
+      summary(model)$aic
+    }
+  ) +
+  summarise_by(
+    .by = c("condition_idx", "item_idx"),
+    rt_mean = mean(rt),
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.5, 0.9))
+  )
+
+# summarise simulation output
+simulation_sumstat <- map_by_condition(
+  sim_output,
+  .progress = TRUE,
+  .parallel = TRUE,
+  function(cond_df) {
+    # clean data here
+    complete_df <- cond_df |>
+      dplyr::filter(V_beta_0 > 0, !is.na(rt))
+    # extract the summary by calling spec directly
+    summary_pipe(complete_df)
+  }
+)
+
+# clean non-complete simulations
+simulation_sumstat <- simulation_sumstat[complete.cases(simulation_sumstat), ]
+
+# summarized observed/target data
+# pretend observed data is condition 1
+# you should load your own observed data here and rename columns accordingly
+observed_data <- sim_output$open_dataset() |>
+  dplyr::filter(chunk_idx == 1, condition_idx == 1) |>
+  dplyr::collect()
+target_sumstat <- summary_pipe(observed_data)
+
+# Prepare data for ABC fitting
+abc_input <- build_abc_input(
+  simulation_output = sim_output,
+  simulation_summary = simulation_sumstat,
+  target_summary = target_sumstat,
+  param = c("A_beta_0", "A_beta_1", "V_beta_0", "V_beta_1", "ndt", "sigma")
+)
+
+#####################
+# ABC model fitting #
+#####################
+abc_rejection_model <- abc::abc(
+  target = abc_input$target,
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  tol = 0.5,
+  method = "rejection"
+)
+
+abc_loclinear_model <- abc::abc(
+  target = abc_input$target,
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  tol = 0.5,
+  method = "loclinear",
+  transf = c("log", "log", "log", "none", "log", "log")
+)
+
+abc_neuralnet_model <- abc::abc(
+  target = abc_input$target,
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  tol = 0.05,
+  method = "neuralnet",
+  sizenet = 8,
+  maxit = 10000,
+  lambda = 1e-2,
+  kernel = "epanechnikov",
+  transf = c("log", "log", "log", "none", "log", "log")
+)
+
+####################
+# cross validation #
+####################
+abc_neuralnet_cv <- abc::cv4abc(
+  param = abc_input$param,
+  sumstat = abc_input$sumstat,
+  abc.out = abc_neuralnet_model,
+  nval = 10,
+  tols = c(0.05, 0.1)
+)
+
+plot_cv_recovery(
+  abc_neuralnet_cv,
+  n_rows = 3,
+  n_cols = 1,
+  resid_tol = 0.99,
+  interactive = FALSE
+)
+
+plot_cv_pair_correlation(
+  abc_neuralnet_cv,
+  interactive = FALSE
+)
+
+summarise_posterior_parameters(
+  abc_rejection_model,
+  # custom summary functions
+  ci_level = 0.95,
+  p10 = function(x) quantile(x, 0.1)
+)
+
+plot_posterior_parameters(
+  abc_rejection_model,
+  abc_input
+)
+
+
+#################
+# re-sample ABC #
+#################
+abc_resample_result <- abc_resample(
+  abc_input$target,
+  abc_input$param,
+  abc_input$sumstat,
+  n_iterations = 100,
+  n_samples = 200,
+  tol = 0.5,
+  method = "rejection"
+)
+
+plot_resample_medians(abc_resample_result)
+summarise_resample_medians(abc_resample_result)
+
+#############
+# posterior #
+#############
+posterior_params <- abc_posterior_bootstrap(
+  abc_neuralnet_model,
+  n_samples = 500
+)
+
+# specify posterior simulation config
+# or you can re-create a new config from scratch with posterior_params
+post_sim_config <- sim_config
+post_sim_config$prior_params <- posterior_params
+post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+
+# (optional) specify a path to save posterior simulations result
+temp_output_path_post <- file.path(temp_base_path, "posterior_output")
+
+post_output <- run_simulation(
+  config = sim_config,
+  output_dir = temp_output_path_post
+)
+
+# plot the posterior rt and accuracy
+plot_rt(
+  post_output,
+  observed_data,
+  facet_x = c("item_idx"),
+  facet_y = c()
+)
+
+plot_accuracy(
+  post_output,
+  observed_data,
+  facet_x = c("group"),
+  facet_y = c()
+)
+```
+
+# Package index
+
+## Reference
+
+# Articles
+
+### Tutorials
+
+- [Template
+  Article](https://y-guang.github.io/eam/articles/template-article.md):
