@@ -61,7 +61,7 @@ Description: Simulation-based evidence accumulation models for analyzing respons
   <doi:10.20982/tqmp.16.2.p120>, Csilléry, François and Blum (2012)
   <doi:10.1111/j.2041-210X.2011.00179.x>, Beaumont (2019)
   <doi:10.1146/annurev-statistics-030718-105212>, and Sainsbury-Dale,
-  Zammit-Mangion and Huser (2024) <doi:10.1080/00031305.2023.2275927>.
+  Zammit-Mangion and Huser (2024) <doi:10.1080/00031305.2023.2249522>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
