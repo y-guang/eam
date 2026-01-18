@@ -136,7 +136,7 @@
 <span><span class="co">####################</span></span>
 <span><span class="co"># simulation setup #</span></span>
 <span><span class="co">####################</span></span>
-<span><span class="va">sim_config</span> <span class="op">&lt;-</span> <span class="fu">new_simulation_config</span><span class="op">(</span></span>
+<span><span class="va">sim_config</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_simulation_config.html">new_simulation_config</a></span><span class="op">(</span></span>
 <span>  prior_formulas <span class="op">=</span> <span class="va">prior_formulas</span>,</span>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
@@ -169,7 +169,7 @@
 <span><span class="co">##################</span></span>
 <span><span class="co"># run simulation #</span></span>
 <span><span class="co">##################</span></span>
-<span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu">run_simulation</span><span class="op">(</span></span>
+<span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
 <span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
 <span><span class="op">)</span></span>
@@ -186,7 +186,7 @@
 <span></span>
 <span><span class="co"># define the summary procedure</span></span>
 <span><span class="va">summary_pipe</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">summarise_by</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span><span class="op">)</span>,</span>
 <span>    <span class="co"># single value</span></span>
 <span>    rt_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rt</span><span class="op">)</span>,</span>
@@ -200,14 +200,14 @@
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">$</span><span class="va">aic</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">summarise_by</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"item_idx"</span><span class="op">)</span>,</span>
 <span>    rt_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">rt</span><span class="op">)</span>,</span>
 <span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># summarise simulation output</span></span>
-<span><span class="va">simulation_sumstat</span> <span class="op">&lt;-</span> <span class="fu">map_by_condition</span><span class="op">(</span></span>
+<span><span class="va">simulation_sumstat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/map_by_condition.html">map_by_condition</a></span><span class="op">(</span></span>
 <span>  <span class="va">sim_output</span>,</span>
 <span>  .progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -232,7 +232,7 @@
 <span><span class="va">target_sumstat</span> <span class="op">&lt;-</span> <span class="fu">summary_pipe</span><span class="op">(</span><span class="va">observed_data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prepare data for ABC fitting</span></span>
-<span><span class="va">abc_input</span> <span class="op">&lt;-</span> <span class="fu">build_abc_input</span><span class="op">(</span></span>
+<span><span class="va">abc_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/build_abc_input.html">build_abc_input</a></span><span class="op">(</span></span>
 <span>  simulation_output <span class="op">=</span> <span class="va">sim_output</span>,</span>
 <span>  simulation_summary <span class="op">=</span> <span class="va">simulation_sumstat</span>,</span>
 <span>  target_summary <span class="op">=</span> <span class="va">target_sumstat</span>,</span>
@@ -283,7 +283,7 @@
 <span>  tols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plot_cv_recovery</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/plot_cv_recovery.html">plot_cv_recovery</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_neuralnet_cv</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  n_cols <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -291,19 +291,19 @@
 <span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plot_cv_pair_correlation</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/plot_cv_pair_correlation.html">plot_cv_pair_correlation</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_neuralnet_cv</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/summarise_posterior_parameters.html">summarise_posterior_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_rejection_model</span>,</span>
 <span>  <span class="co"># custom summary functions</span></span>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  p10 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plot_posterior_parameters</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/plot_posterior_parameters.html">plot_posterior_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_rejection_model</span>,</span>
 <span>  <span class="va">abc_input</span></span>
 <span><span class="op">)</span></span>
@@ -312,7 +312,7 @@
 <span><span class="co">#################</span></span>
 <span><span class="co"># re-sample ABC #</span></span>
 <span><span class="co">#################</span></span>
-<span><span class="va">abc_resample_result</span> <span class="op">&lt;-</span> <span class="fu">abc_resample</span><span class="op">(</span></span>
+<span><span class="va">abc_resample_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/abc_resample.html">abc_resample</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_input</span><span class="op">$</span><span class="va">target</span>,</span>
 <span>  <span class="va">abc_input</span><span class="op">$</span><span class="va">param</span>,</span>
 <span>  <span class="va">abc_input</span><span class="op">$</span><span class="va">sumstat</span>,</span>
@@ -322,13 +322,13 @@
 <span>  method <span class="op">=</span> <span class="st">"rejection"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plot_resample_medians</span><span class="op">(</span><span class="va">abc_resample_result</span><span class="op">)</span></span>
-<span><span class="fu">summarise_resample_medians</span><span class="op">(</span><span class="va">abc_resample_result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_resample_medians.html">plot_resample_medians</a></span><span class="op">(</span><span class="va">abc_resample_result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/summarise_resample_medians.html">summarise_resample_medians</a></span><span class="op">(</span><span class="va">abc_resample_result</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#############</span></span>
 <span><span class="co"># posterior #</span></span>
 <span><span class="co">#############</span></span>
-<span><span class="va">posterior_params</span> <span class="op">&lt;-</span> <span class="fu">abc_posterior_bootstrap</span><span class="op">(</span></span>
+<span><span class="va">posterior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/abc_posterior_bootstrap.html">abc_posterior_bootstrap</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_neuralnet_model</span>,</span>
 <span>  n_samples <span class="op">=</span> <span class="fl">500</span></span>
 <span><span class="op">)</span></span>
@@ -342,20 +342,20 @@
 <span><span class="co"># (optional) specify a path to save posterior simulations result</span></span>
 <span><span class="va">temp_output_path_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">temp_base_path</span>, <span class="st">"posterior_output"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">post_output</span> <span class="op">&lt;-</span> <span class="fu">run_simulation</span><span class="op">(</span></span>
+<span><span class="va">post_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
 <span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">temp_output_path_post</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot the posterior rt and accuracy</span></span>
-<span><span class="fu">plot_rt</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/plot_rt.html">plot_rt</a></span><span class="op">(</span></span>
 <span>  <span class="va">post_output</span>,</span>
 <span>  <span class="va">observed_data</span>,</span>
 <span>  facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_idx"</span><span class="op">)</span>,</span>
 <span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plot_accuracy</span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/plot_accuracy.html">plot_accuracy</a></span><span class="op">(</span></span>
 <span>  <span class="va">post_output</span>,</span>
 <span>  <span class="va">observed_data</span>,</span>
 <span>  facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span><span class="op">)</span>,</span>
