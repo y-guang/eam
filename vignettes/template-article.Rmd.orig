@@ -2,7 +2,15 @@
 title: "Template Article"
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "./template-article/",
+  dev = "svg",
+  fig.ext = "svg"
+)
+```
 
 ## Introduction
 
@@ -12,16 +20,14 @@ It is recommended to use this template as a starting point for writing articles.
 
 First, let's load the eam package.
 
-
-``` r
+```{r}
 library(eam)
 library(dplyr)
 ```
 
 and config a basic EAM model.
 
-
-``` r
+```{r}
 
 # define the condition data generate logic
 n_items <- 3
@@ -55,17 +61,14 @@ noise_factory <- function(context) {
 
 timestamp:
 
-
-``` r
+```{r}
 timestamp <- as.numeric(Sys.time())
 timestamp
-#> [1] 1768731355
 ```
 
 plot a simple figure:
 
-
-``` r
+```{r}
 x <- rnorm(100)
 y <- 0.6 * x + rnorm(10, sd = 0.7)
 
@@ -80,8 +83,6 @@ plot(
 # Optional: add a fitted line
 abline(lm(y ~ x), lwd = 2)
 ```
-
-![plot of chunk unnamed-chunk-5](./template-article/unnamed-chunk-5-1.svg)
 
 you should use
 

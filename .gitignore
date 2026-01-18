@@ -8,10 +8,4 @@ R/RcppExports.R
 # TODO: remove and add before release to CRAN
 man/
 inst/extdata
-
-# allow manually compiled vignettes
-docs/**
-!docs/articles/
-!docs/articles/**
-docs/articles/index.md
-docs/articles/index.html
+docs
