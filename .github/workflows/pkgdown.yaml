@@ -40,9 +40,26 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Build pkgdown site (lazy)
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, lazy = TRUE)
-        shell: Rscript {0}
+      - name: Build pkgdown site (lazy, no clean)
+        run: |
+          pkgdown::init_site()
+
+          pkgdown::build_home()
+
+          pkgdown::build_reference(
+            devel = FALSE,
+            run_dont_run = FALSE,
+            lazy = TRUE
+          )
+
+          # pkgdown::build_articles(
+          #   lazy = TRUE
+          # )
+
+          pkgdown::build_tutorials()
+          pkgdown::build_news()
+          pkgdown::build_redirects()
+          pkgdown::build_llm_docs()
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
