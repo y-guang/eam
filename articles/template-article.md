@@ -12,14 +12,6 @@ First, let’s load the eam package.
 ``` r
 library(eam)
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 ```
 
 and config a basic EAM model.
@@ -61,5 +53,47 @@ timestamp:
 ``` r
 timestamp <- as.numeric(Sys.time())
 timestamp
-#> [1] 1768726088
+#> [1] 1768731355
 ```
+
+plot a simple figure:
+
+``` r
+x <- rnorm(100)
+y <- 0.6 * x + rnorm(10, sd = 0.7)
+
+plot(
+  x, y,
+  pch = 19,
+  xlab = "x",
+  ylab = "y",
+  main = "Test Scatter Plot"
+)
+
+# Optional: add a fitted line
+abline(lm(y ~ x), lwd = 2)
+```
+
+![plot of chunk unnamed-chunk-5](template-article/unnamed-chunk-5-1.svg)
+
+plot of chunk unnamed-chunk-5
+
+you should use
+
+``` r
+old <- getwd()
+setwd("vignettes")
+
+knitr::knit(
+  "template-article.Rmd.orig",
+  output = "template-article.Rmd"
+)
+
+setwd(old)
+```
+
+to generate the final Rmd file.
+
+Then, run
+[`pkgdown::build_site()`](https://pkgdown.r-lib.org/reference/build_site.html)
+to build the site locally.
