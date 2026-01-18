@@ -1,5 +1,5 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
     branches: [main, master]
@@ -16,16 +16,13 @@ permissions: read-all
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
-
+    # Only restrict concurrency for non-PR jobs
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
-
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -40,26 +37,8 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Build pkgdown site (lazy, no clean)
-        run: |
-          pkgdown::init_site()
-
-          pkgdown::build_home()
-
-          pkgdown::build_reference(
-            devel = FALSE,
-            run_dont_run = FALSE,
-            lazy = TRUE
-          )
-
-          pkgdown::build_articles(
-            lazy = TRUE
-          )
-
-          pkgdown::build_tutorials()
-          pkgdown::build_news()
-          pkgdown::build_redirects()
-          pkgdown::build_llm_docs()
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
