@@ -44,7 +44,7 @@ jobs:
         run: |
           pkgdown::init_site()
 
-          pkgdown::build_home(devel = FALSE)
+          pkgdown::build_home()
 
           pkgdown::build_reference(
             devel = FALSE,
@@ -53,8 +53,7 @@ jobs:
           )
 
           pkgdown::build_articles(
-            lazy = TRUE,
-            seed = 1014L
+            lazy = TRUE
           )
 
           # pkgdown::build_tutorials(
