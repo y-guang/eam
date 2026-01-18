@@ -1,0 +1,22 @@
+# About Chinese Translation
+
+## About Chinese Translation (for international readers)
+
+Some parts of this documentation are accompanied by a Chinese
+translation. Please note that the Chinese content is a direct
+translation of the corresponding English documentation and does not
+include any additional information, interpretations, or features beyond
+what is described in English.
+
+If you do not read Chinese, you can safely rely entirely on the English
+documentation — you will not miss any functionality, details, or
+technical explanations by doing so. The English version is maintained as
+the complete and consistent reference for this project.
+
+## 关于中文翻译（给中文读者）
+
+本项目同时提供部分中文文档，主要目的是帮助习惯使用中文的读者更轻松地理解内容。所有中文内容均基于对应英文文档整理与翻译，其涵盖范围与英文保持一致，不额外引入新的信息或解释。
+
+由于项目的持续演进，中文文档可能在更新时效上与英文存在差异。在可以理解英文的情况下，建议优先参考英文文档，以获取更完整、更新及时、表达更精确的信息。
+
+欢迎社区对中文文档的改进与维护，包括任何实质性的改进，如新增翻译、术语统一以及与英文内容的同步更新。中文文档的目标始终是辅助理解英文原意，而非替代英文文档本身。
