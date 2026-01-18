@@ -55,3 +55,11 @@ noise_factory <- function(context) {
   }
 }
 ```
+
+timestamp:
+
+``` r
+timestamp <- as.numeric(Sys.time())
+timestamp
+#> [1] 1768726088
+```
