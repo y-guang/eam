@@ -1,0 +1,87 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+name: pkgdown
+
+permissions: read-all
+
+jobs:
+  pkgdown:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
+
+      - name: Build pkgdown site (lazy, no clean)
+        run: |
+          pkgdown::init_site()
+
+          pkgdown::build_home(devel = FALSE)
+
+          pkgdown::build_reference(
+            devel = FALSE,
+            run_dont_run = FALSE,
+            lazy = TRUE
+          )
+
+          pkgdown::build_articles(
+            lazy = TRUE,
+            seed = 1014L
+          )
+
+          # pkgdown::build_tutorials(
+          #   lazy = TRUE,
+          #   seed = 1014L
+          # )
+
+          pkgdown::build_news()
+          pkgdown::build_redirects()
+          pkgdown::build_llm_docs()
+
+          # ---- build_site_github_pages() side effects:
+
+          # Ensure GitHub Pages doesn't try to run Jekyll
+          # file.create("docs/.nojekyll")
+
+          # Ensure CNAME is present if you use a custom domain
+          # if (!is.null(pkgdown::metadata()$url)) {
+          #   domain <- sub("^https?://", "", pkgdown::metadata()$url)
+          #   writeLines(domain, "docs/CNAME")
+          # }
+        shell: Rscript {0}
+
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs

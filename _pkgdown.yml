@@ -3,7 +3,17 @@ template:
   bootstrap: 5
   light-switch: true
 
+build:
+  destination: docs
+  lazy: true
+
 articles:
-- title: External Articles
+- title: Tutorials
+  navbar: Tutorials
   contents:
   - template-article
+
+reference:
+  - title: Reference
+    contents:
+      - starts_with("")
