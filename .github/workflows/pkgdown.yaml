@@ -52,14 +52,15 @@ jobs:
             lazy = TRUE
           )
 
-          # pkgdown::build_articles(
-          #   lazy = TRUE
-          # )
+          pkgdown::build_articles(
+            lazy = TRUE
+          )
 
           pkgdown::build_tutorials()
           pkgdown::build_news()
           pkgdown::build_redirects()
           pkgdown::build_llm_docs()
+        shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
