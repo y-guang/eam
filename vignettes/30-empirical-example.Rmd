@@ -162,11 +162,7 @@ For illustration purposes, we use data from one representative participant in th
 # Load Observed data  #
 #######################
 
-observed_data<-read.csv("example_data.csv")
-#> Warning in file(file, "rt"): cannot open file 'example_data.csv': No
-#> such file or directory
-#> Error in `file()`:
-#> ! cannot open the connection
+observed_data<-read.csv("./30-empirical-example/example_data.csv")
 ```
 Here we calcualte the response time quantiles (0.1–0.9) separately for each response position ("rank_idx").
 
@@ -307,12 +303,9 @@ plot_rt(
   facet_x = c("rank_idx"),
   facet_y = c()
 )
-#> Error in `dplyr::select()` at eam/R/plot_rt.R:60:3:
-#> ℹ In argument: `dplyr::all_of(cols_to_select)`.
-#> Caused by error in `dplyr::all_of()`:
-#> ! Can't subset elements that don't exist.
-#> ✖ Elements `item_idx` and `rank_idx` don't exist.
 ```
+
+![plot of chunk unnamed-chunk-8](./30-empirical-example/unnamed-chunk-8-1.svg)
 
 Reference:
 

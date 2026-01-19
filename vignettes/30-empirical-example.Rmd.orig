@@ -166,7 +166,7 @@ For illustration purposes, we use data from one representative participant in th
 # Load Observed data  #
 #######################
 
-observed_data<-read.csv("example_data.csv")
+observed_data<-read.csv("./30-empirical-example/example_data.csv")
 ```
 Here we calcualte the response time quantiles (0.1–0.9) separately for each response position ("rank_idx").
 
