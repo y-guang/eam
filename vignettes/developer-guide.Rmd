@@ -34,7 +34,7 @@ Ensure that in the Rmd file, you configure the figure path to a subdirectory und
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "./developer-guide/",
+  fig.path = "./tutorial/",
   dev = "svg",
   fig.ext = "svg"
 )
