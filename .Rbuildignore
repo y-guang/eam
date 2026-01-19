@@ -12,3 +12,4 @@
 ^\.github$
 ^vignettes$
 ^README\.md$
+^blueprint$
