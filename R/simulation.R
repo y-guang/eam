@@ -211,7 +211,7 @@ run_condition <- function(
 run_chunk <- function(config, output_dir, chunk_idx) {
   # NSE variable bindings for R CMD check
   condition_idx <- NULL
-  
+
   # Reconstruct paths from output_dir using fs_proto
   evaluated_conditions_dir <- file.path(
     output_dir,
@@ -273,7 +273,8 @@ run_chunk <- function(config, output_dir, chunk_idx) {
     flat_results,
     path = simulation_dataset_dir,
     partitioning = c("chunk_idx"),
-    format = "parquet"
+    format = "parquet",
+    max_partitions = if (!is.null(.Machine$integer.max)) .Machine$integer.max else as.integer(2^31 - 1)
   )
 
   # No need to return anything for out-of-core processing
@@ -539,7 +540,8 @@ run_simulation <- function(config, output_dir = NULL) {
       simulation_output_fs_proto$evaluated_conditions_dir
     ),
     partitioning = c("chunk_idx"),
-    format = "parquet"
+    format = "parquet",
+    max_partitions = if (!is.null(.Machine$integer.max)) .Machine$integer.max else as.integer(2^31 - 1)
   )
 
   if (config$parallel) {
