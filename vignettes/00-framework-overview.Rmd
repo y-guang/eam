@@ -50,7 +50,7 @@ reaches either the upper boundary $a$ or falls below the lower boundary
 accumulation to this boundary crossing defines the decision time; adding
 a non-decision time $t_{0}$ yields the observable RT.
 
-![Procedures of simulation engines in the eam package](Figure1.jpg)
+![Procedures of simulation engines in the eam package](./00-framework-overview/procedures.svg)
 
 The modular simulation engine composes ten modules (see Figure 1):
 
@@ -228,7 +228,7 @@ Bayesian Computation (ABC) or Amortized Bayesian Inference (ABI). Finally, the a
 y_{\text{obs}})$ is obtained by weighting or sampling parameters
 according to this similarity or likelihood estimate.
 
-![The standard workflow in the **eam** package](Figure2.jpg)
+![The standard workflow in the **eam** package](./00-framework-overview/workflow.svg)
 \bigskip
 
 The following sections provide a structured overview of the standard simulation
