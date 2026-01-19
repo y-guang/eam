@@ -111,7 +111,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -139,7 +139,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -223,7 +223,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "lca",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -254,7 +254,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -340,7 +340,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -368,7 +368,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -447,7 +447,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -475,7 +475,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -581,7 +581,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -609,7 +609,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -712,7 +712,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -740,7 +740,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -831,7 +831,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -859,7 +859,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -943,7 +943,7 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = F,
+  parallel = FALSE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -972,7 +972,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 

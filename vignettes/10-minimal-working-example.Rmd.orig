@@ -159,8 +159,8 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "ddm-2b",
   # Specify the parallel computing settings
-  parallel = FALSE,
-  n_cores = NULL, # Will use default: detectCores() - 1
+  parallel = FALSE, # In tutorial, we disable parallelization, but you are encouraged to enable it locally
+  n_cores = NULL, # When parallel enabled, will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
@@ -228,7 +228,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE, # turn on if you want to speed up
   function(cond_df) summary_pipe(cond_df)
 )
 
@@ -425,7 +425,7 @@ sim_output_alt <- run_simulation(
 simulation_sumstat_alt <- map_by_condition(
   sim_output_alt,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 

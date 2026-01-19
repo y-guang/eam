@@ -186,7 +186,7 @@ summary_pipe <-
 simulation_sumstat <- map_by_condition(
   sim_output,
   .progress = TRUE,
-  .parallel = F,
+  .parallel = FALSE,
   function(cond_df) summary_pipe(cond_df)
 )
 
