@@ -22,14 +22,14 @@ pages 的构建过程。
 `*.Rmd.orig`，例如 `tutorial.Rmd.orig`。
 
 确保在该 Rmd 文件中，将图片路径配置到 `vignettes/`
-下的同名子目录，并偏好使用矢量图格式（如
+下的**同名子目录**，并偏好使用矢量图格式（如
 SVG）以获得更好的缩放效果。一个示例配置如下：
 
 ``` r
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "./developer-guide/",
+  fig.path = "./tutorial/",
   dev = "svg",
   fig.ext = "svg"
 )

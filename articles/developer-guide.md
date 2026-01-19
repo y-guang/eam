@@ -34,7 +34,7 @@ configuration:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "./developer-guide/",
+  fig.path = "./tutorial/",
   dev = "svg",
   fig.ext = "svg"
 )
