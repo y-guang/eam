@@ -79,7 +79,6 @@ sim_output_path <- system.file(
   package = "eam"
 )
 sim_output <- load_simulation_output(sim_output_path)
-#> Error in load_simulation_output(sim_output_path): Output directory does not exist: 
 
 # Define a summary pipeline
 summary_pipe <- summarise_by(
@@ -97,5 +96,4 @@ sim_sumstat <- map_by_condition(
     summary_pipe(cond_df)
   }
 )
-#> Error: object 'sim_output' not found
 ```

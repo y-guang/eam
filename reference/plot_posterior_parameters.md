@@ -57,8 +57,6 @@ abc_file <- system.file(
   package = "eam"
 )
 abc_rejection_model <- readRDS(abc_file)
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Load ABC input for prior comparison
 abc_input_file <- system.file(
@@ -66,10 +64,8 @@ abc_input_file <- system.file(
   package = "eam"
 )
 abc_input <- readRDS(abc_input_file)
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Plot posterior distributions with prior comparison
 plot_posterior_parameters(abc_rejection_model, abc_input)
-#> Error: object 'abc_rejection_model' not found
+
 ```

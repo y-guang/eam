@@ -20,7 +20,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/template-article.html">Template Article</a></li>
+    <li><a class="dropdown-item" href="../articles/00-framework-overview.html">Overview of the EAM Framework</a></li>
+    <li><a class="dropdown-item" href="../articles/10-minimal-working-example.html">Getting Started: A Minimal Working Example</a></li>
+    <li><a class="dropdown-item" href="../articles/20-models-in-eam.html">Models in eam</a></li>
+    <li><a class="dropdown-item" href="../articles/30-empirical-example.html">An Empirical Example: Simulation-Based Inference for Free Recall</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Developer Guide</h6></li>
     <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer Guide</a></li>
@@ -88,19 +91,22 @@
 <span class="r-in"><span><span class="co"># check abc::abc for details on fitting ABC models</span></span></span>
 <span class="r-in"><span><span class="va">rdm_minimal_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rdm_minimal"</span>, package <span class="op">=</span> <span class="st">"eam"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">abc_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rdm_minimal_example</span>, <span class="st">"abc"</span>, <span class="st">"abc_neuralnet_model.rds"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open compressed file '/abc/abc_neuralnet_model.rds', probable reason 'No such file or directory'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gzfile(file, "rb"):</span> cannot open the connection</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bootstrap resample posterior parameters</span></span></span>
 <span class="r-in"><span><span class="va">posterior_params</span> <span class="op">&lt;-</span> <span class="fu">abc_posterior_bootstrap</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">abc_model</span>,</span></span>
 <span class="r-in"><span>  n_samples <span class="op">=</span> <span class="fl">100</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'abc_model' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># View the first few rows of the bootstrapped posterior parameters</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">posterior_params</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'posterior_params' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         V_beta_1 V_beta_group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X232   0.2280897    0.1869761</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X61    0.2587934    0.1670919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X150   0.2258720    0.1938078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X318   0.2608088    0.1624729</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X318.1 0.2608088    0.1624729</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X51    0.2649904    0.1941630</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

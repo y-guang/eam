@@ -47,10 +47,9 @@ cv_file <- system.file(
   package = "eam"
 )
 abc_neuralnet_cv <- readRDS(cv_file)
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Plot parameter pair correlations
 plot_cv_pair_correlation(abc_neuralnet_cv)
-#> Error: object 'abc_neuralnet_cv' not found
+
+
 ```

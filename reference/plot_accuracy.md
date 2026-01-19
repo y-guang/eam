@@ -48,10 +48,7 @@ A ggplot2 object
 # Load posterior simulation output and observed data
 base_dir <- system.file("extdata", "rdm_minimal", package = "eam")
 post_output <- load_simulation_output(file.path(base_dir, "abc", "posterior", "neuralnet"))
-#> Error in load_simulation_output(file.path(base_dir, "abc", "posterior",     "neuralnet")): Output directory does not exist: /abc/posterior/neuralnet
 obs_df <- read.csv(file.path(base_dir, "observation", "observation_data.csv"))
-#> Warning: cannot open file '/observation/observation_data.csv': No such file or directory
-#> Error in file(file, "rt"): cannot open the connection
 
 # Plot accuracy comparison between posterior and observed data
 # The plot shows side-by-side bars comparing hit rates or accuracy
@@ -60,5 +57,4 @@ plot_accuracy(
   obs_df,
   facet_x = c("group")
 )
-#> Error: object 'post_output' not found
 ```

@@ -70,8 +70,6 @@ cv_file <- system.file(
   package = "eam"
 )
 abc_neuralnet_cv <- readRDS(cv_file)
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Plot parameter recovery
 plot_cv_recovery(
@@ -80,5 +78,6 @@ plot_cv_recovery(
   n_cols = 1,
   resid_tol = 0.99
 )
-#> Error: object 'abc_neuralnet_cv' not found
+
+
 ```

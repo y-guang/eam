@@ -22,7 +22,10 @@ parameters from ABC results."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/template-article.html">Template Article</a></li>
+    <li><a class="dropdown-item" href="../articles/00-framework-overview.html">Overview of the EAM Framework</a></li>
+    <li><a class="dropdown-item" href="../articles/10-minimal-working-example.html">Getting Started: A Minimal Working Example</a></li>
+    <li><a class="dropdown-item" href="../articles/20-models-in-eam.html">Models in eam</a></li>
+    <li><a class="dropdown-item" href="../articles/30-empirical-example.html">An Empirical Example: Simulation-Based Inference for Free Recall</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Developer Guide</h6></li>
     <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer Guide</a></li>
@@ -102,16 +105,18 @@ as named arguments will be applied to each parameter's posterior samples.</p></d
 <span class="r-in"><span>  package <span class="op">=</span> <span class="st">"eam"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">abc_rejection_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">abc_file</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open compressed file '', probable reason 'No such file or directory'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gzfile(file, "rb"):</span> cannot open the connection</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summarise posterior distributions</span></span></span>
 <span class="r-in"><span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span><span class="va">abc_rejection_model</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'abc_rejection_model' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      parameter      mean    median ci_lower_0.025 ci_upper_0.975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     V_beta_1 0.2684096 0.2607152      0.1119190      0.4470107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 V_beta_group 0.1949098 0.1879120      0.1036883      0.2958763</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Custom confidence interval level</span></span></span>
 <span class="r-in"><span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span><span class="va">abc_rejection_model</span>, ci_level <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'abc_rejection_model' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      parameter      mean    median ci_lower_0.050 ci_upper_0.950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     V_beta_1 0.2684096 0.2607152      0.1291406       0.422611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 V_beta_group 0.1949098 0.1879120      0.1070319       0.290407</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

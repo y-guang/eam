@@ -40,8 +40,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-Then, in your local R environment, run the following code to generate
-the final Rmd file:
+Then, in your local R environment, run the appropriate line from the
+code below to generate the final Rmd file:
+
+``` r
+# In R environment
+source("scripts/knit_vignettes.R")
+
+# Or in terminal
+Rscript scripts/knit_vignettes.R
+
+# If you need to force recompile all scripts (not recommended)
+Rscript scripts/knit_vignettes.R false
+```
+
+Alternatively, you can manually modify and run the following code
+snippet to compile a specific Rmd file:
 
 ``` r
 old <- getwd()

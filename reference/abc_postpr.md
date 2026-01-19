@@ -39,8 +39,6 @@ An object of class "postpr" from
 # This example compares the same model to itself for demonstration
 rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
 abc_input <- readRDS(file.path(rdm_minimal_example, "abc", "abc_input.rds"))
-#> Warning: cannot open compressed file '/abc/abc_input.rds', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Compare two models using their summary statistics
 # In practice, create different abc_input objects for different models:
@@ -52,9 +50,27 @@ postpr_result <- abc_postpr(
   tol = 0.5,
   method = "rejection"
 )
-#> Error: object 'abc_input' not found
 
 # View model comparison results
 summary(postpr_result)
-#> Error: object 'postpr_result' not found
+#> Call: 
+#> abc::postpr(target = target, index = index, sumstat = sumstat, 
+#>     tol = 0.5, method = "rejection")
+#> Data:
+#>  postpr.out$values (500 posterior samples)
+#> Models a priori:
+#>  model1, model2
+#> Models a posteriori:
+#>  model1, model2
+#> 
+#> Proportion of accepted simulations (rejection):
+#> model1 model2 
+#>    0.5    0.5 
+#> 
+#> Bayes factors:
+#>        model1 model2
+#> model1      1      1
+#> model2      1      1
+#> 
+#> 
 ```

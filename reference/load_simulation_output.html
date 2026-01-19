@@ -22,7 +22,10 @@ previously saved simulation output directory."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/template-article.html">Template Article</a></li>
+    <li><a class="dropdown-item" href="../articles/00-framework-overview.html">Overview of the EAM Framework</a></li>
+    <li><a class="dropdown-item" href="../articles/10-minimal-working-example.html">Getting Started: A Minimal Working Example</a></li>
+    <li><a class="dropdown-item" href="../articles/20-models-in-eam.html">Models in eam</a></li>
+    <li><a class="dropdown-item" href="../articles/30-empirical-example.html">An Empirical Example: Simulation-Based Inference for Free Recall</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Developer Guide</h6></li>
     <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer Guide</a></li>
@@ -85,15 +88,30 @@ previously saved simulation output directory.</p>
 <span class="r-in"><span>  package <span class="op">=</span> <span class="st">"eam"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu">load_simulation_output</span><span class="op">(</span><span class="va">sim_output_path</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in load_simulation_output(sim_output_path):</span> Output directory does not exist: </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Access the configuration</span></span></span>
 <span class="r-in"><span><span class="va">sim_output</span><span class="op">$</span><span class="va">simulation_config</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sim_output' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> eam Simulation Configuration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> =================================</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model: rdm </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Backend: ddm-2b </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Conditions: 500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Trials per condition: 100 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Items per trial: 3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Max reached: 3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Max time: 10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time step: 0.001 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Noise mechanism: add </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Conditions per chunk: 500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parallel: FALSE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formulas:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Prior formulas: 2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Between-trial formulas: 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Item formulas: 4 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Access the dataset (check arrow documentation for working with the dataset)</span></span></span>
 <span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="va">sim_output</span><span class="op">$</span><span class="fu">open_dataset</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sim_output' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -45,7 +45,6 @@ post_output_path <- system.file(
   package = "eam"
 )
 post_output <- load_simulation_output(post_output_path)
-#> Error in load_simulation_output(post_output_path): Output directory does not exist: 
 
 # Load example observed data
 obs_file <- system.file(
@@ -53,12 +52,10 @@ obs_file <- system.file(
   package = "eam"
 )
 obs_df <- read.csv(obs_file)
-#> Warning: file("") only supports open = "w+" and open = "w+b": using the former
-#> Error in read.table(file = file, header = header, sep = sep, quote = quote,     dec = dec, fill = fill, comment.char = comment.char, ...): no lines available in input
 
 # Plot RT distributions by item
 plot_rt(post_output, obs_df, facet_x = c("item_idx"))
-#> Error: object 'post_output' not found
+
 
 # Plot RT distributions by item and group
 plot_rt(
@@ -67,5 +64,5 @@ plot_rt(
   facet_x = c("item_idx"),
   facet_y = c("group")
 )
-#> Error: object 'post_output' not found
+
 ```

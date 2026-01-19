@@ -2,11 +2,14 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
+  00-framework-overview: 00-framework-overview.html
+  10-minimal-working-example: 10-minimal-working-example.html
+  20-models-in-eam: 20-models-in-eam.html
+  30-empirical-example: 30-empirical-example.html
   about-zh-translation: about-zh-translation.html
   developer-guide: developer-guide.html
   developer-guide.zh: developer-guide.zh.html
-  template-article: template-article.html
-last_built: 2026-01-19T02:57Z
+last_built: 2026-01-19T06:25Z
 urls:
   reference: https://y-guang.github.io/eam/reference
   article: https://y-guang.github.io/eam/articles

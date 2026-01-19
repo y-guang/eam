@@ -80,10 +80,7 @@ package.
 # Load the example dataset
 rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
 sim_output <- load_simulation_output(file.path(rdm_minimal_example, "simulation"))
-#> Error in load_simulation_output(file.path(rdm_minimal_example, "simulation")): Output directory does not exist: /simulation
 obs_df <- read.csv(file.path(rdm_minimal_example, "observation", "observation_data.csv"))
-#> Warning: cannot open file '/observation/observation_data.csv': No such file or directory
-#> Error in file(file, "rt"): cannot open the connection
 
 # Define summary statistics pipeline
 summary_pipe <- summarise_by(
@@ -100,9 +97,7 @@ sim_summary <- map_by_condition(
     summary_pipe(cond_df)
   }
 )
-#> Error: object 'sim_output' not found
 obs_summary <- summary_pipe(obs_df)
-#> Error: object 'obs_df' not found
 
 # Build ABC input
 abc_input <- build_abc_input(
@@ -111,7 +106,6 @@ abc_input <- build_abc_input(
   target_summary = obs_summary,
   param = c("V_beta_1", "V_beta_group")
 )
-#> Error: object 'sim_output' not found
 
 # Perform ABC parameter estimation using rejection method
 abc_rejection_model <- abc::abc(
@@ -121,6 +115,5 @@ abc_rejection_model <- abc::abc(
   tol = 0.5,
   method = "rejection"
 )
-#> Error: object 'abc_input' not found
 # }
 ```

@@ -35,7 +35,10 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/template-article.html">Template Article</a></li>
+    <li><a class="dropdown-item" href="../articles/00-framework-overview.html">Overview of the EAM Framework</a></li>
+    <li><a class="dropdown-item" href="../articles/10-minimal-working-example.html">Getting Started: A Minimal Working Example</a></li>
+    <li><a class="dropdown-item" href="../articles/20-models-in-eam.html">Models in eam</a></li>
+    <li><a class="dropdown-item" href="../articles/30-empirical-example.html">An Empirical Example: Simulation-Based Inference for Free Recall</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Developer Guide</h6></li>
     <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer Guide</a></li>
@@ -114,8 +117,19 @@ SVG）以获得更好的缩放效果。一个示例配置如下：</p>
 <span>  dev <span class="op">=</span> <span class="st">"svg"</span>,</span>
 <span>  fig.ext <span class="op">=</span> <span class="st">"svg"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>然后，在本地 R 环境中，运行以下代码以生成最终的 Rmd 文件：</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>然后，在本地 R 环境中，运行下面代码中适合的那行以生成最终的 Rmd
+文件：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># 在 R 环境中</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/knit_vignettes.R"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 或在终端中</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 如果你需要全量编译所有脚本（不建议的）</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R false</span></code></pre></div>
+<p>或，你可以手动修改并运行下面的代码片段以编译某一个特定的 Rmd
+文件：</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"vignettes"</span><span class="op">)</span></span>
 <span></span>
@@ -131,18 +145,18 @@ SVG）以获得更好的缩放效果。一个示例配置如下：</p>
 </h3>
 <p>一旦你完成了预编译过程，确保在 <code>_pkgdown.yml</code>
 文件中正确引用了新的 Rmd 文件。例如：</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="提交更改">提交更改<a class="anchor" aria-label="anchor" href="#%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%94%B9"></a>
 </h3>
 <p>之后，你可以尝试在本地构建 pkgdown 网站以确保一切正常：</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">build_site</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>确保所有内容均正确后，同时提交<code>*.Rmd.orig</code> 和生成的
 <code>*.Rmd</code>。</p>

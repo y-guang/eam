@@ -33,17 +33,20 @@ Data frame of bootstrapped parameter values
 # check abc::abc for details on fitting ABC models
 rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
 abc_model <- readRDS(file.path(rdm_minimal_example, "abc", "abc_neuralnet_model.rds"))
-#> Warning: cannot open compressed file '/abc/abc_neuralnet_model.rds', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Bootstrap resample posterior parameters
 posterior_params <- abc_posterior_bootstrap(
   abc_model,
   n_samples = 100
 )
-#> Error: object 'abc_model' not found
 
 # View the first few rows of the bootstrapped posterior parameters
 head(posterior_params)
-#> Error: object 'posterior_params' not found
+#>         V_beta_1 V_beta_group
+#> X232   0.2280897    0.1869761
+#> X61    0.2587934    0.1670919
+#> X150   0.2258720    0.1938078
+#> X318   0.2608088    0.1624729
+#> X318.1 0.2608088    0.1624729
+#> X51    0.2649904    0.1941630
 ```

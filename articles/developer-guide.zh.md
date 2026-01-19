@@ -35,7 +35,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-然后，在本地 R 环境中，运行以下代码以生成最终的 Rmd 文件：
+然后，在本地 R 环境中，运行下面代码中适合的那行以生成最终的 Rmd 文件：
+
+``` r
+# 在 R 环境中
+source("scripts/knit_vignettes.R")
+
+# 或在终端中
+Rscript scripts/knit_vignettes.R
+
+# 如果你需要全量编译所有脚本（不建议的）
+Rscript scripts/knit_vignettes.R false
+```
+
+或，你可以手动修改并运行下面的代码片段以编译某一个特定的 Rmd 文件：
 
 ``` r
 old <- getwd()

@@ -26,7 +26,10 @@ for ABC parameter estimation."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/template-article.html">Template Article</a></li>
+    <li><a class="dropdown-item" href="../articles/00-framework-overview.html">Overview of the EAM Framework</a></li>
+    <li><a class="dropdown-item" href="../articles/10-minimal-working-example.html">Getting Started: A Minimal Working Example</a></li>
+    <li><a class="dropdown-item" href="../articles/20-models-in-eam.html">Models in eam</a></li>
+    <li><a class="dropdown-item" href="../articles/30-empirical-example.html">An Empirical Example: Simulation-Based Inference for Free Recall</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Developer Guide</h6></li>
     <li><a class="dropdown-item" href="../articles/developer-guide.html">Developer Guide</a></li>
@@ -131,10 +134,7 @@ are familiar with the <code>abc</code> package.</p>
 <span class="r-in"><span><span class="co"># Load the example dataset</span></span></span>
 <span class="r-in"><span><span class="va">rdm_minimal_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rdm_minimal"</span>, package <span class="op">=</span> <span class="st">"eam"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_simulation_output.html">load_simulation_output</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rdm_minimal_example</span>, <span class="st">"simulation"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in load_simulation_output(file.path(rdm_minimal_example, "simulation")):</span> Output directory does not exist: /simulation</span>
 <span class="r-in"><span><span class="va">obs_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">rdm_minimal_example</span>, <span class="st">"observation"</span>, <span class="st">"observation_data.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/observation/observation_data.csv': No such file or directory</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(file, "rt"):</span> cannot open the connection</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Define summary statistics pipeline</span></span></span>
 <span class="r-in"><span><span class="va">summary_pipe</span> <span class="op">&lt;-</span> <span class="fu"><a href="summarise_by.html">summarise_by</a></span><span class="op">(</span></span></span>
@@ -151,9 +151,7 @@ are familiar with the <code>abc</code> package.</p>
 <span class="r-in"><span>    <span class="fu">summary_pipe</span><span class="op">(</span><span class="va">cond_df</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sim_output' not found</span>
 <span class="r-in"><span><span class="va">obs_summary</span> <span class="op">&lt;-</span> <span class="fu">summary_pipe</span><span class="op">(</span><span class="va">obs_df</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'obs_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Build ABC input</span></span></span>
 <span class="r-in"><span><span class="va">abc_input</span> <span class="op">&lt;-</span> <span class="fu">build_abc_input</span><span class="op">(</span></span></span>
@@ -162,7 +160,6 @@ are familiar with the <code>abc</code> package.</p>
 <span class="r-in"><span>  target_summary <span class="op">=</span> <span class="va">obs_summary</span>,</span></span>
 <span class="r-in"><span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"V_beta_1"</span>, <span class="st">"V_beta_group"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sim_output' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Perform ABC parameter estimation using rejection method</span></span></span>
 <span class="r-in"><span><span class="va">abc_rejection_model</span> <span class="op">&lt;-</span> <span class="fu">abc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/abc/man/abc.html" class="external-link">abc</a></span><span class="op">(</span></span></span>
@@ -172,7 +169,6 @@ are familiar with the <code>abc</code> package.</p>
 <span class="r-in"><span>  tol <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"rejection"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'abc_input' not found</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

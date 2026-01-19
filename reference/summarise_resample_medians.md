@@ -35,8 +35,6 @@ Data frame with summary statistics for each parameter
 abc_input <- readRDS(
   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
 )
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Perform ABC resampling
 results <- abc_resample(
@@ -48,11 +46,11 @@ results <- abc_resample(
   tol = 0.5,
   method = "rejection"
 )
-#> Error: object 'abc_input' not found
 
 # summarise the resample medians
 summary_stats <- summarise_resample_medians(results, ci_level = 0.95)
-#> Error: object 'results' not found
 print(summary_stats)
-#> Error: object 'summary_stats' not found
+#>      parameter      mean    median ci_lower_0.025 ci_upper_0.975
+#> 1     V_beta_1 0.2603399 0.2603058      0.2307077      0.2915249
+#> 2 V_beta_group 0.1893953 0.1885646      0.1678800      0.2107938
 ```

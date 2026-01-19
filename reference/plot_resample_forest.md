@@ -50,8 +50,6 @@ plots displayed in the graphics device.
 abc_input <- readRDS(
   system.file("extdata", "rdm_minimal", "abc", "abc_input.rds", package = "eam")
 )
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Perform ABC resampling
 results <- abc_resample(
@@ -63,9 +61,7 @@ results <- abc_resample(
   tol = 0.5,
   method = "rejection"
 )
-#> Error: object 'abc_input' not found
 
 # plot forest plots showing parameter ranges
 plot_resample_forest(results, ci_level = 0.95)
-#> Error: object 'results' not found
 ```

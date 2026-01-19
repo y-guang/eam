@@ -45,14 +45,16 @@ abc_file <- system.file(
   package = "eam"
 )
 abc_rejection_model <- readRDS(abc_file)
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 
 # Summarise posterior distributions
 summarise_posterior_parameters(abc_rejection_model)
-#> Error: object 'abc_rejection_model' not found
+#>      parameter      mean    median ci_lower_0.025 ci_upper_0.975
+#> 1     V_beta_1 0.2684096 0.2607152      0.1119190      0.4470107
+#> 2 V_beta_group 0.1949098 0.1879120      0.1036883      0.2958763
 
 # Custom confidence interval level
 summarise_posterior_parameters(abc_rejection_model, ci_level = 0.90)
-#> Error: object 'abc_rejection_model' not found
+#>      parameter      mean    median ci_lower_0.050 ci_upper_0.950
+#> 1     V_beta_1 0.2684096 0.2607152      0.1291406       0.422611
+#> 2 V_beta_group 0.1949098 0.1879120      0.1070319       0.290407
 ```
