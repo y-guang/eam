@@ -5,5 +5,4 @@
 .vscode
 R/RcppExports.R
 /blueprint/
-inst/extdata
 docs
