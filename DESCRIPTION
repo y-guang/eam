@@ -33,7 +33,8 @@ Imports:
   gridExtra,
   data.table,
   purrr,
-  scales
+  scales,
+  vctrs
 Suggests:
     testthat (>= 3.0.0),
     pbapply,

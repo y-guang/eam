@@ -170,8 +170,9 @@ summarise_by_impl <- function(.data, dots, .by, .wider_by) {
           # No names or empty names: use X1, X2, etc.
           nm <- paste0(colname, "_X", seq_along(val))
         } else {
-          # Has names: use assigned_name_original_name
-          nm <- paste0(colname, "_", nm)
+          # Has names: repair names them, then prefix
+          nm_clean <- vctrs::vec_as_names(nm, repair = "universal", quiet = TRUE)
+          nm <- paste0(colname, "_", nm_clean)
         }
         stats::setNames(as.list(val), nm)
       } else {
