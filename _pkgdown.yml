@@ -11,7 +11,10 @@ articles:
 - title: Tutorials
   navbar: Tutorials
   contents:
-  - template-article
+  - 00-framework-overview
+  - 10-minimal-working-example
+  - 20-models-in-eam
+  - 30-empirical-example
 - title: Developer Guide
   navbar: Developer Guide
   contents:
