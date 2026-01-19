@@ -13,11 +13,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-This section presents a real-world example illustrating how the proposed
-simulation-based inference workflow can be applied to empirical data. 
+This section presents a real-world example illustrating how the proposed simulation-based inference workflow can be applied to empirical data.
 
-Here, we used the free recall data from Penn Electrophysiology of Encoding and Retrieval Study (PEERS; Kahana et al., 2024).
-We model the recall process using a multi-response Racing Diffusion Model (RDM), focusing on RTs for first seven retrievaled items. 
+Here, we used the free recall data from Penn Electrophysiology of Encoding and Retrieval Study (PEERS; Kahana et al., 2024). We model the recall process using a multi-response Racing Diffusion Model (RDM), focusing on RTs for first seven retrievaled items.
 
 ```{r,message=FALSE}
 # Load necessary packages
@@ -47,14 +45,14 @@ ndt_{\beta_0} &\sim \text{Uniform}(-1, 1).
 \paragraph{Between-trial variability}
 
 To capture variabilities in recall trajectories and recall strategies across trials , we introduce a between-trial variability on the drift rate:
+
 \[
 V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
 \]
 
 \paragraph{Item-level parameterization}
 
-At the item-level, different model parameters are linked to different
-structural aspects of the task. Specifically, the decision boundary is assumed to vary with the \emph{output position}, whereas the drift rate varies with the \emph{item index}. 
+At the item-level, different model parameters are linked to different structural aspects of the task. Specifically, the decision boundary is assumed to vary with the \emph{output position}, whereas the drift rate varies with the \emph{item index}.
 
 Formally, we define
 \[
@@ -68,8 +66,7 @@ where \( \varepsilon > 0 \) is a small constant ensuring positivity of the drift
 
 \paragraph{Evidence accumulation dynamics}
 
-Within each trial, evidence evolves according to a Wiener diffusion
-process:
+Within each trial, evidence evolves according to a Wiener diffusion process:
 \[
 dX(t) = V_i \, dt + \sigma \, dW(t),
 \qquad
@@ -77,9 +74,9 @@ dW(t) \sim \mathcal{N}(0, dt),
 \]
 
 A response is generated when one accumulator first reaches the decision boundary \( A_i \). The observed response time for item \( i \) is given by
+
 \[
 RT_i = T_{\text{decision},i} + ndt_i .
-\]
 \]
 
 ```{r}
@@ -126,11 +123,8 @@ noise_factory <- function(context) {
   }
 }
 ```
-When parallelization is enabled, running the full simulation
-typically takes approximately 30 minutes to 1 hour.
-Given the computational constraints of this tutorial, we do not execute the full
-pipeline here. Interested readers are encouraged to run the code locally to
-reproduce the results.
+When parallelization is enabled, running the full simulation typically takes approximately 30 minutes to 1 hour. Given the computational constraints of this tutorial, we do not execute the full pipeline here. Interested readers are encouraged to run the code locally to reproduce the results.
+
 ```{r,eval=FALSE}
 ####################
 # Simulation setup #
@@ -165,8 +159,8 @@ sim_output <- run_simulation(
   output_dir = temp_output_path
 )
 ```
-For illustration purposes, we use data from one representative participant in the
-PEERS dataset as the observed data in this example.
+For illustration purposes, we use data from one representative participant in the PEERS dataset as the observed data in this example.
+
 ```{r}
 #######################
 # Load Observed data  #
@@ -174,8 +168,8 @@ PEERS dataset as the observed data in this example.
 
 observed_data<-read.csv("example_data.csv")
 ```
-Here we calcualte the response time quantiles (0.1–0.9) separately for each response
-position ("rank_idx").
+Here we calcualte the response time quantiles (0.1–0.9) separately for each response position ("rank_idx").
+
 ```{r,eval=FALSE}
 #####################
 # abc model prepare #
@@ -209,10 +203,7 @@ abc_input <- build_abc_input(
 
 ```
 
-As the simulation step is omitted here, the inference code below is presented
-without being executed.
-Readers can run the complete inference pipeline locally once the simulated data have been
-generated.
+As the simulation step is omitted here, the inference code below is presented without being executed. Readers can run the complete inference pipeline locally once the simulated data have been generated.
 
 ```{r,eval=FALSE}
 
@@ -257,9 +248,8 @@ plot_posterior_parameters(
   abc_input
 )
 ```
-Here, we directly present results from a previously fitted model and assess
-model adequacy by examining the overlap between RTs simulated from the
-posterior median and the RTs.
+Here, we directly present results from a previously fitted model and assess model adequacy by examining the overlap between RTs simulated from the posterior median and the RTs.
+
 ```{r}
 ##############################
 # Posterior predictive check #
@@ -319,3 +309,4 @@ plot_rt(
 Reference:
 
 Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A. W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller, N. E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera, J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn Electrophysiology of Encoding and Retrieval Study. Journal of Experimental Psychology: Learning, Memory, and Cognition, 50(9), 1421–1443. https://doi.org/10.1037/xlm0001319
+

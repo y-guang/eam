@@ -14,42 +14,28 @@ knitr::opts_chunk$set(
 ```
 
 
-This section introduces the setting for five representative models: Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing Accumulator (LCA; Usher & McClelland, 2001), Linear Ballistic Accumulator (LBA; Brown & Heathcote, 2008), Racing Diffusion Model
-(RDM; Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al., 2020). Meanwhile, we also provide a tutorial on how to extend them to multi-response variants or interget covariates into the simualtion and inference.
+This section introduces the setting for five representative models: Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing Accumulator (LCA; Usher & McClelland, 2001), Linear Ballistic Accumulator (LBA; Brown & Heathcote, 2008), Racing Diffusion Model (RDM; Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al., 2020). Meanwhile, we also provide a tutorial on how to extend them to multi-response variants or interget covariates into the simualtion and inference.
 
 In practice, when fitting these models to real data, the simulation-and-summary pipeline shown below can be combined directly with the Section 1 workflow (i.e., replacing the toy observed dataset with empirical data, computing the same summary statistics, and then running ABC/ABI for posterior inference and diagnostics).
 
 ## Diffusion decision model
 
-The diffusion decision model (DDM) is is a double-boundary single-accumulator EAM with Gaussian noise.
-The moment-to-moment change in accumulated evidence $x(t)$ is expressed as:
+The diffusion decision model (DDM) is is a double-boundary single-accumulator EAM with Gaussian noise. The moment-to-moment change in accumulated evidence $x(t)$ is expressed as:
 \[
 dx(t) = v \cdot dt + \omega \cdot dW_t,
 \]
 \[
 dW_t \sim N(0,\, dt),
 \]
-where the diffusion noise term $dW_t$ at each time step is drawn from a Gaussian
-distribution with mean 0 and variance $dt$. The diffusion scaling parameter
-$\omega$ is typically fixed at 1. The starting point $z$ in the DDM is often expressed as a proportion of
-the decision boundary $a$:
+where the diffusion noise term $dW_t$ at each time step is drawn from a Gaussian distribution with mean 0 and variance $dt$. The diffusion scaling parameter $\omega$ is typically fixed at 1. The starting point $z$ in the DDM is often expressed as a proportion of the decision boundary $a$:
 \[
 z = \rho \cdot a, \qquad \rho \in [0,\, 1],
 \]
-where $\rho$ denotes relative bias toward the upper boundary $a$.
-A larger $\rho$ places the starting point closer to the upper boundary,
-making it easier and faster for the process to reach it, increasing the
-probability of a correct response.
+where $\rho$ denotes relative bias toward the upper boundary $a$. A larger $\rho$ places the starting point closer to the upper boundary, making it easier and faster for the process to reach it, increasing the probability of a correct response.
 
-The free parameters of the model thus include the drift rate $v$, the
-decision boundary $a$, the starting point $z$ (or relative bias $\rho$), and the
-non-decision time $t_0$. 
+The free parameters of the model thus include the drift rate $v$, the decision boundary $a$, the starting point $z$ (or relative bias $\rho$), and the non-decision time $t_0$.
 
-Beyond these core parameters, the DDM also incorporates
-three sources of between-trial variability: variability in drift rate ($s_v$),
-starting point ($s_z$), and non-decision time ($s_{t0}$). These components are optional,
-yet including them enables the model to better capture empirical RT distributions,
-explain "fast errors", and separate within-trial noise from between-trial variability.
+Beyond these core parameters, the DDM also incorporates three sources of between-trial variability: variability in drift rate ($s_v$), starting point ($s_z$), and non-decision time ($s_{t0}$). These components are optional, yet including them enables the model to better capture empirical RT distributions, explain "fast errors", and separate within-trial noise from between-trial variability.
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
@@ -161,11 +147,7 @@ simulation_sumstat <- map_by_condition(
 
 ## Leaky competing accumulator
 
-The leaky competing accumulator model is a single-boundary, 
-multi-accumulator evidence-accumulation model with Gaussian noise. 
-Beyond stochastic fluctuations, the evolution of evidence in each 
-accumulator is shaped by a leakage term $k x_i$ and a lateral inhibition 
-term $\beta \sum_{j \neq i} x_j$:
+The leaky competing accumulator model is a single-boundary, multi-accumulator evidence-accumulation model with Gaussian noise. Beyond stochastic fluctuations, the evolution of evidence in each accumulator is shaped by a leakage term $k x_i$ and a lateral inhibition term $\beta \sum_{j \neq i} x_j$:
 \[
 dx_i(t) = \left(v_i - k x_i - \beta \sum_{j \neq i} x_j\right)\cdot dt 
           + s\cdot dW_t,
@@ -174,18 +156,9 @@ dx_i(t) = \left(v_i - k x_i - \beta \sum_{j \neq i} x_j\right)\cdot dt
 dW_t \sim N(0,\, dt).
 \]
 
-Here, $k$ is the leakage parameter that governs the rate at which 
-accumulated evidence decays over time, $x_i$ denotes the accumulated 
-evidence in accumulator $i$, $\beta$ controls the strength of lateral 
-inhibition exerted by competing accumulators, and 
-$\sum_{j \neq i} x_j$ represents the total evidence of all competing 
-alternatives.
+Here, $k$ is the leakage parameter that governs the rate at which accumulated evidence decays over time, $x_i$ denotes the accumulated evidence in accumulator $i$, $\beta$ controls the strength of lateral inhibition exerted by competing accumulators, and $\sum_{j \neq i} x_j$ represents the total evidence of all competing alternatives.
 
-The LCA adopts a single decision boundary $a$ shared across all 
-accumulators, and a response is triggered when the first accumulator reaches 
-that boundary. In a two-accumulator system, the parameters to be estimated usually include 
-the drift rates for each alternative $v_i$, the leakage parameter $k$, the inhibition strength 
-$\beta$, the decision boundary $a$, and the non-decision time $t_0$.
+The LCA adopts a single decision boundary $a$ shared across all accumulators, and a response is triggered when the first accumulator reaches that boundary. In a two-accumulator system, the parameters to be estimated usually include the drift rates for each alternative $v_i$, the leakage parameter $k$, the inhibition strength $\beta$, the decision boundary $a$, and the non-decision time $t_0$.
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
@@ -287,38 +260,19 @@ simulation_sumstat <- map_by_condition(
 
 ```
 
-## Linear ballistic accumulator 
-The linear ballistic accumulator model is a
-single-boundary multiple-accumulator EAM with non-decision noise.
-Without stochastic fluctuations moment to moment, the accumulated
-evidence evolves as a straight line with slope equal to the drift rate
-$v_i$, and the response and RT is determined by the first
-accumulator to reach its threshold:
+## Linear ballistic accumulator
+
+The linear ballistic accumulator model is a single-boundary multiple-accumulator EAM with non-decision noise. Without stochastic fluctuations moment to moment, the accumulated evidence evolves as a straight line with slope equal to the drift rate $v_i$, and the response and RT is determined by the first accumulator to reach its threshold:
 \[
 dx(t) = v_i \cdot dt.
 \]
 
-To account for between-trial variability in observed response and RTs, 
-the LBA introduces two additional random components.
-First, on each trial, each accumulator begins with a random starting
-point $z_i$ sampled from a uniform distribution $U(0, Z)$, capturing
-variability in initial bias. Second, on each trial, the drift rate for
-each accumulator is drawn from a Gaussian distribution with mean $V_i$
-and variance $\tau$, representing the variability in quality of
-evidence:
+To account for between-trial variability in observed response and RTs, the LBA introduces two additional random components. First, on each trial, each accumulator begins with a random starting point $z_i$ sampled from a uniform distribution $U(0, Z)$, capturing variability in initial bias. Second, on each trial, the drift rate for each accumulator is drawn from a Gaussian distribution with mean $V_i$ and variance $\tau$, representing the variability in quality of evidence:
 \[
 v_i \sim N(V_i,\ \tau).
 \]
 
-For model identifiability, $\tau$ is typically fixed as a constant, 
-or constraints are imposed on the mean drift rates 
-(e.g., $V_1 + V_2 = 1$). 
-The free parameters of the model thus include the mean drift rate 
-for each accumulator $V_i$, the decision boundary $a$, the upper bound 
-of starting point $Z$, and the non-decision time $t_0$. 
-This design gives the LBA greater flexibility in capturing error RT 
-distributions and allows straightforward extension to tasks with more 
-than two options by simply adding more accumulators.
+For model identifiability, $\tau$ is typically fixed as a constant, or constraints are imposed on the mean drift rates (e.g., $V_1 + V_2 = 1$). The free parameters of the model thus include the mean drift rate for each accumulator $V_i$, the decision boundary $a$, the upper bound of starting point $Z$, and the non-decision time $t_0$. This design gives the LBA greater flexibility in capturing error RT distributions and allows straightforward extension to tasks with more than two options by simply adding more accumulators.
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
@@ -422,18 +376,9 @@ simulation_sumstat <- map_by_condition(
 
 ## Racing diffusion model
 
-The racing diffusion model is a 
-single-boundary, multiple-accumulator EAM with Gaussian noise. 
-The moment-to-moment change in accumulated evidence, $x(t)$, follows 
-the same stochastic updating rule as in the DDM; the key difference lies 
-in how incorrect responses are determined, namely by allowing multiple 
-accumulators to ``race'' toward the upper decision boundary, with the 
-first to cross it dictating the response and RT.
+The racing diffusion model is a single-boundary, multiple-accumulator EAM with Gaussian noise. The moment-to-moment change in accumulated evidence, $x(t)$, follows the same stochastic updating rule as in the DDM; the key difference lies in how incorrect responses are determined, namely by allowing multiple accumulators to ``race'' toward the upper decision boundary, with the first to cross it dictating the response and RT.
 
-Due to concerns about parameter recovery, the RDM avoids estimating
-between-trial variability in drift rates ($s_v$) while still allowing
-starting points ($s_z$) to vary across
-trials to improve the fit to empirical RT distributions. 
+Due to concerns about parameter recovery, the RDM avoids estimating between-trial variability in drift rates ($s_v$) while still allowing starting points ($s_z$) to vary across trials to improve the fit to empirical RT distributions.
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
@@ -537,21 +482,14 @@ simulation_sumstat <- map_by_condition(
 ```
 ## Lévy flight model
 
-The Lévy flight model (LFM) 
-extends the traditional DDM in a different direction by replacing 
-the Gaussian diffusion noise with a Lévy $\alpha$-stable distribution, 
-allowing occasional large evidence jumps to capture heavy-tailed RT 
-distributions. It is a double-boundary single-accumulator EAM with Lévy
-$\alpha$-stable noise. The moment-to-moment change in accumulated
-evidence $x(t)$ thus follows the rules:
+The Lévy flight model (LFM) extends the traditional DDM in a different direction by replacing the Gaussian diffusion noise with a Lévy $\alpha$-stable distribution, allowing occasional large evidence jumps to capture heavy-tailed RT distributions. It is a double-boundary single-accumulator EAM with Lévy $\alpha$-stable noise. The moment-to-moment change in accumulated evidence $x(t)$ thus follows the rules:
 \[
 dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),
 \]
 \[
 dL_{\alpha}(t) \sim S_{\alpha}(\gamma,\ \varepsilon,\ \mu),
 \]
-where $S_{\alpha}(\cdot)$ denotes a Lévy $\alpha$-stable distribution
-parameterized by:
+where $S_{\alpha}(\cdot)$ denotes a Lévy $\alpha$-stable distribution parameterized by:
 
 \begin{itemize}
   \setlength{\itemsep}{0pt}     
@@ -563,13 +501,7 @@ parameterized by:
     \item $\mu \in \mathbb{R}$: location parameter
 \end{itemize}
 
-In the LFM, the stability parameter $\alpha$ is free to be estimated 
-from the data, whereas the skewness ($\gamma$), scale ($\varepsilon$),
-and location ($\mu$) are fixed. Thus, the free parameters of the LFM include the drift rate for a single
-accumulator $v$, the decision boundary $a$, the starting point $z$, the
-non-decision time $t_0$, and the stability parameter $\alpha$. The LFM
-allows between-trial variability in drift rates ($s_v$), starting points
-($s_z$), and non-decision time ($s_{t0}$). 
+In the LFM, the stability parameter $\alpha$ is free to be estimated from the data, whereas the skewness ($\gamma$), scale ($\varepsilon$), and location ($\mu$) are fixed. Thus, the free parameters of the LFM include the drift rate for a single accumulator $v$, the decision boundary $a$, the starting point $z$, the non-decision time $t_0$, and the stability parameter $\alpha$. The LFM allows between-trial variability in drift rates ($s_v$), starting points ($s_z$), and non-decision time ($s_{t0}$). 
 
 ```{r,eval=FALSE}
 # Load the package for Lévy alpha-stable distribution
@@ -687,33 +619,23 @@ simulation_sumstat <- map_by_condition(
 
 ## Multi-response EAMs
 
-To simulate a multi-response EAM, we introduced
-two additional components: a position-dependent decision boundary function and an
-item-dependent drift rate function.\\
-First, the decision boundary was modeled as a linear increasing
-function of output position $o$:
+To simulate a multi-response EAM, we introduced two additional components: a position-dependent decision boundary function and an item-dependent drift rate function.
+
+First, the decision boundary was modeled as a linear increasing function of output position $o$:
 \[
 a(o) = a_{0} + a_{1}\cdot o,
 \]
-where $a_{0}$ represents the decision boundary for the first-retrieved
-item and $a_{1} > 0$ captures the rate at which the boundary increases
-across retrieval positions. 
+where $a_{0}$ represents the decision boundary for the first-retrieved item and $a_{1} > 0$ captures the rate at which the boundary increases across retrieval positions.
 
-As the recall episode progresses, the
-criterion for terminating evidence accumulation becomes more stringent.
-Such an increase may arise from increased caution in memory retrieval.
-Importantly, because the boundary is linked to output position rather
-than item index, items with lower drift rates may reach the lower boundary by chance. \\
-Second, drift rates were specified as a linear decreasing function of item
-index $i$:
+As the recall episode progresses, the criterion for terminating evidence accumulation becomes more stringent. Such an increase may arise from increased caution in memory retrieval. Importantly, because the boundary is linked to output position rather than item index, items with lower drift rates may reach the lower boundary by chance.
+
+Second, drift rates were specified as a linear decreasing function of item index $i$:
+
 \[
 v(i) = v_{0} + v_{1}\cdot i,
 \]
-where $v_{0}$ represents the drift rate for the first item and
-$v_{1} < 0$ reflects the decline in evidence strength across positions.
-This was intended to capture the reduction in available memory cues or
-retrieval strength for later items, a pattern commonly observed in free
-recall tasks. 
+
+where $v_{0}$ represents the drift rate for the first item and $v_{1} < 0$ reflects the decline in evidence strength across positions. This was intended to capture the reduction in available memory cues or retrieval strength for later items, a pattern commonly observed in free recall tasks. 
 
 The following example use DDM as a template and extend it to a multi-response version:
 
@@ -828,25 +750,15 @@ simulation_sumstat <- map_by_condition(
 
 There are two general strategies for incorporating covariates into the models.
 
-In the first approach, model parameters are allowed to vary systematically as a
-function of group or trial-level covariates. Specifically, parameters
-are generated according to
+In the first approach, model parameters are allowed to vary systematically as a function of group or trial-level covariates. Specifically, parameters are generated according to
+
 \[
 \theta_i = \theta_0 + \theta_{\mathrm{cov}}\, X_i,
 \]
-where $\theta$ denotes the model parameters (e.g., drift rate, decision
-boundary, or non-decision time), $X_i$ is the covariate value on trial $i$,
-$\theta_0$ is the baseline (intercept) parameter, and $\theta_{\mathrm{cov}}$
-quantifies the effect of the covariate. This formulation is flexible and
-accommodates both continuous and discrete covariates.
 
-When using simulation-based inference, the choice of summary statistics must
-reflect the structure of the covariate. For continuous covariates, the summary
-statistics should include the estimated regression intercept and slope capturing
-the relationship between response times (RTs) and the covariate. For discrete
-covariates, summary statistics typically consist of RT quantiles computed
-separately for each covariate level, together with accuracy measures for
-double-boundary EAMs.
+where $\theta$ denotes the model parameters (e.g., drift rate, decision boundary, or non-decision time), $X_i$ is the covariate value on trial $i$, $\theta_0$ is the baseline (intercept) parameter, and $\theta_{\mathrm{cov}}$ quantifies the effect of the covariate. This formulation is flexible and accommodates both continuous and discrete covariates.
+
+When using simulation-based inference, the choice of summary statistics must reflect the structure of the covariate. For continuous covariates, the summary statistics should include the estimated regression intercept and slope capturing the relationship between response times (RTs) and the covariate. For discrete covariates, summary statistics typically consist of RT quantiles computed separately for each covariate level, together with accuracy measures for double-boundary EAMs.
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
@@ -953,19 +865,11 @@ simulation_sumstat <- map_by_condition(
 
 ```
 
-In the second approach, covariates such as trial-level neural signals are injected
-directly into the accumulation process by modulating model parameters.
+In the second approach, covariates such as trial-level neural signals are injected directly into the accumulation process by modulating model parameters.
 
-Specifically, the package allows users to link trial-level neural measurements
-to EAM parameters through a latent-variable formulation. A scaling parameter
-$s$ is introduced to map the neural signal onto the appropriate parameter scale,
-while a variance term $\tau^{2}$ captures the discrepancy between the observed
-neural signal and the latent parameter value.
+Specifically, the package allows users to link trial-level neural measurements to EAM parameters through a latent-variable formulation. A scaling parameter $s$ is introduced to map the neural signal onto the appropriate parameter scale, while a variance term $\tau^{2}$ captures the discrepancy between the observed neural signal and the latent parameter value.
 
-This formulation enables joint modeling of neural and behavioral data, and allows
-formal tests of whether incorporating neural information leads to improved model
-performance. Formally, a trial-level neural signal $P_i$ (e.g., EEG or fMRI
-measurements) is linked to the corresponding parameter $\theta_i$ via
+This formulation enables joint modeling of neural and behavioral data, and allows formal tests of whether incorporating neural information leads to improved model performance. Formally, a trial-level neural signal $P_i$ (e.g., EEG or fMRI measurements) is linked to the corresponding parameter $\theta_i$ via
 \[
 \theta_i \sim \mathcal{N}\bigl(s \cdot P_i,\, \tau^{2}\bigr).
 \]
@@ -1095,3 +999,4 @@ https://doi.org/10.3758/s13423-020-01719-6
 Wieschen, E. M., Voss, A., & Radev, S. T. (2020). Jumping to conclusion? A Lévy flight
 model of decision making. The Quantitative Methods for Psychology, 16 (2),
 120–132. https://doi.org/10.20982/tqmp.16.2.p120
+
