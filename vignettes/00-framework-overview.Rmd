@@ -95,10 +95,7 @@ The modular simulation engine composes ten modules (see Figure 1):
 
 
 By combining different modular components, the engine can simulate responses and
-RTs from many representative EAMs (see Section 2 for the configurations of each representative
-EAM). 
-
-\bigskip
+RTs from many representative EAMs (see the section [Models in eam](./20-models-in-eam.html) for the configurations of each representative EAM).
 
 ## Simulation-based inference module
 
@@ -106,8 +103,8 @@ The simulation-based inference module includes two major apporaches: Approximate
 Bayesian Computation (ABC; Csilléry et al., 2012) and Amortized Bayesian Inference (ABI; Sainsbury-Dale et al., 2024). These methods can estimate the posteiror distribution of parameters via the comparsion between simulated and observed data, bypassing the need for likelihood functions.
 
 ### Approximate Bayesian Computation (ABC)
-The Approximate
-Bayesian Computation (ABC) approximates the posterior distribution
+
+The Approximate Bayesian Computation (ABC) approximates the posterior distribution
 by comparing summary statistics from simulated data 
 $y_{\text{sim}}$ and observed data $y_{\text{obs}}$:
 
@@ -234,13 +231,13 @@ according to this similarity or likelihood estimate.
 The following sections provide a structured overview of the standard simulation
 and inference workflow supported by the package.
 
-\textbf{Section 1} introduces the core functions of the package and provides a minimal runnable example based on a three-parameter Drift Diffusion Model (DDM).
+\textbf{Section 1} [Getting Started: A Minimal Working Example](./10-minimal-working-example.html) introduces the core functions of the package and provides a minimal runnable example based on a three-parameter Drift Diffusion Model (DDM).
 
-\textbf{Section 2} demonstrates how representative evidence accumulation models can be
+\textbf{Section 2} [Models in eam](./20-models-in-eam.html) demonstrates how representative evidence accumulation models can be
 specified within the package, and how they can be extended to multi-response
 settings or intergeted with covariates. 
 
-\textbf{Section 3} presents a real-world application using free recall data, illustrating
+\textbf{Section 3} [An Empirical Example: Simulation-Based Inference for Free Recall](./30-empirical-example.html) presents a real-world application using free recall data, illustrating
 how the package can be applied to empirical datasets in practice.
 
 

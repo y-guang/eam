@@ -138,6 +138,7 @@ noise_factory <- function(context) {
   }
 }
 ```
+
 Once the model is specified, we can proceed to data simulation.
 The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
 ```{r,message=FALSE}
