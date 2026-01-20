@@ -2,6 +2,15 @@ url: https://y-guang.github.io/eam/
 template:
   bootstrap: 5
   light-switch: true
+  bslib:
+  includes:
+    in_header: |
+      <style>
+      // ugly hack to hide all the auto-generated figure captions
+      .figcaption {
+        display: none !important;
+      }
+      </style>
 
 build:
   destination: docs
