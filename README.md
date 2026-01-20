@@ -6,6 +6,12 @@ The package supports user-defined functions for item-level parameterization and 
 
 In addition to core inference tools, the package provides modules for parameter recovery, posterior predictive checks, and model comparison. Overall, it facilitates the study of a wide range of cognitive processes in tasks involving perceptual decision making, memory retrieval, and value-based decision making.
 
+## Links
+
+- [Documentation (for users)](https://y-guang.github.io/eam/): User-facing documentation with tutorials, usage examples, and model overviews.
+- [Development repository (for developers)](https://github.com/y-guang/eam): GitHub repository for source code, development discussions, and issue/PR tracking. The main branch reflects the development version, and tags are used for stable releases.
+- [CRAN page](https://CRAN.R-project.org/package=eam): The official CRAN page for the eam package.
+
 ## Features
 
 - ⚙️ High-Performance Backend
