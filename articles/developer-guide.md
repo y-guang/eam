@@ -13,17 +13,25 @@ in development discussions.
 
 ## Computation-Intensive Documents
 
-For computation-intensive vignettes, such as simulation tutorials,
-please adopt a **local pre-compilation** approach to accelerate the
-GitHub Pages build process.
+For any vignettes involving actual computation and execution, such as
+simulation tutorials, please adopt a **local pre-compilation** approach
+to accelerate the GitHub Pages build process.
 
-A rule of thumb is that if your document’s code execution time exceeds
-approximately 5 minute, you should consider using local pre-compilation.
+The corresponding file structure for each document is as follows. For
+example, for a document named `tutorial-a`:
+
+``` r
+.
+├── vignettes
+│   ├── tutorial-a.Rmd.orig      # Pre-compilation source file (can be omitted for documents without computation)
+│   ├── tutorial-a.Rmd           # Final file generated from source
+│   └── tutorial-a/              # Subdirectory for storing resources and pre-compiled figures
+```
 
 ### Local Pre-compilation
 
 First, in the `vignettes/` directory, rename the Rmd file that requires
-pre-compilation to `*.Rmd.orig`, for example `tutorial.Rmd.orig`.
+pre-compilation to `*.Rmd.orig`, for example `tutorial-a.Rmd.orig`.
 
 Ensure that in the Rmd file, you configure the figure path to a
 subdirectory under `vignettes/` with the same name, and prefer using
@@ -34,7 +42,7 @@ configuration:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "./tutorial/",
+  fig.path = "./tutorial-a/",
   dev = "svg",
   fig.ext = "svg"
 )
@@ -62,8 +70,8 @@ old <- getwd()
 setwd("vignettes")
 
 knitr::knit(
-  "tutorial.Rmd.orig",
-  output = "tutorial.Rmd"
+  "tutorial-a.Rmd.orig",
+  output = "tutorial-a.Rmd"
 )
 
 setwd(old)
@@ -80,7 +88,7 @@ articles:
   navbar: Tutorials
   contents:
   - another-document
-  - tutorial
+  - tutorial-a
 ```
 
 ### Commit Changes

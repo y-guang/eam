@@ -9,17 +9,24 @@ issue、Pull Request 以及开发讨论中优先使用英语。
 
 ## 计算密集型文档
 
-对于计算密集型的 vignettes
+对于任何涉及实际计算和运行的 vignettes
 (文档)，例如涉及模拟的教程，请采用**本地预编译**的方式以加速 github
 pages 的构建过程。
 
-一个经验性的建议是，如果你的文档代码运行实践超过 5
-分钟这个量级，那么就应该考虑使用本地预编译的方式。
+每个文档的对应文件结构如下，例如，对于一个名为`tutorial-a` 的文档：
+
+``` r
+.
+├── vignettes
+│   ├── tutorial-a.Rmd.orig      # 预编译源文件（对于不涉及计算的文档可省略此文件）
+│   ├── tutorial-a.Rmd           # 由源文件生成的最终文件
+│   └── tutorial-a/              # 存放资源及预编译图片的子目录
+```
 
 ### 本地预编译
 
 首先，在 `vignettes/` 目录下，将需要预编译的 Rmd 文件重命名为
-`*.Rmd.orig`，例如 `tutorial.Rmd.orig`。
+`*.Rmd.orig`，例如 `tutorial-a.Rmd.orig`。
 
 确保在该 Rmd 文件中，将图片路径配置到 `vignettes/`
 下的**同名子目录**，并偏好使用矢量图格式（如
@@ -29,7 +36,7 @@ SVG）以获得更好的缩放效果。一个示例配置如下：
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "./tutorial/",
+  fig.path = "./tutorial-a/",
   dev = "svg",
   fig.ext = "svg"
 )
@@ -55,8 +62,8 @@ old <- getwd()
 setwd("vignettes")
 
 knitr::knit(
-  "tutorial.Rmd.orig",
-  output = "tutorial.Rmd"
+  "tutorial-a.Rmd.orig",
+  output = "tutorial-a.Rmd"
 )
 
 setwd(old)
@@ -73,7 +80,7 @@ articles:
   navbar: Tutorials
   contents:
   - another-document
-  - tutorial
+  - tutorial-a
 ```
 
 ### 提交更改

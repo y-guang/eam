@@ -99,49 +99,54 @@ in development discussions.</p>
 <div class="section level2">
 <h2 id="computation-intensive-documents">Computation-Intensive Documents<a class="anchor" aria-label="anchor" href="#computation-intensive-documents"></a>
 </h2>
-<p>For computation-intensive vignettes, such as simulation tutorials,
-please adopt a <strong>local pre-compilation</strong> approach to
-accelerate the GitHub Pages build process.</p>
-<p>A rule of thumb is that if your document’s code execution time
-exceeds approximately 5 minute, you should consider using local
-pre-compilation.</p>
+<p>For any vignettes involving actual computation and execution, such as
+simulation tutorials, please adopt a <strong>local
+pre-compilation</strong> approach to accelerate the GitHub Pages build
+process.</p>
+<p>The corresponding file structure for each document is as follows. For
+example, for a document named <code>tutorial-a</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>.</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>├── vignettes</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>│   ├── tutorial<span class="sc">-</span>a.Rmd.orig      <span class="co"># Pre-compilation source file (can be omitted for documents without computation)</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>│   ├── tutorial<span class="sc">-</span>a.Rmd           <span class="co"># Final file generated from source</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>│   └── tutorial<span class="sc">-</span>a<span class="sc">/</span>              <span class="co"># Subdirectory for storing resources and pre-compiled figures</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="local-pre-compilation">Local Pre-compilation<a class="anchor" aria-label="anchor" href="#local-pre-compilation"></a>
 </h3>
 <p>First, in the <code>vignettes/</code> directory, rename the Rmd file
 that requires pre-compilation to <code>*.Rmd.orig</code>, for example
-<code>tutorial.Rmd.orig</code>.</p>
+<code>tutorial-a.Rmd.orig</code>.</p>
 <p>Ensure that in the Rmd file, you configure the figure path to a
 subdirectory under <code>vignettes/</code> with the same name, and
 prefer using vector graphics formats (such as SVG) for better scaling.
 An example configuration:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span></span>
 <span>  collapse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comment <span class="op">=</span> <span class="st">"#&gt;"</span>,</span>
-<span>  fig.path <span class="op">=</span> <span class="st">"./tutorial/"</span>,</span>
+<span>  fig.path <span class="op">=</span> <span class="st">"./tutorial-a/"</span>,</span>
 <span>  dev <span class="op">=</span> <span class="st">"svg"</span>,</span>
 <span>  fig.ext <span class="op">=</span> <span class="st">"svg"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Then, in your local R environment, run the appropriate line from the
 code below to generate the final Rmd file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># In R environment</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/knit_vignettes.R"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Or in terminal</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># If you need to force recompile all scripts (not recommended)</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R false</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># In R environment</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/knit_vignettes.R"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># Or in terminal</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># If you need to force recompile all scripts (not recommended)</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R false</span></code></pre></div>
 <p>Alternatively, you can manually modify and run the following code
 snippet to compile a specific Rmd file:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"vignettes"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span></span>
-<span>  <span class="st">"tutorial.Rmd.orig"</span>,</span>
-<span>  output <span class="op">=</span> <span class="st">"tutorial.Rmd"</span></span>
+<span>  <span class="st">"tutorial-a.Rmd.orig"</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"tutorial-a.Rmd"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="va">old</span><span class="op">)</span></span></code></pre></div>
@@ -152,19 +157,19 @@ snippet to compile a specific Rmd file:</p>
 <p>Once you have completed the pre-compilation process, ensure that the
 new Rmd file is properly referenced in the <code>_pkgdown.yml</code>
 file. For example:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial-a</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="commit-changes">Commit Changes<a class="anchor" aria-label="anchor" href="#commit-changes"></a>
 </h3>
 <p>Afterwards, you can try building the pkgdown site locally to ensure
 everything works correctly:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">build_site</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>After confirming that all content is correct, commit both the
 <code>*.Rmd.orig</code> and the generated <code>*.Rmd</code> files.</p>

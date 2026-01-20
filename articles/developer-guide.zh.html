@@ -95,47 +95,52 @@ issue、Pull Request 以及开发讨论中优先使用英语。</p>
 <div class="section level2">
 <h2 id="计算密集型文档">计算密集型文档<a class="anchor" aria-label="anchor" href="#%E8%AE%A1%E7%AE%97%E5%AF%86%E9%9B%86%E5%9E%8B%E6%96%87%E6%A1%A3"></a>
 </h2>
-<p>对于计算密集型的 vignettes
+<p>对于任何涉及实际计算和运行的 vignettes
 (文档)，例如涉及模拟的教程，请采用<strong>本地预编译</strong>的方式以加速
 github pages 的构建过程。</p>
-<p>一个经验性的建议是，如果你的文档代码运行实践超过 5
-分钟这个量级，那么就应该考虑使用本地预编译的方式。</p>
+<p>每个文档的对应文件结构如下，例如，对于一个名为<code>tutorial-a</code>
+的文档：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>.</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>├── vignettes</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>│   ├── tutorial<span class="sc">-</span>a.Rmd.orig      <span class="co"># 预编译源文件（对于不涉及计算的文档可省略此文件）</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>│   ├── tutorial<span class="sc">-</span>a.Rmd           <span class="co"># 由源文件生成的最终文件</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>│   └── tutorial<span class="sc">-</span>a<span class="sc">/</span>              <span class="co"># 存放资源及预编译图片的子目录</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="本地预编译">本地预编译<a class="anchor" aria-label="anchor" href="#%E6%9C%AC%E5%9C%B0%E9%A2%84%E7%BC%96%E8%AF%91"></a>
 </h3>
 <p>首先，在 <code>vignettes/</code> 目录下，将需要预编译的 Rmd
 文件重命名为 <code>*.Rmd.orig</code>，例如
-<code>tutorial.Rmd.orig</code>。</p>
+<code>tutorial-a.Rmd.orig</code>。</p>
 <p>确保在该 Rmd 文件中，将图片路径配置到 <code>vignettes/</code>
 下的<strong>同名子目录</strong>，并偏好使用矢量图格式（如
 SVG）以获得更好的缩放效果。一个示例配置如下：</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span></span>
 <span>  collapse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  comment <span class="op">=</span> <span class="st">"#&gt;"</span>,</span>
-<span>  fig.path <span class="op">=</span> <span class="st">"./tutorial/"</span>,</span>
+<span>  fig.path <span class="op">=</span> <span class="st">"./tutorial-a/"</span>,</span>
 <span>  dev <span class="op">=</span> <span class="st">"svg"</span>,</span>
 <span>  fig.ext <span class="op">=</span> <span class="st">"svg"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>然后，在本地 R 环境中，运行下面代码中适合的那行以生成最终的 Rmd
 文件：</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># 在 R 环境中</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/knit_vignettes.R"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># 或在终端中</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># 如果你需要全量编译所有脚本（不建议的）</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R false</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># 在 R 环境中</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/knit_vignettes.R"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># 或在终端中</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># 如果你需要全量编译所有脚本（不建议的）</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>Rscript scripts<span class="sc">/</span>knit_vignettes.R false</span></code></pre></div>
 <p>或，你可以手动修改并运行下面的代码片段以编译某一个特定的 Rmd
 文件：</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"vignettes"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/knit.html" class="external-link">knit</a></span><span class="op">(</span></span>
-<span>  <span class="st">"tutorial.Rmd.orig"</span>,</span>
-<span>  output <span class="op">=</span> <span class="st">"tutorial.Rmd"</span></span>
+<span>  <span class="st">"tutorial-a.Rmd.orig"</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"tutorial-a.Rmd"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="va">old</span><span class="op">)</span></span></code></pre></div>
@@ -145,18 +150,18 @@ SVG）以获得更好的缩放效果。一个示例配置如下：</p>
 </h3>
 <p>一旦你完成了预编译过程，确保在 <code>_pkgdown.yml</code>
 文件中正确引用了新的 Rmd 文件。例如：</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">articles</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">title</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span><span class="at"> Tutorials</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="at">  </span><span class="fu">contents</span><span class="kw">:</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> another-document</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> tutorial-a</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="提交更改">提交更改<a class="anchor" aria-label="anchor" href="#%E6%8F%90%E4%BA%A4%E6%9B%B4%E6%94%B9"></a>
 </h3>
 <p>之后，你可以尝试在本地构建 pkgdown 网站以确保一切正常：</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">build_site</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>确保所有内容均正确后，同时提交<code>*.Rmd.orig</code> 和生成的
 <code>*.Rmd</code>。</p>
