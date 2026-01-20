@@ -2,7 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-.vscode
+.vscode/*
+!.vscode/settings.json
 R/RcppExports.R
 /blueprint/
 docs
