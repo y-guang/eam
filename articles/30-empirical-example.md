@@ -42,8 +42,8 @@ assumed to vary with the , whereas the drift rate varies with the .
 
 Formally, we define $$\begin{aligned}
 A & {= A_{\beta_{0}} + \text{output position} \cdot A_{\beta_{1}},} \\
-V & {= \max\!\left( V_{\beta_{0}} - \text{item index} \cdot V_{\beta_{1}} + V_{\text{var}},\;\varepsilon \right)}
-\end{aligned}$$ where $\varepsilon > 0$ is a small constant ensuring
+V & {= \max\!\left( V_{\beta_{0}} - \text{item index} \cdot V_{\beta_{1}} + V_{\text{var}},\;\theta \right)}
+\end{aligned}$$ where $\theta > 0$ is a small constant ensuring
 positivity of the drift rate.
 
 Within each trial, evidence evolves according to a Wiener diffusion
@@ -202,7 +202,7 @@ abc_fit <- abc::abc(
   param  = abc_input$param,
   sumstat= abc_input$sumstat,
   tol    = 0.05,
-  method = "rejection"
+  method = "neuralnet"
 )
 
 abc_cv <- abc::cv4abc(
@@ -299,6 +299,10 @@ plot_rt(
 unnamed-chunk-8](30-empirical-example/unnamed-chunk-8-1.svg)
 
 plot of chunk unnamed-chunk-8
+
+The results showed that, when fitted to the model, the estimated
+parameters accurately captured the shape of the observed reaction time
+distributions, thereby providing support for the validity of the model.
 
 Reference:
 

@@ -134,8 +134,12 @@ simulation-based workflow in a setting where the ground truth is
 known.</p>
 <p>Here, we adopt a slightly different parameterization from the
 conventional DDM: instead of assuming accumulation from a positive
-starting point toward 0 or a a, evidence is initialized at zero and
-evolves toward symmetric bounds at a and -a.</p>
+starting point toward 0 or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
+evidence is initialized at zero and evolves toward symmetric bounds at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">-a</annotation></semantics></math>.</p>
 <p>The details of this model is listed below:</p>
 <p><strong>Priors on global parameters</strong>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>V</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.5</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ρ</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0.5</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
@@ -265,14 +269,19 @@ represents a possible outcome implied by the assumed model.</p>
 <p>For observed data, we create a small dataset using the
 <strong>rtdists</strong> package, which provides fast simulators for
 standard DDM. Specifically, we simulate N=500 trials from a two-boundary
-DDM with fixed parameters (a,v,t) where a controls boundary separation,
-v is the drift rate, and t0 captures non-decision time.</p>
-<p>The function rdiffusion() returns response labels (“upper”/“lower”)
-and response times. For consistency with the data format produced by our
-simulation engine, we recode responses into a numeric choice variable (1
-for the upper boundary and -1 for the lower boundary), and we add a
-condition_idx field to indicate that all trials belong to a single
-experimental condition</p>
+DDM with fixed parameters
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">t0</annotation></semantics></math>)
+where a controls boundary separation,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>
+is the drift rate, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">t0</annotation></semantics></math>
+captures non-decision time.</p>
+<p>The function <em>rdiffusion()</em> returns response labels
+(“upper”/“lower”) and response times. For consistency with the data
+format produced by our simulation engine, we recode responses into a
+numeric choice variable (1 for the upper boundary and -1 for the lower
+boundary), and we add a condition_idx field to indicate that all trials
+belong to a single experimental condition</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">############################</span></span>
 <span><span class="co"># Observed data generation #</span></span>
@@ -300,10 +309,9 @@ summary statistics of the DDM data: (i) the accuracy and (ii) RT
 quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice
 category (1 vs. -1).</p>
 <p>We then apply the same summary procedure to every simulated dataset
-to obtain <strong>simulation_sumstat</strong>, and to the observed
-dataset to obtain <strong>target_sumstat</strong>. Finally,
-build_abc_input() aligns the simulated and observed summaries into a
-consistent structure.</p>
+to obtain <em>simulation_sumstat</em>, and to the observed dataset to
+obtain <em>target_sumstat</em>. Finally, build_abc_input() aligns the
+simulated and observed summaries into a consistent structure.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#####################</span></span>
 <span><span class="co"># abc model prepare #</span></span>
@@ -350,8 +358,8 @@ which learns a flexible mapping from summary statistics to parameters to
 improve posterior approximation.</p>
 <p>These diagnostics help verify whether the posterior concentrates on
 plausible regions of the parameter space and whether the recovered
-parameters are consistent with the parameters in the rdiffusion()
-model.</p>
+parameters are consistent with the parameters in the
+<em>rdiffusion()</em> model.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">########################</span></span>
 <span><span class="co"># Parameter estimation #</span></span>
@@ -385,7 +393,6 @@ distributions.</p>
 <span><span class="co">#&gt; 2       V_0 1.9133499 1.9342754      1.7349258      2.0046695</span></span>
 <span><span class="co">#&gt; 3     ndt_0 0.4854268 0.4860683      0.4370122      0.5083276</span></span>
 <span></span>
-<span></span>
 <span><span class="fu"><a href="../reference/plot_posterior_parameters.html">plot_posterior_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_fit</span>,</span>
 <span>  <span class="va">abc_input</span></span>
@@ -394,14 +401,14 @@ distributions.</p>
 <img src="10-minimal-workflow/unnamed-chunk-8-1.svg" alt="plot of chunk unnamed-chunk-8"><div class="figcaption">plot of chunk unnamed-chunk-8</div>
 </div>
 <p>The next step is to evaluate parameter recovery for the model. To do
-so, we run cv4abc() as a cross-validation procedure.</p>
+so, we run <em>cv4abc()</em> as a cross-validation procedure.</p>
 <p>First, we specify the number of validation datasets (N=100). The
 function then randomly samples N conditions from the simulated summary
 statistics, treats their associated parameter values as known ground
 truth, and re-estimates the parameters using the fitted ABC object under
 the same tolerance level.</p>
-<p>Recovery performance is visualized using plot_cv_recovery(), which
-compares the estimated parameters with their true values across
+<p>Recovery performance is visualized using <em>plot_cv_recovery()</em>,
+which compares the estimated parameters with their true values across
 validation datasets.</p>
 <p>Good recovery is indicated by a high correlation between estimated
 and true parameters (good:
@@ -423,7 +430,7 @@ central 99%), making the main recovery pattern easier to inspect.</p>
 <span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-10-1.svg" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
+<img src="10-minimal-workflow/unnamed-chunk-9-1.svg" alt="plot of chunk unnamed-chunk-9"><div class="figcaption">plot of chunk unnamed-chunk-9</div>
 </div>
 <p>As a final diagnostic, we perform a posterior predictive check to
 assess the adequacy of the fitted model.</p>
@@ -485,7 +492,7 @@ model is able to reproduce key empirical patterns.</p>
 <span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-11-1.svg" alt="plot of chunk unnamed-chunk-11"><div class="figcaption">plot of chunk unnamed-chunk-11</div>
+<img src="10-minimal-workflow/unnamed-chunk-10-1.svg" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
 </div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -496,7 +503,7 @@ model is able to reproduce key empirical patterns.</p>
 <span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-11-2.svg" alt="plot of chunk unnamed-chunk-11"><div class="figcaption">plot of chunk unnamed-chunk-11</div>
+<img src="10-minimal-workflow/unnamed-chunk-10-2.svg" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
 </div>
 <p>Beyond parameter estimation, the <strong>eam</strong> package also
 supports model comparison within a simulation-based inference
@@ -510,12 +517,12 @@ us to isolate the contribution of this parameter assumption to overall
 model fit. Synthetic data are then generated under the alternative
 model, and the same summary statistics pipeline is applied to ensure
 comparability across models.</p>
-<p>Model comparison is conducted using the abc_postpr() function, which
-estimates posterior model probabilities based on Approximate Bayesian
-Computation. Intuitively, this procedure assesses which model is more
-likely to have generated the observed data by comparing the proximity of
-simulated summary statistics from each model to the target summary
-statistics, given a fixed tolerance level.</p>
+<p>Model comparison is conducted using the <em>abc_postpr()</em>
+function, which estimates posterior model probabilities based on
+Approximate Bayesian Computation. Intuitively, this procedure assesses
+which model is more likely to have generated the observed data by
+comparing the proximity of simulated summary statistics from each model
+to the target summary statistics, given a fixed tolerance level.</p>
 <p>The resulting posterior probabilities indicate the relative
 likelihood that the observed data were generated by each candidate
 model. These probabilities can be summarized using Bayes factors, which
@@ -587,12 +594,24 @@ its competitor.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Proportion of accepted simulations (rejection):</span></span>
 <span><span class="co">#&gt; model_1 model_2 </span></span>
-<span><span class="co">#&gt;    0.87    0.13 </span></span>
+<span><span class="co">#&gt;    0.59    0.41 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bayes factors:</span></span>
 <span><span class="co">#&gt;         model_1 model_2</span></span>
-<span><span class="co">#&gt; model_1  1.0000  6.6923</span></span>
-<span><span class="co">#&gt; model_2  0.1494  1.0000</span></span></code></pre></div>
+<span><span class="co">#&gt; model_1  1.0000  1.4390</span></span>
+<span><span class="co">#&gt; model_2  0.6949  1.0000</span></span></code></pre></div>
+<p>According to the results, the model comparison indicated moderate
+evidence in favor of the model with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\rho = 0.5</annotation></semantics></math>
+(the correct
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+configuration) over the model with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>0.7</mn></mrow><annotation encoding="application/x-tex">\rho = 0.7</annotation></semantics></math>
+(the incorrect
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+configuration), with a posterior probability of 0.87 and a Bayes factor
+of approximately 6.7.</p>
+<p>This is the end of this example.</p>
 <p>This simple DDM example serves as a reference template for the rest
 of the tutorial. Once this workflow is clear, extending it to more
 complex models in eam mainly involves modifying the model components,

@@ -5,12 +5,20 @@ responses and reaction times in cognitive tasks. The **eam** package
 provide a simulation-based framework for simulating and fitting EAMs for
 single- and multiple-response tasks.
 
+Traditional single-response tasks are two-alternative forced choice
+(2AFC) tasks such as lexical decision tasks, and random-dot motion
+discrimination tasks, while multiple-response tasks are characterized by
+the production of a sequence of responses within a single trial or
+episode, as in free recall or verbal fluency tasks. The **eam** package
+enables modeling responses from both types of tasks.
+
 The **eam** package consists of two parts:
 
-that allows users to flexibly customize models and simulate data;
+**a modular simulation engine** that allows users to flexibly customize
+models and simulate data;
 
-for reliable parameter inference without requiring a tractable
-likelihood.
+**a simulation-based inference module** for reliable parameter inference
+without requiring a tractable likelihood.
 
 In this section, we introduce these two components in detail and
 demonstrate how they can be combined to build, simulate, and fit
@@ -18,77 +26,83 @@ customized evidence accumulation models.
 
 ## Modular simulation engine
 
-The modular simulation engine is built upon a generalized evidence
+The modular simulation engine is built upon the generalized evidence
 accumulation framework, within which we assume that decision making is
 characterized as a stochastic process in which evidence is continuously
 collected over time. The accumulation unfolds in infinitesimal
 increments $dt$, which can be approximated in practice with very small
 time steps (for example, 1,). The moment-to-moment change in accumulated
 evidence $x(t)$ can be expressed as a stochastic differential:
-$$dx(t) = v \cdot dt + s \cdot \sigma,$$ where $v$ is the drift rate,
-$dt$ is a time step, $s$ is the noise scaling parameter, and $\sigma$ is
-a diffusion noise term.
+
+$$dx(t) = v \cdot dt + s \cdot \sigma,$$
+
+where $v$ is the drift rate, $dt$ is a time step, $s$ is the noise
+scaling parameter, and $\sigma$ is a diffusion noise term.
 
 As the process unfolds, the accumulated evidence $x(t)$ continues to
 evolve until it reaches the decision boundaries, at which point a
 response is triggered and the corresponding RT is recorded. The distance
 to reaching the boundary is jointly determined by two parameters: the
-decision boundary ($a$) and the starting point ($z$). As evidence
-accumulates, the process continues until $x(t) + z$ first reaches either
-the upper boundary $a$ or falls below the lower boundary 0 (in
-two-boundary EAMs). The elapsed time from the start of accumulation to
-this boundary crossing defines the decision time; adding a non-decision
-time $t_{0}$ yields the observable RT.
+decision boundary ($a$) and the starting point ($z$).
 
-![Procedures of simulation engines in the eam
-package](00-framework-overview/procedures.svg)
+As evidence accumulates, the process continues until $x(t) + z$ first
+reaches either the upper boundary $a$ or falls below the lower boundary
+0 (in two-boundary EAMs). The elapsed time from the start of
+accumulation to this boundary crossing defines the decision time; adding
+a non-decision time $t_{0}$ yields the observable RT.
 
-Procedures of simulation engines in the eam package
+The modular simulation engine is composed of ten modules (see figure
+below):
 
-The modular simulation engine composes ten modules (see Figure 1):
+**Number of accumulators**: the number of accumulators that race or
+compete toward a decision boundary (e.g., one in DDM or LFM; multiple in
+LBA, LCA, or RDM)
 
-: the number of accumulators that race or compete toward a decision
-boundary (e.g., one in DDM or LFM; multiple in LBA, LCA, or RDM)
+**Prior distribution of hyperparameters**: hierarchical priors
+specifying mean, variance, and regression coefficients for core
+parameters of the evidence-accumulation process including drift rate,
+decision boundary, starting point/relative bias, non-decision time,
+leakage parameter, strength of lateral inhibition, and stability
+parameter.
 
-: hierarchical priors specifying mean, variance, and regression
-coefficients for core parameters of the evidence-accumulation process
-including drift rate, decision boundary, starting point/relative bias,
-non-decision time, leakage parameter, strength of lateral inhibition,
-and stability parameter.
+**Between-trial variability**: specify the formulas for between-subject
+or between-trial variability in parameters, also allowing linking
+covariates to the subject- or trial-level parameters.
 
-: specify the formulas for between-subject or between-trial variability
-in parameters, also allowing linking covariates to the subject- or
-trial-level parameters.
+**Item-level formula**: linking each accumulator’s parameter to item
+indexes or output positions to generate the accumulator-level parameter
+values such as drift rate or decision boundary, also allowing linking
+covariates to the item-level parameters.
 
-: linking each accumulator’s parameter to item indexes or output
-positions to generate the accumulator-level parameter values such as
-drift rate or decision boundary, also allowing linking covariates to the
-item-level parameters.
+**Type of noise**: family of diffusion noise (e.g., Gaussian vs. Lévy
+$\alpha$-stable vs. deterministic ballistic).
 
-: family of diffusion noise (e.g., Gaussian vs. Lévy $\alpha$-stable
-vs. deterministic ballistic).
+**Simulation setting**: the configuration used for model simulation,
+including model equations, number of conditions, number of trials per
+condition, and other implementation parameters.
 
-: the configuration used for model simulation, including model
-equations, number of conditions, number of trials per condition, and
-other implementation parameters.
+**Rules to record responses**: the criteria determining when and how
+responses are recorded (e.g., first boundary crossing only, or the first
+$n$ releases within a time limit).
 
-: the criteria determining when and how responses are recorded (e.g.,
-first boundary crossing only, or the first $n$ releases within a time
-limit).
+**Time step**: the discrete increment used to approximate
+continuous-time evidence accumulation (default at 1,).
 
-: the discrete increment used to approximate continuous-time evidence
-accumulation (default at 1,).
+**Noise setting**: the algorithmic specification of stochastic
+increments (e.g., additive vs. multiplicative).
 
-: the algorithmic specification of stochastic increments (e.g., additive
-vs. multiplicative).
-
-: the underlying architecture of evidence accumulation (e.g.,
-single-boundary vs. double-boundary vs. LCA accumulators).
+**Type of model**: the underlying architecture of evidence accumulation
+(e.g., single-boundary vs. double-boundary vs. LCA accumulators).
 
 By combining different modular components, the engine can simulate
 responses and RTs from many representative EAMs (see the section [Models
 in eam](https://y-guang.github.io/eam/articles/20-models-in-eam.md) for
 the configurations of each representative EAM).
+
+![Procedures of simulation engines in the eam
+package](00-framework-overview/procedures.svg)
+
+Procedures of simulation engines in the eam package
 
 ## Simulation-based inference module
 
@@ -186,22 +200,28 @@ where $\kappa^{*}( \cdot )$ is the trained neural estimator,
 $q\left( \theta;\kappa(Z) \right)$ is the approximated posterior family,
 and the expectation is taken over all possible realizations of $Z$.
 
-## A standard workflow in the **eam** package
+## A standard workflow in the eam package
 
 A standard procedure of simulation-based inference involves several
 steps:
 
-First, a generative model or simulator $M(\theta)$ is defined, which
+**First**, a generative model or simulator $M(\theta)$ is defined, which
 specifies how observable data $y$ are generated from underlying
-parameters $\theta$. Second, parameters are sampled from a prior
-distribution $\pi(\theta)$, reflecting prior beliefs or theoretical
-constraints. Third, for each sampled parameter value, synthetic datasets
+parameters $\theta$.
+
+**Second**, parameters are sampled from a prior distribution
+$\pi(\theta)$, reflecting prior beliefs or theoretical constraints.
+
+**Third**, for each sampled parameter value, synthetic datasets
 $y_{\text{sim}}$ are simulated from the model, producing pairs of
-parameters and corresponding simulated observations. Fourth, the
-similarity between simulated and observed data is quantified—either by
-computing distance metrics between summary statistics, as in Approximate
-Bayesian Computation (ABC) or Amortized Bayesian Inference (ABI).
-Finally, the approximate posterior distribution
+parameters and corresponding simulated observations.
+
+**Fourth**, the similarity between simulated and observed data is
+quantified—either by computing distance metrics between summary
+statistics, as in Approximate Bayesian Computation (ABC) or Amortized
+Bayesian Inference (ABI).
+
+**Finally**, the approximate posterior distribution
 $p\left( \theta \mid y_{\text{obs}} \right)$ is obtained by weighting or
 sampling parameters according to this similarity or likelihood estimate.
 
@@ -211,18 +231,19 @@ package](00-framework-overview/workflow.svg)
 The following sections provide a structured overview of the standard
 simulation and inference workflow supported by the package.
 
-[Getting Started: A Minimal Working
+**Section 1:** [Getting Started: A Minimal Working
 Example](https://y-guang.github.io/eam/articles/10-minimal-working-example.md)
 introduces the core functions of the package and provides a minimal
 runnable example based on a three-parameter Drift Diffusion Model (DDM).
 
-[Models in
+**Section 2:** [Models in
 eam](https://y-guang.github.io/eam/articles/20-models-in-eam.md)
 demonstrates how representative evidence accumulation models can be
 specified within the package, and how they can be extended to
 multi-response settings or intergeted with covariates.
 
-[An Empirical Example: Simulation-Based Inference for Free
+**Section 3:** [An Empirical Example: Simulation-Based Inference for
+Free
 Recall](https://y-guang.github.io/eam/articles/30-empirical-example.md)
 presents a real-world application using free recall data, illustrating
 how the package can be applied to empirical datasets in practice.

@@ -125,14 +125,14 @@ V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
 structural aspects of the task. Specifically, the decision boundary is
 assumed to vary with the , whereas the drift rate varies with the .</p>
 <p>Formally, we define
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>A</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>A</mi><msub><mi>β</mi><mn>0</mn></msub></msub><mo>+</mo><mtext mathvariant="normal">output position</mtext><mo>⋅</mo><msub><mi>A</mi><msub><mi>β</mi><mn>1</mn></msub></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>V</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>max</mo><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>V</mi><msub><mi>β</mi><mn>0</mn></msub></msub><mo>−</mo><mtext mathvariant="normal">item index</mtext><mo>⋅</mo><msub><mi>V</mi><msub><mi>β</mi><mn>1</mn></msub></msub><mo>+</mo><msub><mi>V</mi><mtext mathvariant="normal">var</mtext></msub><mo>,</mo><mspace width="0.278em"></mspace><mi>ε</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>A</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>A</mi><msub><mi>β</mi><mn>0</mn></msub></msub><mo>+</mo><mtext mathvariant="normal">output position</mtext><mo>⋅</mo><msub><mi>A</mi><msub><mi>β</mi><mn>1</mn></msub></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>V</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>max</mo><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>V</mi><msub><mi>β</mi><mn>0</mn></msub></msub><mo>−</mo><mtext mathvariant="normal">item index</mtext><mo>⋅</mo><msub><mi>V</mi><msub><mi>β</mi><mn>1</mn></msub></msub><mo>+</mo><msub><mi>V</mi><mtext mathvariant="normal">var</mtext></msub><mo>,</mo><mspace width="0.278em"></mspace><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 A &amp;= A_{\beta_0} + \text{output position} \cdot A_{\beta_1}, \\
 V &amp;= \max\!\left( V_{\beta_0} - \text{item index} \cdot V_{\beta_1} + V_{\text{var}}, \;
-\varepsilon \right)
+\theta \right)
 \end{aligned}
 </annotation></semantics></math> where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon &gt; 0</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta &gt; 0</annotation></semantics></math>
 is a small constant ensuring positivity of the drift rate.</p>
 <p>Within each trial, evidence evolves according to a Wiener diffusion
 process:
@@ -286,7 +286,7 @@ pipeline locally once the simulated data have been generated.</p>
 <span>  param  <span class="op">=</span> <span class="va">abc_input</span><span class="op">$</span><span class="va">param</span>,</span>
 <span>  sumstat<span class="op">=</span> <span class="va">abc_input</span><span class="op">$</span><span class="va">sumstat</span>,</span>
 <span>  tol    <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"rejection"</span></span>
+<span>  method <span class="op">=</span> <span class="st">"neuralnet"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">abc_cv</span> <span class="op">&lt;-</span> <span class="fu">abc</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/abc/man/cv4abc.html" class="external-link">cv4abc</a></span><span class="op">(</span></span>
@@ -377,6 +377,10 @@ from the posterior median and the RTs.</p>
 <div class="float">
 <img src="30-empirical-example/unnamed-chunk-8-1.svg" alt="plot of chunk unnamed-chunk-8"><div class="figcaption">plot of chunk unnamed-chunk-8</div>
 </div>
+<p>The results showed that, when fitted to the model, the estimated
+parameters accurately captured the shape of the observed reaction time
+distributions, thereby providing support for the validity of the
+model.</p>
 <p>Reference:</p>
 <p>Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A.
 W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller,

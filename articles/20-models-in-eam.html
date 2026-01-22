@@ -97,9 +97,10 @@ multi-response variants or interget covariates into the simualtion and
 inference.</p>
 <p>In practice, when fitting these models to real data, the
 simulation-and-summary pipeline shown below can be combined directly
-with the Section 1 workflow (i.e., replacing the toy observed dataset
-with empirical data, computing the same summary statistics, and then
-running ABC/ABI for posterior inference and diagnostics).</p>
+with the Section 1 workflow <a href="./10-minimal-working-example.html">Getting Started: A Minimal
+Working Example</a> by replacing the simulations models and observed
+dataset.</p>
+<p>The following sections will introduce each model in detail:</p>
 <div class="section level2">
 <h2 id="diffusion-decision-model">Diffusion decision model<a class="anchor" aria-label="anchor" href="#diffusion-decision-model"></a>
 </h2>
@@ -1096,9 +1097,9 @@ double-boundary EAMs.</p>
 <span>  .parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">cond_df</span><span class="op">)</span> <span class="fu">summary_pipe</span><span class="op">(</span><span class="va">cond_df</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>In the second approach, covariates such as trial-level neural signals
-are injected directly into the accumulation process by modulating model
-parameters.</p>
+<p>In the second approach, continuous covariates such as trial-level
+neural signals are injected directly into the accumulation process by
+modulating model parameters.</p>
 <p>Specifically, the package allows users to link trial-level neural
 measurements to EAM parameters through a latent-variable formulation. A
 scaling parameter

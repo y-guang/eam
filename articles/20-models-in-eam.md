@@ -11,9 +11,11 @@ inference.
 
 In practice, when fitting these models to real data, the
 simulation-and-summary pipeline shown below can be combined directly
-with the Section 1 workflow (i.e., replacing the toy observed dataset
-with empirical data, computing the same summary statistics, and then
-running ABC/ABI for posterior inference and diagnostics).
+with the Section 1 workflow [Getting Started: A Minimal Working
+Example](https://y-guang.github.io/eam/articles/10-minimal-working-example.md)
+by replacing the simulations models and observed dataset.
+
+The following sections will introduce each model in detail:
 
 ## Diffusion decision model
 
@@ -914,9 +916,9 @@ simulation_sumstat <- map_by_condition(
 )
 ```
 
-In the second approach, covariates such as trial-level neural signals
-are injected directly into the accumulation process by modulating model
-parameters.
+In the second approach, continuous covariates such as trial-level neural
+signals are injected directly into the accumulation process by
+modulating model parameters.
 
 Specifically, the package allows users to link trial-level neural
 measurements to EAM parameters through a latent-variable formulation. A

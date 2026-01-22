@@ -48,8 +48,8 @@ simulation-based workflow in a setting where the ground truth is known.
 
 Here, we adopt a slightly different parameterization from the
 conventional DDM: instead of assuming accumulation from a positive
-starting point toward 0 or a a, evidence is initialized at zero and
-evolves toward symmetric bounds at a and -a.
+starting point toward 0 or $a$, evidence is initialized at zero and
+evolves toward symmetric bounds at $a$ and $- a$.
 
 The details of this model is listed below:
 
@@ -176,11 +176,11 @@ sim_output <- run_simulation(
 For observed data, we create a small dataset using the **rtdists**
 package, which provides fast simulators for standard DDM. Specifically,
 we simulate N=500 trials from a two-boundary DDM with fixed parameters
-(a,v,t) where a controls boundary separation, v is the drift rate, and
-t0 captures non-decision time.
+($a$,$v$,$t0$) where a controls boundary separation, $v$ is the drift
+rate, and $t0$ captures non-decision time.
 
-The function rdiffusion() returns response labels (“upper”/“lower”) and
-response times. For consistency with the data format produced by our
+The function *rdiffusion()* returns response labels (“upper”/“lower”)
+and response times. For consistency with the data format produced by our
 simulation engine, we recode responses into a numeric choice variable (1
 for the upper boundary and -1 for the lower boundary), and we add a
 condition_idx field to indicate that all trials belong to a single
@@ -216,8 +216,8 @@ statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%,
 vs. -1).
 
 We then apply the same summary procedure to every simulated dataset to
-obtain **simulation_sumstat**, and to the observed dataset to obtain
-**target_sumstat**. Finally, build_abc_input() aligns the simulated and
+obtain *simulation_sumstat*, and to the observed dataset to obtain
+*target_sumstat*. Finally, build_abc_input() aligns the simulated and
 observed summaries into a consistent structure.
 
 ``` r
@@ -271,7 +271,8 @@ improve posterior approximation.
 
 These diagnostics help verify whether the posterior concentrates on
 plausible regions of the parameter space and whether the recovered
-parameters are consistent with the parameters in the rdiffusion() model.
+parameters are consistent with the parameters in the *rdiffusion()*
+model.
 
 ``` r
 ########################
@@ -308,7 +309,6 @@ summarise_posterior_parameters(
 #> 2       V_0 1.9133499 1.9342754      1.7349258      2.0046695
 #> 3     ndt_0 0.4854268 0.4860683      0.4370122      0.5083276
 
-
 plot_posterior_parameters(
   abc_fit,
   abc_input
@@ -321,7 +321,7 @@ unnamed-chunk-8](10-minimal-workflow/unnamed-chunk-8-1.svg)
 plot of chunk unnamed-chunk-8
 
 The next step is to evaluate parameter recovery for the model. To do so,
-we run cv4abc() as a cross-validation procedure.
+we run *cv4abc()* as a cross-validation procedure.
 
 First, we specify the number of validation datasets (N=100). The
 function then randomly samples N conditions from the simulated summary
@@ -329,7 +329,7 @@ statistics, treats their associated parameter values as known ground
 truth, and re-estimates the parameters using the fitted ABC object under
 the same tolerance level.
 
-Recovery performance is visualized using plot_cv_recovery(), which
+Recovery performance is visualized using *plot_cv_recovery()*, which
 compares the estimated parameters with their true values across
 validation datasets.
 
@@ -355,9 +355,9 @@ plot_cv_recovery(
 ```
 
 ![plot of chunk
-unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-1.svg)
+unnamed-chunk-9](10-minimal-workflow/unnamed-chunk-9-1.svg)
 
-plot of chunk unnamed-chunk-10
+plot of chunk unnamed-chunk-9
 
 As a final diagnostic, we perform a posterior predictive check to assess
 the adequacy of the fitted model.
@@ -424,9 +424,9 @@ plot_rt(
 ```
 
 ![plot of chunk
-unnamed-chunk-11](10-minimal-workflow/unnamed-chunk-11-1.svg)
+unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-1.svg)
 
-plot of chunk unnamed-chunk-11
+plot of chunk unnamed-chunk-10
 
 ``` r
 
@@ -439,9 +439,9 @@ plot_accuracy(
 ```
 
 ![plot of chunk
-unnamed-chunk-11](10-minimal-workflow/unnamed-chunk-11-2.svg)
+unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-2.svg)
 
-plot of chunk unnamed-chunk-11
+plot of chunk unnamed-chunk-10
 
 Beyond parameter estimation, the **eam** package also supports model
 comparison within a simulation-based inference framework.
@@ -454,7 +454,7 @@ assumption to overall model fit. Synthetic data are then generated under
 the alternative model, and the same summary statistics pipeline is
 applied to ensure comparability across models.
 
-Model comparison is conducted using the abc_postpr() function, which
+Model comparison is conducted using the *abc_postpr()* function, which
 estimates posterior model probabilities based on Approximate Bayesian
 Computation. Intuitively, this procedure assesses which model is more
 likely to have generated the observed data by comparing the proximity of
@@ -532,13 +532,21 @@ summary(postpr_result)
 #> 
 #> Proportion of accepted simulations (rejection):
 #> model_1 model_2 
-#>    0.87    0.13 
+#>    0.59    0.41 
 #> 
 #> Bayes factors:
 #>         model_1 model_2
-#> model_1  1.0000  6.6923
-#> model_2  0.1494  1.0000
+#> model_1  1.0000  1.4390
+#> model_2  0.6949  1.0000
 ```
+
+According to the results, the model comparison indicated moderate
+evidence in favor of the model with $\rho = 0.5$ (the correct $\rho$
+configuration) over the model with $\rho = 0.7$ (the incorrect $\rho$
+configuration), with a posterior probability of 0.87 and a Bayes factor
+of approximately 6.7.
+
+This is the end of this example.
 
 This simple DDM example serves as a reference template for the rest of
 the tutorial. Once this workflow is clear, extending it to more complex
