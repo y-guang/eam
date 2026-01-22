@@ -59,10 +59,10 @@ Formally, we define
 \begin{aligned}
 A &= A_{\beta_0} + \text{output position} \cdot A_{\beta_1}, \\
 V &= \max\!\left( V_{\beta_0} - \text{item index} \cdot V_{\beta_1} + V_{\text{var}}, \;
-\varepsilon \right)
+\theta \right)
 \end{aligned}
 \]
-where \( \varepsilon > 0 \) is a small constant ensuring positivity of the drift rate.
+where \( \theta > 0 \) is a small constant ensuring positivity of the drift rate.
 
 \paragraph{Evidence accumulation dynamics}
 
@@ -216,7 +216,7 @@ abc_fit <- abc::abc(
   param  = abc_input$param,
   sumstat= abc_input$sumstat,
   tol    = 0.05,
-  method = "rejection"
+  method = "neuralnet"
 )
 
 abc_cv <- abc::cv4abc(
@@ -305,6 +305,10 @@ plot_rt(
   facet_y = c()
 )
 ```
+
+The results showed that, when fitted to the model, the estimated parameters accurately captured the shape of the observed reaction time distributions, thereby providing support for the validity of the model.
+
+\bigskip
 
 Reference:
 

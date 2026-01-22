@@ -16,7 +16,9 @@ knitr::opts_chunk$set(
 
 This section introduces the setting for five representative models: Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing Accumulator (LCA; Usher & McClelland, 2001), Linear Ballistic Accumulator (LBA; Brown & Heathcote, 2008), Racing Diffusion Model (RDM; Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al., 2020). Meanwhile, we also provide a tutorial on how to extend them to multi-response variants or interget covariates into the simualtion and inference.
 
-In practice, when fitting these models to real data, the simulation-and-summary pipeline shown below can be combined directly with the Section 1 workflow (i.e., replacing the toy observed dataset with empirical data, computing the same summary statistics, and then running ABC/ABI for posterior inference and diagnostics).
+In practice, when fitting these models to real data, the simulation-and-summary pipeline shown below can be combined directly with the Section 1 workflow [Getting Started: A Minimal Working Example](./10-minimal-working-example.html) by replacing the simulations models and observed dataset. 
+
+The following sections will introduce each model in detail:
 
 ## Diffusion decision model
 
@@ -865,7 +867,7 @@ simulation_sumstat <- map_by_condition(
 
 ```
 
-In the second approach, covariates such as trial-level neural signals are injected directly into the accumulation process by modulating model parameters.
+In the second approach, continuous covariates such as trial-level neural signals are injected directly into the accumulation process by modulating model parameters.
 
 Specifically, the package allows users to link trial-level neural measurements to EAM parameters through a latent-variable formulation. A scaling parameter $s$ is introduced to map the neural signal onto the appropriate parameter scale, while a variance term $\tau^{2}$ captures the discrepancy between the observed neural signal and the latent parameter value.
 
@@ -977,6 +979,8 @@ simulation_sumstat <- map_by_condition(
 )
 
 ```
+
+\bigskip
 
 Reference:
 
