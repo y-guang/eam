@@ -616,7 +616,7 @@ simulation_sumstat <- map_by_condition(
 ```
 
 
-## Multi-response EAMs
+## Multi-response EAM
 
 To simulate a multi-response EAM, we introduced two additional components: a position-dependent decision boundary function and an item-dependent drift rate function.
 
