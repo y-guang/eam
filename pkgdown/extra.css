@@ -1,0 +1,4 @@
+/* Hide all figure captions */
+.figcaption {
+  visibility: hidden;
+}
