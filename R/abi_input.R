@@ -163,32 +163,14 @@ build_abi_input.Z <- function(
   # Convert to list of matrices, one per condition
   # Each matrix has trials as columns and (rank * Z) as rows
   z_list <- z_complete |>
+    dplyr::select(-trial_idx) |>
     dplyr::group_by(condition_idx) |>
-    dplyr::group_split() |>
+    dplyr::group_split(.keep = FALSE) |>
     purrr::map(function(cond_df) {
       cond_df |>
-        dplyr::select(-condition_idx, -trial_idx) |>
         as.matrix() |>
         t()
     })
 
   return(z_list)
 }
-
-
-
-test_result <- build_abi_input(
-  sim_output,
-  c(
-    "A_beta_0",
-    "A_beta_1",
-    "V_beta_0",
-    "V_beta_1"
-  ), c(
-    "item_idx",
-    "rt"
-  ),
-  rank_levels = c(
-    1, 2, 3
-  )
-)
