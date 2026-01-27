@@ -1,4 +1,79 @@
-# trnaslate data to abi-api friendly
+#' Build input for Amortized Bayesian Inference (ABI)
+#'
+#' Prepares simulation output for Amortized Bayesian Inference (ABI) analysis
+#' using the \code{NeuralEstimators} package. Extracts parameters and summary statistics
+#' from simulation results, splits data into training and validation sets, and formats
+#' them into matrices suitable for neural network training.
+#'
+#' @details
+#' This function provides a streamlined workflow for preparing ABI inputs. It
+#' requires that \code{simulation_output} be created by \code{\link{run_simulation}}
+#' or \code{\link{load_simulation_output}}. The function automatically handles
+#' missing trials and ranks by filling with zeros to ensure complete data matrices.
+#'
+#' The output format is optimized for the \code{abi} package's training functions,
+#' with parameters formatted as matrices (each column is a condition) and summary
+#' statistics formatted as lists of matrices (one per condition, with trials as columns).
+#'
+#' @param simulation_output A eam_simulation_output object from
+#'   \code{\link{run_simulation}} or \code{\link{load_simulation_output}}.
+#' @param theta Character vector of parameter names to extract from simulation_output.
+#'   These parameters will be used as the target variables for inference.
+#' @param Z Character vector of summary statistic column names to extract from
+#'   the simulation output dataset (e.g., "rt", "item_idx", "choice").
+#' @param train_ratio Numeric value between 0 and 1 specifying the proportion
+#'   of conditions to use for training (default: 0.8).
+#' @param rank_levels Numeric vector specifying which rank indices to include.
+#'   If NULL (default), uses all ranks from 1 to n_items from simulation config.
+#'
+#' @return A list with components suitable for \code{abi} package training:
+#' \describe{
+#'   \item{theta_train}{Matrix of training parameters (parameters × conditions)}
+#'   \item{theta_val}{Matrix of validation parameters (parameters × conditions)}
+#'   \item{Z_train}{List of matrices, one per training condition (ranks*Z × trials)}
+#'   \item{Z_val}{List of matrices, one per validation condition (ranks*Z × trials)}
+#'   \item{train_idx}{Vector of condition indices used for training}
+#'   \item{val_idx}{Vector of condition indices used for validation}
+#'   \item{train_ratio}{The training ratio used}
+#'   \item{rank_levels}{The rank levels included in Z matrices}
+#' }
+#'
+#' @examples
+#' # Load the example dataset
+#' rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
+#' sim_output <- load_simulation_output(file.path(rdm_minimal_example, "simulation"))
+#'
+#' # build the ABI input
+#' abi_input <- build_abi_input(
+#'   sim_output,
+#'   c(
+#'     "V_beta_1",
+#'     "V_beta_group"
+#'   ),
+#'   c(
+#'     "item_idx",
+#'     "rt",
+#'     "choice"
+#'   )
+#' )
+#'
+#' # view the structure of the ABI input
+#' str(abi_input)
+#'
+#' \dontrun{
+#' # Example of using the ABI input for training
+#' # (requires NeuralEstimators package and build your estimator first, see our tutorials)
+#' train(
+#'   estimator,
+#'   theta_train = abi_input$theta_train,
+#'   theta_val = abi_input$theta_val,
+#'   Z_train = abi_input$Z_train,
+#'   Z_val = abi_input$Z_val,
+#'   epochs = 500,
+#'   stopping_epochs = 200
+#' )
+#' }
+#' @export
 build_abi_input <- function(
     simulation_output,
     theta,
@@ -101,7 +176,13 @@ build_abi_input <- function(
   return(abi_input)
 }
 
-# @keyword internal
+#' Extract and format parameter matrix for ABI
+#'
+#' @param conditions Arrow dataset of evaluated conditions
+#' @param theta Character vector of parameter names
+#' @param select_idx Vector of condition indices to extract
+#' @return Matrix with parameters as rows and conditions as columns
+#' @keywords internal
 build_abi_input.theta <- function(
     conditions,
     theta,
@@ -124,7 +205,15 @@ build_abi_input.theta <- function(
   return(theta_matrix)
 }
 
-# @keyword internal
+#' Extract and format summary statistics for ABI
+#'
+#' @param output Arrow dataset of simulation output
+#' @param Z Character vector of summary statistic column names
+#' @param rank_levels Numeric vector of rank indices to include
+#' @param select_idx Vector of condition indices to extract
+#' @param n_trials_per_condition Number of trials per condition
+#' @return List of matrices, one per condition (ranks*Z rows × trials columns)
+#' @keywords internal
 build_abi_input.Z <- function(
     output,
     Z,
