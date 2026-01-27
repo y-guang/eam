@@ -30,14 +30,7 @@ Concretely, the workflow consists of four steps:
 The following sections walk through these steps in detail using a simple
 DDM example, before extending the workflow to more complex models.
 
-``` r
-# Load necessary packages
-library(eam)
-library(dplyr)
-
-# Set a random seed for reproducibility
-set.seed(1)
-```
+------------------------------------------------------------------------
 
 In this example, we start with a simple three-parameter two-boundary
 Diffusion Decision Model (DDM).
@@ -50,6 +43,8 @@ Here, we adopt a slightly different parameterization from the
 conventional DDM: instead of assuming accumulation from a positive
 starting point toward 0 or $a$, evidence is initialized at zero and
 evolves toward symmetric bounds at $a$ and $- a$.
+
+### Description of the model
 
 The details of this model is listed below:
 
@@ -75,6 +70,22 @@ A decision is made when $X(t)$ first reaches either $A_{\text{upper}}$
 or $A_{\text{lower}}$, and the observed response time is
 
 $$RT = T_{\text{decision}} + ndt.$$
+
+### Step one: Model setup
+
+First, we load the required packages.
+
+``` r
+# Load necessary packages
+library(eam)
+library(dplyr)
+
+# Set a random seed for reproducibility
+set.seed(1)
+```
+
+Then, we specify the model configuration according to the setup
+described above.
 
 ``` r
 #######################
@@ -125,6 +136,10 @@ noise_factory <- function(context) {
 }
 ```
 
+------------------------------------------------------------------------
+
+### Step two: Data simulation
+
 Once the model is specified, we can proceed to data simulation. The
 simulation step generates a large collection of synthetic datasets by
 sampling parameters from their prior distributions and simulating data
@@ -173,6 +188,10 @@ sim_output <- run_simulation(
 )
 ```
 
+------------------------------------------------------------------------
+
+### Step three: Load observed data
+
 For observed data, we create a small dataset using the **rtdists**
 package, which provides fast simulators for standard DDM. Specifically,
 we simulate N=500 trials from a two-boundary DDM with fixed parameters
@@ -209,6 +228,10 @@ observed_data <- rdiffusion(n = N, a = pars$a, v = pars$v, t0 = pars$t0)
 observed_data$choice <- ifelse(observed_data $response == "upper", 1, -1)
 observed_data$condition_idx <- 1
 ```
+
+------------------------------------------------------------------------
+
+### Step four: Extract summary statistics
 
 we define a summary pipeline that extracts two types of common summary
 statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%,
@@ -256,6 +279,10 @@ abc_input <- build_abc_input(
 )
 ```
 
+------------------------------------------------------------------------
+
+### Step five: Fit the model
+
 With the simulated and observed summary statistics aligned, we can now
 estimate the posterior distribution of the model parameters using
 Approximate Bayesian Computation (ABC).
@@ -292,6 +319,8 @@ abc_fit <- abc::abc(
 #> 12345678910
 ```
 
+------------------------------------------------------------------------
+
 After fitting, we summarize the posterior means/medians and 95% credible
 intervals and visualize the resulting posterior distributions.
 
@@ -319,6 +348,10 @@ plot_posterior_parameters(
 unnamed-chunk-8](10-minimal-workflow/unnamed-chunk-8-1.svg)
 
 plot of chunk unnamed-chunk-8
+
+------------------------------------------------------------------------
+
+### Step six: Model evaluation
 
 The next step is to evaluate parameter recovery for the model. To do so,
 we run *cv4abc()* as a cross-validation procedure.
@@ -352,12 +385,11 @@ plot_cv_recovery(
   resid_tol = 0.99,
   interactive = FALSE
 )
+#> Error:
+#> ! object 'abc_cv' not found
 ```
 
-![plot of chunk
-unnamed-chunk-9](10-minimal-workflow/unnamed-chunk-9-1.svg)
-
-plot of chunk unnamed-chunk-9
+------------------------------------------------------------------------
 
 As a final diagnostic, we perform a posterior predictive check to assess
 the adequacy of the fitted model.
@@ -438,10 +470,9 @@ plot_accuracy(
 )
 ```
 
-![plot of chunk
-unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-2.svg)
+## ![plot of chunk unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-2.svg)
 
-plot of chunk unnamed-chunk-10
+### Step seven (optional): Model comparison
 
 Beyond parameter estimation, the **eam** package also supports model
 comparison within a simulation-based inference framework.
@@ -547,6 +578,8 @@ configuration), with a posterior probability of 0.87 and a Bayes factor
 of approximately 6.7.
 
 This is the end of this example.
+
+------------------------------------------------------------------------
 
 This simple DDM example serves as a reference template for the rest of
 the tutorial. Once this workflow is clear, extending it to more complex

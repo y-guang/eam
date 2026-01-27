@@ -8,14 +8,9 @@ Encoding and Retrieval Study (PEERS; Kahana et al., 2024). We model the
 recall process using a multi-response Racing Diffusion Model (RDM),
 focusing on RTs for first seven retrievaled items.
 
-``` r
-# Load necessary packages
-library(eam)
-library(dplyr)
+------------------------------------------------------------------------
 
-# Set a random seed for reproducibility
-set.seed(1)
-```
+### Descriptions of the model
 
 The details of this model are listed below:
 
@@ -54,6 +49,24 @@ A response is generated when one accumulator first reaches the decision
 boundary $A_{i}$. The observed response time for item $i$ is given by
 
 $$RT_{i} = T_{\text{decision},i} + ndt_{i}.$$
+
+------------------------------------------------------------------------
+
+### Step one: Model setup
+
+First, we load the required packages.
+
+``` r
+# Load necessary packages
+library(eam)
+library(dplyr)
+
+# Set a random seed for reproducibility
+set.seed(1)
+```
+
+Then, we specify the model configuration according to the setup
+described above.
 
 ``` r
 #######################
@@ -100,6 +113,10 @@ noise_factory <- function(context) {
 }
 ```
 
+------------------------------------------------------------------------
+
+### Step two: Data simulation
+
 When parallelization is enabled, running the full simulation typically
 takes approximately 30 minutes to 1 hour. Given the computational
 constraints of this tutorial, we do not execute the full pipeline here.
@@ -141,6 +158,10 @@ sim_output <- run_simulation(
 )
 ```
 
+------------------------------------------------------------------------
+
+### Step three: Load observed data
+
 For illustration purposes, we use data from one representative
 participant in the PEERS dataset as the observed data in this example.
 
@@ -151,6 +172,10 @@ participant in the PEERS dataset as the observed data in this example.
 
 observed_data<-read.csv("./30-empirical-example/example_data.csv")
 ```
+
+------------------------------------------------------------------------
+
+### Step four: Extract summary statistics
 
 Here we calcualte the response time quantiles (0.1–0.9) separately for
 each response position (“rank_idx”).
@@ -186,6 +211,10 @@ abc_input <- build_abc_input(
   param = c("A_beta_0","A_beta_1","V_beta_0","V_beta_1","V_sigma","ndt_beta_0")
 )
 ```
+
+------------------------------------------------------------------------
+
+### Step five: Fit the model
 
 As the simulation step is omitted here, the inference code below is
 presented without being executed. Readers can run the complete inference
@@ -234,6 +263,10 @@ plot_posterior_parameters(
   abc_input
 )
 ```
+
+------------------------------------------------------------------------
+
+### Step six: Model evaluation
 
 Here, we directly present results from a previously fitted model and
 assess model adequacy by examining the overlap between RTs simulated
@@ -303,6 +336,8 @@ plot of chunk unnamed-chunk-8
 The results showed that, when fitted to the model, the estimated
 parameters accurately captured the shape of the observed reaction time
 distributions, thereby providing support for the validity of the model.
+
+------------------------------------------------------------------------
 
 Reference:
 

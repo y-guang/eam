@@ -95,13 +95,10 @@ data.</p>
 Encoding and Retrieval Study (PEERS; Kahana et al., 2024). We model the
 recall process using a multi-response Racing Diffusion Model (RDM),
 focusing on RTs for first seven retrievaled items.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam">eam</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set a random seed for reproducibility</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<hr>
+<div class="section level3">
+<h3 id="descriptions-of-the-model">Descriptions of the model<a class="anchor" aria-label="anchor" href="#descriptions-of-the-model"></a>
+</h3>
 <p>The details of this model are listed below:</p>
 <p>We specify weakly informative priors on the global parameters
 governing decision boundary, drift rate, non-decision time, and
@@ -151,6 +148,21 @@ is given by</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><msub><mi>T</mi><mi>i</mi></msub><mo>=</mo><msub><mi>T</mi><mrow><mtext mathvariant="normal">decision</mtext><mo>,</mo><mi>i</mi></mrow></msub><mo>+</mo><mi>n</mi><mi>d</mi><msub><mi>t</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
 RT_i = T_{\text{decision},i} + ndt_i .
 </annotation></semantics></math></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-one-model-setup">Step one: Model setup<a class="anchor" aria-label="anchor" href="#step-one-model-setup"></a>
+</h3>
+<p>First, we load the required packages.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam">eam</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Set a random seed for reproducibility</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>Then, we specify the model configuration according to the setup
+described above.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#######################</span></span>
 <span><span class="co"># Model specification #</span></span>
@@ -194,6 +206,11 @@ RT_i = T_{\text{decision},i} + ndt_i .
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-two-data-simulation">Step two: Data simulation<a class="anchor" aria-label="anchor" href="#step-two-data-simulation"></a>
+</h3>
 <p>When parallelization is enabled, running the full simulation
 typically takes approximately 30 minutes to 1 hour. Given the
 computational constraints of this tutorial, we do not execute the full
@@ -232,6 +249,11 @@ to reproduce the results.</p>
 <span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-three-load-observed-data">Step three: Load observed data<a class="anchor" aria-label="anchor" href="#step-three-load-observed-data"></a>
+</h3>
 <p>For illustration purposes, we use data from one representative
 participant in the PEERS dataset as the observed data in this
 example.</p>
@@ -241,6 +263,11 @@ example.</p>
 <span><span class="co">#######################</span></span>
 <span></span>
 <span><span class="va">observed_data</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"./30-empirical-example/example_data.csv"</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-four-extract-summary-statistics">Step four: Extract summary statistics<a class="anchor" aria-label="anchor" href="#step-four-extract-summary-statistics"></a>
+</h3>
 <p>Here we calcualte the response time quantiles (0.1–0.9) separately
 for each response position (“rank_idx”).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -273,6 +300,11 @@ for each response position (“rank_idx”).</p>
 <span>  target_summary     <span class="op">=</span> <span class="va">target_sumstat</span>,</span>
 <span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_beta_0"</span>,<span class="st">"A_beta_1"</span>,<span class="st">"V_beta_0"</span>,<span class="st">"V_beta_1"</span>,<span class="st">"V_sigma"</span>,<span class="st">"ndt_beta_0"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-five-fit-the-model">Step five: Fit the model<a class="anchor" aria-label="anchor" href="#step-five-fit-the-model"></a>
+</h3>
 <p>As the simulation step is omitted here, the inference code below is
 presented without being executed. Readers can run the complete inference
 pipeline locally once the simulated data have been generated.</p>
@@ -318,6 +350,11 @@ pipeline locally once the simulated data have been generated.</p>
 <span>  <span class="va">abc_fit</span>,</span>
 <span>  <span class="va">abc_input</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-six-model-evaluation">Step six: Model evaluation<a class="anchor" aria-label="anchor" href="#step-six-model-evaluation"></a>
+</h3>
 <p>Here, we directly present results from a previously fitted model and
 assess model adequacy by examining the overlap between RTs simulated
 from the posterior median and the RTs.</p>
@@ -382,6 +419,7 @@ from the posterior median and the RTs.</p>
 parameters accurately captured the shape of the observed reaction time
 distributions, thereby providing support for the validity of the
 model.</p>
+<hr>
 <p>Reference:</p>
 <p>Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A.
 W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller,
@@ -390,7 +428,9 @@ Pazdera, J. K., Pedisich, I., Rudoler, J. H., &amp; Weidemann, C. T.
 (2024). The Penn Electrophysiology of Encoding and Retrieval Study.
 Journal of Experimental Psychology: Learning, Memory, and Cognition,
 50(9), 1421–1443. <a href="https://doi.org/10.1037/xlm0001319" class="external-link uri">https://doi.org/10.1037/xlm0001319</a></p>
-  </main>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

@@ -1,38 +1,41 @@
 # Overview of the EAM Framework
 
+**Welcome to the tutorials for the *eam* package!**
+
+In these tutorials, you will learn how to customize your own evidence
+accumulation models and estimate model parameters from observed data.
+
+------------------------------------------------------------------------
+
 Evidence accumulation models (EAMs) are major approaches for modeling
-responses and reaction times in cognitive tasks. The **eam** package
+responses and reaction times in cognitive tasks. The *eam* package
 provide a simulation-based framework for simulating and fitting EAMs for
 single- and multiple-response tasks.
 
-Traditional single-response tasks are two-alternative forced choice
-(2AFC) tasks such as lexical decision tasks, and random-dot motion
-discrimination tasks, while multiple-response tasks are characterized by
-the production of a sequence of responses within a single trial or
-episode, as in free recall or verbal fluency tasks. The **eam** package
-enables modeling responses from both types of tasks.
-
 The **eam** package consists of two parts:
 
-**a modular simulation engine** that allows users to flexibly customize
-models and simulate data;
+1.  **a modular simulation engine** that allows users to flexibly
+    customize models and simulate data;
 
-**a simulation-based inference module** for reliable parameter inference
-without requiring a tractable likelihood.
+2.  **a simulation-based inference module** for reliable parameter
+    inference without requiring a tractable likelihood.
 
-In this section, we introduce these two components in detail and
+In this section, we introduce the two components in detail and
 demonstrate how they can be combined to build, simulate, and fit
 customized evidence accumulation models.
 
-## Modular simulation engine
+------------------------------------------------------------------------
 
-The modular simulation engine is built upon the generalized evidence
+### Modular simulation engine
+
+The **modular simulation engine** is built upon the generalized evidence
 accumulation framework, within which we assume that decision making is
 characterized as a stochastic process in which evidence is continuously
 collected over time. The accumulation unfolds in infinitesimal
 increments $dt$, which can be approximated in practice with very small
-time steps (for example, 1,). The moment-to-moment change in accumulated
-evidence $x(t)$ can be expressed as a stochastic differential:
+time steps (for example, 1ms}). The moment-to-moment change in
+accumulated evidence $x(t)$ can be expressed as a stochastic
+differential:
 
 $$dx(t) = v \cdot dt + s \cdot \sigma,$$
 
@@ -51,60 +54,70 @@ reaches either the upper boundary $a$ or falls below the lower boundary
 accumulation to this boundary crossing defines the decision time; adding
 a non-decision time $t_{0}$ yields the observable RT.
 
-The modular simulation engine is composed of ten modules (see figure
-below):
+The **modular simulation engine** allows researchers to flexibly
+simulate different types of data by changing the evidence accumulation
+algorithm, the number of accumulators involved in the process, and the
+decision termination rules. The engine is composed of ten modules (see
+figure below):
 
-**Number of accumulators**: the number of accumulators that race or
-compete toward a decision boundary (e.g., one in DDM or LFM; multiple in
-LBA, LCA, or RDM)
+1.  **Number of accumulators**: the number of accumulators that race or
+    compete toward a decision boundary (e.g., one in DDM or LFM;
+    multiple in LBA, LCA, or RDM)
 
-**Prior distribution of hyperparameters**: hierarchical priors
-specifying mean, variance, and regression coefficients for core
-parameters of the evidence-accumulation process including drift rate,
-decision boundary, starting point/relative bias, non-decision time,
-leakage parameter, strength of lateral inhibition, and stability
-parameter.
+2.  **Prior distribution of hyperparameters**: hierarchical priors
+    specifying mean, variance, and regression coefficients for core
+    parameters of the evidence-accumulation process including drift
+    rate, decision boundary, starting point/relative bias, non-decision
+    time, leakage parameter, strength of lateral inhibition, and
+    stability parameter.
 
-**Between-trial variability**: specify the formulas for between-subject
-or between-trial variability in parameters, also allowing linking
-covariates to the subject- or trial-level parameters.
+3.  **Between-trial variability**: specify the formulas for
+    between-subject or between-trial variability in parameters, also
+    allowing linking covariates to the subject- or trial-level
+    parameters.
 
-**Item-level formula**: linking each accumulator’s parameter to item
-indexes or output positions to generate the accumulator-level parameter
-values such as drift rate or decision boundary, also allowing linking
-covariates to the item-level parameters.
+4.  **Item-level formula**: linking each accumulator’s parameter to item
+    indexes or output positions to generate the accumulator-level
+    parameter values such as drift rate or decision boundary, also
+    allowing linking covariates to the item-level parameters.
 
-**Type of noise**: family of diffusion noise (e.g., Gaussian vs. Lévy
-$\alpha$-stable vs. deterministic ballistic).
+5.  **Type of noise**: family of diffusion noise (e.g., Gaussian
+    vs. Lévy $\alpha$-stable vs. deterministic ballistic).
 
-**Simulation setting**: the configuration used for model simulation,
-including model equations, number of conditions, number of trials per
-condition, and other implementation parameters.
+6.  **Simulation setting**: the configuration used for model simulation,
+    including model equations, number of conditions, number of trials
+    per condition, and other implementation parameters.
 
-**Rules to record responses**: the criteria determining when and how
-responses are recorded (e.g., first boundary crossing only, or the first
-$n$ releases within a time limit).
+7.  **Rules to record responses**: the criteria determining when and how
+    responses are recorded (e.g., first boundary crossing only, or the
+    first $n$ releases within a time limit).
 
-**Time step**: the discrete increment used to approximate
-continuous-time evidence accumulation (default at 1,).
+8.  **Time step**: the discrete increment used to approximate
+    continuous-time evidence accumulation (default at 1,).
 
-**Noise setting**: the algorithmic specification of stochastic
-increments (e.g., additive vs. multiplicative).
+9.  **Noise setting**: the algorithmic specification of stochastic
+    increments (e.g., additive vs. multiplicative).
 
-**Type of model**: the underlying architecture of evidence accumulation
-(e.g., single-boundary vs. double-boundary vs. LCA accumulators).
+10. **Type of model**: the underlying architecture of evidence
+    accumulation (e.g., single-boundary vs. double-boundary vs. LCA
+    accumulators).
 
 By combining different modular components, the engine can simulate
 responses and RTs from many representative EAMs (see the section [Models
 in eam](https://y-guang.github.io/eam/articles/20-models-in-eam.md) for
 the configurations of each representative EAM).
 
+Once the data are simulated, they can be directly passed to the
+inference module for parameter estimation.
+
 ![Procedures of simulation engines in the eam
 package](00-framework-overview/procedures.svg)
 
 Procedures of simulation engines in the eam package
 
-## Simulation-based inference module
+------------------------------------------------------------------------
+
+### Simulation-based inference module
 
 The simulation-based inference module includes two major apporaches:
 Approximate Bayesian Computation (ABC; Csilléry et al., 2012) and
@@ -113,7 +126,7 @@ methods can estimate the posteiror distribution of parameters via the
 comparsion between simulated and observed data, bypassing the need for
 likelihood functions.
 
-### Approximate Bayesian Computation (ABC)
+#### Approximate Bayesian Computation (ABC)
 
 The Approximate Bayesian Computation (ABC) approximates the posterior
 distribution by comparing summary statistics from simulated data
@@ -163,7 +176,7 @@ with weight decay on accepted $\left( \theta_{i},s_{i} \right)$ pairs.
 This correction improves robustness in high-dimensional summary spaces
 and mitigates the curse of dimensionality.
 
-### Amortized Bayesian Inference (ABI)
+#### Amortized Bayesian Inference (ABI)
 
 While methods such as ABC require running inference each time new ABI
 allows one to first train a neural network that learns a mapping between
@@ -200,6 +213,8 @@ where $\kappa^{*}( \cdot )$ is the trained neural estimator,
 $q\left( \theta;\kappa(Z) \right)$ is the approximated posterior family,
 and the expectation is taken over all possible realizations of $Z$.
 
+------------------------------------------------------------------------
+
 ## A standard workflow in the eam package
 
 A standard procedure of simulation-based inference involves several
@@ -228,6 +243,10 @@ sampling parameters according to this similarity or likelihood estimate.
 ![The standard workflow in the eam
 package](00-framework-overview/workflow.svg)
 
+The standard workflow in the eam package
+
+------------------------------------------------------------------------
+
 The following sections provide a structured overview of the standard
 simulation and inference workflow supported by the package.
 
@@ -247,6 +266,8 @@ Free
 Recall](https://y-guang.github.io/eam/articles/30-empirical-example.md)
 presents a real-world application using free recall data, illustrating
 how the package can be applied to empirical datasets in practice.
+
+------------------------------------------------------------------------
 
 Reference:
 

@@ -88,36 +88,38 @@ Zhu</h4>
 
     
     
+<p><strong>Welcome to the tutorials for the <em>eam</em> package!
+</strong></p>
+<p>In these tutorials, you will learn how to customize your own evidence
+accumulation models and estimate model parameters from observed
+data.</p>
+<hr>
 <p>Evidence accumulation models (EAMs) are major approaches for modeling
-responses and reaction times in cognitive tasks. The
-<strong>eam</strong> package provide a simulation-based framework for
-simulating and fitting EAMs for single- and multiple-response tasks.</p>
-<p>Traditional single-response tasks are two-alternative forced choice
-(2AFC) tasks such as lexical decision tasks, and random-dot motion
-discrimination tasks, while multiple-response tasks are characterized by
-the production of a sequence of responses within a single trial or
-episode, as in free recall or verbal fluency tasks. The
-<strong>eam</strong> package enables modeling responses from both types
-of tasks.</p>
+responses and reaction times in cognitive tasks. The <em>eam</em>
+package provide a simulation-based framework for simulating and fitting
+EAMs for single- and multiple-response tasks.</p>
 <p>The <strong>eam</strong> package consists of two parts:</p>
-<p><strong>a modular simulation engine</strong> that allows users to
-flexibly customize models and simulate data;</p>
-<p><strong>a simulation-based inference module</strong> for reliable
-parameter inference without requiring a tractable likelihood.</p>
-<p>In this section, we introduce these two components in detail and
+<ol style="list-style-type: decimal">
+<li><p><strong>a modular simulation engine</strong> that allows users to
+flexibly customize models and simulate data;</p></li>
+<li><p><strong>a simulation-based inference module</strong> for reliable
+parameter inference without requiring a tractable likelihood.</p></li>
+</ol>
+<p>In this section, we introduce the two components in detail and
 demonstrate how they can be combined to build, simulate, and fit
 customized evidence accumulation models.</p>
-<div class="section level2">
-<h2 id="modular-simulation-engine">Modular simulation engine<a class="anchor" aria-label="anchor" href="#modular-simulation-engine"></a>
-</h2>
-<p>The modular simulation engine is built upon the generalized evidence
-accumulation framework, within which we assume that decision making is
-characterized as a stochastic process in which evidence is continuously
-collected over time. The accumulation unfolds in infinitesimal
-increments
+<hr>
+<div class="section level3">
+<h3 id="modular-simulation-engine">Modular simulation engine<a class="anchor" aria-label="anchor" href="#modular-simulation-engine"></a>
+</h3>
+<p>The <strong>modular simulation engine</strong> is built upon the
+generalized evidence accumulation framework, within which we assume that
+decision making is characterized as a stochastic process in which
+evidence is continuously collected over time. The accumulation unfolds
+in infinitesimal increments
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">dt</annotation></semantics></math>,
 which can be approximated in practice with very small time steps (for
-example, 1,). The moment-to-moment change in accumulated evidence
+example, 1ms}). The moment-to-moment change in accumulated evidence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
 can be expressed as a stochastic differential:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>s</mi><mo>⋅</mo><mi>σ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
@@ -150,65 +152,75 @@ time from the start of accumulation to this boundary crossing defines
 the decision time; adding a non-decision time
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_{0}</annotation></semantics></math>
 yields the observable RT.</p>
-<p>The modular simulation engine is composed of ten modules (see figure
-below):</p>
-<p><strong>Number of accumulators</strong>: the number of accumulators
-that race or compete toward a decision boundary (e.g., one in DDM or
-LFM; multiple in LBA, LCA, or RDM)</p>
-<p><strong>Prior distribution of hyperparameters</strong>: hierarchical
-priors specifying mean, variance, and regression coefficients for core
-parameters of the evidence-accumulation process including drift rate,
-decision boundary, starting point/relative bias, non-decision time,
-leakage parameter, strength of lateral inhibition, and stability
-parameter.</p>
-<p><strong>Between-trial variability</strong>: specify the formulas for
-between-subject or between-trial variability in parameters, also
+<p>The <strong>modular simulation engine</strong> allows researchers to
+flexibly simulate different types of data by changing the evidence
+accumulation algorithm, the number of accumulators involved in the
+process, and the decision termination rules. The engine is composed of
+ten modules (see figure below):</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Number of accumulators</strong>: the number of
+accumulators that race or compete toward a decision boundary (e.g., one
+in DDM or LFM; multiple in LBA, LCA, or RDM)</p></li>
+<li><p><strong>Prior distribution of hyperparameters</strong>:
+hierarchical priors specifying mean, variance, and regression
+coefficients for core parameters of the evidence-accumulation process
+including drift rate, decision boundary, starting point/relative bias,
+non-decision time, leakage parameter, strength of lateral inhibition,
+and stability parameter.</p></li>
+<li><p><strong>Between-trial variability</strong>: specify the formulas
+for between-subject or between-trial variability in parameters, also
 allowing linking covariates to the subject- or trial-level
-parameters.</p>
-<p><strong>Item-level formula</strong>: linking each accumulator’s
+parameters.</p></li>
+<li><p><strong>Item-level formula</strong>: linking each accumulator’s
 parameter to item indexes or output positions to generate the
 accumulator-level parameter values such as drift rate or decision
 boundary, also allowing linking covariates to the item-level
-parameters.</p>
-<p><strong>Type of noise</strong>: family of diffusion noise (e.g.,
+parameters.</p></li>
+<li><p><strong>Type of noise</strong>: family of diffusion noise (e.g.,
 Gaussian vs. Lévy
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>-stable
-vs. deterministic ballistic).</p>
-<p><strong>Simulation setting</strong>: the configuration used for model
-simulation, including model equations, number of conditions, number of
-trials per condition, and other implementation parameters.</p>
-<p><strong>Rules to record responses</strong>: the criteria determining
-when and how responses are recorded (e.g., first boundary crossing only,
-or the first
+vs. deterministic ballistic).</p></li>
+<li><p><strong>Simulation setting</strong>: the configuration used for
+model simulation, including model equations, number of conditions,
+number of trials per condition, and other implementation
+parameters.</p></li>
+<li><p><strong>Rules to record responses</strong>: the criteria
+determining when and how responses are recorded (e.g., first boundary
+crossing only, or the first
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-releases within a time limit).</p>
-<p><strong>Time step</strong>: the discrete increment used to
-approximate continuous-time evidence accumulation (default at 1,).</p>
-<p><strong>Noise setting</strong>: the algorithmic specification of
-stochastic increments (e.g., additive vs. multiplicative).</p>
-<p><strong>Type of model</strong>: the underlying architecture of
+releases within a time limit).</p></li>
+<li><p><strong>Time step</strong>: the discrete increment used to
+approximate continuous-time evidence accumulation (default at
+1,).</p></li>
+<li><p><strong>Noise setting</strong>: the algorithmic specification of
+stochastic increments (e.g., additive vs. multiplicative).</p></li>
+<li><p><strong>Type of model</strong>: the underlying architecture of
 evidence accumulation (e.g., single-boundary vs. double-boundary vs. LCA
-accumulators).</p>
+accumulators).</p></li>
+</ol>
 <p>By combining different modular components, the engine can simulate
 responses and RTs from many representative EAMs (see the section <a href="./20-models-in-eam.html">Models in eam</a> for the configurations
 of each representative EAM).</p>
+<p>Once the data are simulated, they can be directly passed to the
+inference module for parameter estimation.</p>
 <div class="float">
 <img src="00-framework-overview/procedures.svg" alt="Procedures of simulation engines in the eam package"><div class="figcaption">Procedures of simulation engines in the eam
 package</div>
 </div>
+<hr>
 </div>
-<div class="section level2">
-<h2 id="simulation-based-inference-module">Simulation-based inference module<a class="anchor" aria-label="anchor" href="#simulation-based-inference-module"></a>
-</h2>
+<div class="section level3">
+<h3 id="simulation-based-inference-module">Simulation-based inference module<a class="anchor" aria-label="anchor" href="#simulation-based-inference-module"></a>
+</h3>
 <p>The simulation-based inference module includes two major apporaches:
 Approximate Bayesian Computation (ABC; Csilléry et al., 2012) and
 Amortized Bayesian Inference (ABI; Sainsbury-Dale et al., 2024). These
 methods can estimate the posteiror distribution of parameters via the
 comparsion between simulated and observed data, bypassing the need for
 likelihood functions.</p>
-<div class="section level3">
-<h3 id="approximate-bayesian-computation-abc">Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#approximate-bayesian-computation-abc"></a>
-</h3>
+<div class="section level4">
+<h4 id="approximate-bayesian-computation-abc">Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#approximate-bayesian-computation-abc"></a>
+</h4>
 <p>The Approximate Bayesian Computation (ABC) approximates the posterior
 distribution by comparing summary statistics from simulated data
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><annotation encoding="application/x-tex">y_{\text{sim}}</annotation></semantics></math>
@@ -282,9 +294,9 @@ estimated using neural networks with weight decay on accepted
 pairs. This correction improves robustness in high-dimensional summary
 spaces and mitigates the curse of dimensionality.</p>
 </div>
-<div class="section level3">
-<h3 id="amortized-bayesian-inference-abi">Amortized Bayesian Inference (ABI)<a class="anchor" aria-label="anchor" href="#amortized-bayesian-inference-abi"></a>
-</h3>
+<div class="section level4">
+<h4 id="amortized-bayesian-inference-abi">Amortized Bayesian Inference (ABI)<a class="anchor" aria-label="anchor" href="#amortized-bayesian-inference-abi"></a>
+</h4>
 <p>While methods such as ABC require running inference each time new ABI
 allows one to first train a neural network that learns a mapping between
 the parameter space and the data (or summary statistics), and then reuse
@@ -339,6 +351,7 @@ is the trained neural estimator,
 is the approximated posterior family, and the expectation is taken over
 all possible realizations of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>.</p>
+<hr>
 </div>
 </div>
 <div class="section level2">
@@ -369,7 +382,10 @@ Amortized Bayesian Inference (ABI).</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\theta \mid y_{\text{obs}})</annotation></semantics></math>
 is obtained by weighting or sampling parameters according to this
 similarity or likelihood estimate.</p>
-<p><img src="00-framework-overview/workflow.svg" alt="The standard workflow in the eam package"></p>
+<div class="float">
+<img src="00-framework-overview/workflow.svg" alt="The standard workflow in the eam package"><div class="figcaption">The standard workflow in the eam package</div>
+</div>
+<hr>
 <p>The following sections provide a structured overview of the standard
 simulation and inference workflow supported by the package.</p>
 <p><strong>Section 1:</strong> <a href="./10-minimal-working-example.html">Getting Started: A Minimal
@@ -384,6 +400,7 @@ multi-response settings or intergeted with covariates.</p>
 Empirical Example: Simulation-Based Inference for Free Recall</a>
 presents a real-world application using free recall data, illustrating
 how the package can be applied to empirical datasets in practice.</p>
+<hr>
 <p>Reference:</p>
 <p>Beaumont, M. A., Zhang, W., &amp; Balding, D. J. (2002). Approximate
 Bayesian computation in population genetics. Genetics, 162 (4),

@@ -120,13 +120,7 @@ model specifications.</li>
 <p>The following sections walk through these steps in detail using a
 simple DDM example, before extending the workflow to more complex
 models.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam">eam</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set a random seed for reproducibility</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<hr>
 <p>In this example, we start with a simple three-parameter two-boundary
 Diffusion Decision Model (DDM).</p>
 <p>Although the DDM has a trackable likelihood, we deliberately treat it
@@ -141,6 +135,9 @@ evidence is initialized at zero and evolves toward symmetric bounds at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">-a</annotation></semantics></math>.</p>
+<div class="section level3">
+<h3 id="description-of-the-model">Description of the model<a class="anchor" aria-label="anchor" href="#description-of-the-model"></a>
+</h3>
 <p>The details of this model is listed below:</p>
 <p><strong>Priors on global parameters</strong>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>V</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.5</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ρ</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0.5</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
@@ -175,6 +172,20 @@ and the observed response time is</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>T</mi><mo>=</mo><msub><mi>T</mi><mtext mathvariant="normal">decision</mtext></msub><mo>+</mo><mi>n</mi><mi>d</mi><mi>t</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
 RT = T_{\text{decision}} + ndt .
 </annotation></semantics></math></p>
+</div>
+<div class="section level3">
+<h3 id="step-one-model-setup">Step one: Model setup<a class="anchor" aria-label="anchor" href="#step-one-model-setup"></a>
+</h3>
+<p>First, we load the required packages.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam">eam</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Set a random seed for reproducibility</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>Then, we specify the model configuration according to the setup
+described above.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#######################</span></span>
 <span><span class="co"># Model specification #</span></span>
@@ -222,6 +233,11 @@ RT = T_{\text{decision}} + ndt .
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-two-data-simulation">Step two: Data simulation<a class="anchor" aria-label="anchor" href="#step-two-data-simulation"></a>
+</h3>
 <p>Once the model is specified, we can proceed to data simulation. The
 simulation step generates a large collection of synthetic datasets by
 sampling parameters from their prior distributions and simulating data
@@ -267,6 +283,11 @@ represents a possible outcome implied by the assumed model.</p>
 <span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
 <span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-three-load-observed-data">Step three: Load observed data<a class="anchor" aria-label="anchor" href="#step-three-load-observed-data"></a>
+</h3>
 <p>For observed data, we create a small dataset using the
 <strong>rtdists</strong> package, which provides fast simulators for
 standard DDM. Specifically, we simulate N=500 trials from a two-boundary
@@ -305,6 +326,11 @@ belong to a single experimental condition</p>
 <span><span class="co"># Recode the data to be consistent with simulated data</span></span>
 <span><span class="va">observed_data</span><span class="op">$</span><span class="va">choice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">observed_data</span> <span class="op">$</span><span class="va">response</span> <span class="op">==</span> <span class="st">"upper"</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">observed_data</span><span class="op">$</span><span class="va">condition_idx</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-four-extract-summary-statistics">Step four: Extract summary statistics<a class="anchor" aria-label="anchor" href="#step-four-extract-summary-statistics"></a>
+</h3>
 <p>we define a summary pipeline that extracts two types of common
 summary statistics of the DDM data: (i) the accuracy and (ii) RT
 quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice
@@ -347,6 +373,11 @@ simulated and observed summaries into a consistent structure.</p>
 <span>  target_summary     <span class="op">=</span> <span class="va">target_sumstat</span>,</span>
 <span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_0"</span>,<span class="st">"V_0"</span>,<span class="st">"ndt_0"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-five-fit-the-model">Step five: Fit the model<a class="anchor" aria-label="anchor" href="#step-five-fit-the-model"></a>
+</h3>
 <p>With the simulated and observed summary statistics aligned, we can
 now estimate the posterior distribution of the model parameters using
 Approximate Bayesian Computation (ABC).</p>
@@ -377,6 +408,7 @@ parameters are consistent with the parameters in the
 <span><span class="co">#&gt; Warning: All parameters are "none" transformed.</span></span>
 <span><span class="co">#&gt; 12345678910</span></span>
 <span><span class="co">#&gt; 12345678910</span></span></code></pre></div>
+<hr>
 <p>After fitting, we summarize the posterior means/medians and 95%
 credible intervals and visualize the resulting posterior
 distributions.</p>
@@ -401,6 +433,11 @@ distributions.</p>
 <div class="float">
 <img src="10-minimal-workflow/unnamed-chunk-8-1.svg" alt="plot of chunk unnamed-chunk-8"><div class="figcaption">plot of chunk unnamed-chunk-8</div>
 </div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-six-model-evaluation">Step six: Model evaluation<a class="anchor" aria-label="anchor" href="#step-six-model-evaluation"></a>
+</h3>
 <p>The next step is to evaluate parameter recovery for the model. To do
 so, we run <em>cv4abc()</em> as a cross-validation procedure.</p>
 <p>First, we specify the number of validation datasets (N=100). The
@@ -429,10 +466,10 @@ central 99%), making the main recovery pattern easier to inspect.</p>
 <span>  n_cols <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  resid_tol <span class="op">=</span> <span class="fl">0.99</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-9-1.svg" alt="plot of chunk unnamed-chunk-9"><div class="figcaption">plot of chunk unnamed-chunk-9</div>
-</div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error:</span></span>
+<span><span class="co">#&gt; ! object 'abc_cv' not found</span></span></code></pre></div>
+<hr>
 <p>As a final diagnostic, we perform a posterior predictive check to
 assess the adequacy of the fitted model.</p>
 <p>Specifically, we generate the posterior data using posterior median
@@ -503,9 +540,14 @@ model is able to reproduce key empirical patterns.</p>
 <span>  facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-10-2.svg" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
 </div>
+<div class="section level2">
+<h2 id="plot-of-chunk-unnamed-chunk-10">
+<img src="10-minimal-workflow/unnamed-chunk-10-2.svg" alt="plot of chunk unnamed-chunk-10"><a class="anchor" aria-label="anchor" href="#plot-of-chunk-unnamed-chunk-10"></a>
+</h2>
+<div class="section level3">
+<h3 id="step-seven-optional-model-comparison">Step seven (optional): Model comparison<a class="anchor" aria-label="anchor" href="#step-seven-optional-model-comparison"></a>
+</h3>
 <p>Beyond parameter estimation, the <strong>eam</strong> package also
 supports model comparison within a simulation-based inference
 framework.</p>
@@ -613,11 +655,15 @@ configuration) over the model with
 configuration), with a posterior probability of 0.87 and a Bayes factor
 of approximately 6.7.</p>
 <p>This is the end of this example.</p>
+<hr>
 <p>This simple DDM example serves as a reference template for the rest
 of the tutorial. Once this workflow is clear, extending it to more
 complex models in eam mainly involves modifying the model components,
 while the overall inference pipeline remains unchanged.</p>
-  </main>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
