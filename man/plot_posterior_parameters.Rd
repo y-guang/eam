@@ -20,13 +20,22 @@ plot_posterior_parameters(data, ...)
   \item{interactive}{Logical; whether to pause between pages and wait for input}
 }}
 
-\item{abc_input}{Optional abc_input object containing prior samples for comparison.}
+\item{abc_input}{Optional abc_input object containing prior samples for comparison.
+If provided, prior distributions are shown as red histograms and posterior
+distributions as blue density curves.}
 }
 \value{
 Invisibly returns `NULL`. Called for its side effect of producing plots.
 }
 \description{
 Plotting posterior distributions (and optionally prior distributions) from ABC results.
+}
+\details{
+The plots use the following visual encoding:
+\itemize{
+  \item Posterior distributions: blue density curves
+  \item Prior distributions (if provided): red histograms with transparency
+}
 }
 \examples{
 # Load ABC output from saved file
