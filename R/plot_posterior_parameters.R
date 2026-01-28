@@ -40,12 +40,21 @@ plot_posterior_parameters <- function(data, ...) {
 #' @param data An \code{abc} object containing posterior samples in
 #'   \code{adj.values} or \code{unadj.values}.
 #' @param abc_input Optional abc_input object containing prior samples for comparison.
+#'   If provided, prior distributions are shown as red histograms and posterior
+#'   distributions as blue density curves.
 #' @param ... Additional arguments:
 #'   \describe{
 #'     \item{n_rows}{Integer; number of rows in the plot grid (default: 2)}
 #'     \item{n_cols}{Integer; number of columns in the plot grid (default: 2)}
 #'     \item{interactive}{Logical; whether to pause between pages and wait for input}
 #'   }
+#'
+#' @details
+#' The plots use the following visual encoding:
+#' \itemize{
+#'   \item Posterior distributions: blue density curves
+#'   \item Prior distributions (if provided): red histograms with transparency
+#' }
 #'
 #' @export
 plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
@@ -124,31 +133,46 @@ plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
       plot_df <- rbind(plot_df, prior_df)
     }
 
-    # Create density plot
-    p <- ggplot2::ggplot(plot_df, ggplot2::aes(
-        x = value, color = type, fill = type
-        )) +
-      ggplot2::geom_density(alpha = 0.3, linewidth = 0.8) +
+    # Create plot with histogram for Prior and density for Posterior
+    p <- ggplot2::ggplot() +
       ggplot2::labs(
         title = param_name,
         x = "Value",
         y = "Density"
+      ) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        axis.line = ggplot2::element_line(color = "black"),
+        axis.ticks = ggplot2::element_line(color = "black"),
+        legend.position = "none"
+      )
+
+    # Add Prior as histogram if available
+    if (!is.null(prior)) {
+      p <- p +
+        ggplot2::geom_histogram(
+          data = dplyr::filter(plot_df, type == "Prior"),
+          ggplot2::aes(x = value, y = ggplot2::after_stat(density), fill = type),
+          bins = 30,
+          alpha = 0.3,
+          color = "red"
+        )
+    }
+
+    # Add Posterior as density curve
+    p <- p +
+      ggplot2::geom_density(
+        data = dplyr::filter(plot_df, type == "Posterior"),
+        ggplot2::aes(x = value, color = type),
+        linewidth = 0.9
       ) +
       ggplot2::scale_color_manual(
         values = c("Posterior" = "blue", "Prior" = "red")
       ) +
       ggplot2::scale_fill_manual(
         values = c("Posterior" = "blue", "Prior" = "red")
-      ) +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(
-        plot.title = ggplot2::element_text(hjust = 0.5),
-        panel.grid.major = ggplot2::element_blank(),
-        panel.grid.minor = ggplot2::element_blank(),
-        axis.line = ggplot2::element_line(color = "black"),
-        axis.ticks = ggplot2::element_line(color = "black"),
-        legend.position = "bottom",
-        legend.title = ggplot2::element_blank()
       )
 
     plot_list[[j]] <- p
