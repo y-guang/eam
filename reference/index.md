@@ -10,6 +10,8 @@
   : ABC with resampling
 - [`build_abc_input()`](https://y-guang.github.io/eam/reference/build_abc_input.md)
   : Build input for Approximate Bayesian Computation (ABC)
+- [`build_abi_input()`](https://y-guang.github.io/eam/reference/build_abi_input.md)
+  : Build input for Amortized Bayesian Inference (ABI)
 - [`load_simulation_output()`](https://y-guang.github.io/eam/reference/load_simulation_output.md)
   : Rebuild eam_simulation_output from an existing output directory
 - [`map_by_condition()`](https://y-guang.github.io/eam/reference/map_by_condition.md)

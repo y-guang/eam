@@ -37,12 +37,22 @@ plot_posterior_parameters(data, abc_input = NULL, ...)
 
 - abc_input:
 
-  Optional abc_input object containing prior samples for comparison.
+  Optional abc_input object containing prior samples for comparison. If
+  provided, prior distributions are shown as red histograms and
+  posterior distributions as blue density curves.
 
 ## Value
 
 Invisibly returns \`NULL\`. Called for its side effect of producing
 plots.
+
+## Details
+
+The plots use the following visual encoding:
+
+- Posterior distributions: blue density curves
+
+- Prior distributions (if provided): red histograms with transparency
 
 ## See also
 

@@ -91,13 +91,20 @@
 
 
 <dt id="arg-abc-input">abc_input<a class="anchor" aria-label="anchor" href="#arg-abc-input"></a></dt>
-<dd><p>Optional abc_input object containing prior samples for comparison.</p></dd>
+<dd><p>Optional abc_input object containing prior samples for comparison.
+If provided, prior distributions are shown as red histograms and posterior
+distributions as blue density curves.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Invisibly returns `NULL`. Called for its side effect of producing plots.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The plots use the following visual encoding:</p><ul><li><p>Posterior distributions: blue density curves</p></li>
+<li><p>Prior distributions (if provided): red histograms with transparency</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code>plot_posterior_parameters.abc</code></p></div>

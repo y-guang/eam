@@ -2,6 +2,8 @@
 
 ## eam (development version)
 
+- Add `build_abi_input` function to create input for ABI anlysis from
+  EAM simulation output.
 - Simulation allow more than 1024 data chunks/arrow partitions. Now, it
   depends on the hard limit of the arrow library and the file system.
 - Fix
@@ -10,6 +12,8 @@
   quantile functions returning “90%”, “95%”). Now uses
   [`vctrs::vec_as_names()`](https://vctrs.r-lib.org/reference/vec_as_names.html)
   for proper name repair.
+- By convention of ABC, change the prior of `plot_posterior_parameters`
+  to the hist graph.
 
 ### repo
 
