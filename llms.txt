@@ -22,9 +22,10 @@ Overall, it facilitates the study of a wide range of cognitive processes
 in tasks involving perceptual decision making, memory retrieval, and
 value-based decision making.
 
-- ![overview of the
-  package](articles/00-framework-overview/procedures.svg)
-  overview of the package
+![overview of the
+package](articles/00-framework-overview/procedures.svg)
+
+overview of the package
 
 ## Links
 
