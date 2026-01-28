@@ -6,6 +6,8 @@ The package supports user-defined functions for item-level parameterization and 
 
 In addition to core inference tools, the package provides modules for parameter recovery, posterior predictive checks, and model comparison. Overall, it facilitates the study of a wide range of cognitive processes in tasks involving perceptual decision making, memory retrieval, and value-based decision making.
 
+- ![overview of the package](vignettes/00-framework-overview/procedures.svg)
+
 ## Links
 
 - [Documentation (for users)](https://y-guang.github.io/eam/): User-facing documentation with tutorials, usage examples, and model overviews.
@@ -22,3 +24,9 @@ In addition to core inference tools, the package provides modules for parameter 
   - Flexible architecture: composable api, defines several formulas, you can easily customize your own models.
   - modern R api：Built around modern R conventions, it provides a declarative, tidy-style interface.
   - Unified data pipeline: provides a consistent set of data manipulation and summarization utilities for seamless simulation, evaluation, and visualization.
+
+## License
+
+The eam package is licensed under the MIT License. Feel free to use it in your projects!
+
+If you need a different license for your use case, please contact the author.
