@@ -111,7 +111,7 @@ plot_posterior_parameters.abc <- function(data, abc_input = NULL, ...) {
   n_pages <- ceiling(n_params / plots_per_page)
 
   # NSE variable bindings for R CMD check
-  value <- type <- NULL
+  value <- type <- density <- NULL
 
   # Create plots for each parameter
   plot_list <- list()
