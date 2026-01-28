@@ -6,7 +6,7 @@ The package supports user-defined functions for item-level parameterization and 
 
 In addition to core inference tools, the package provides modules for parameter recovery, posterior predictive checks, and model comparison. Overall, it facilitates the study of a wide range of cognitive processes in tasks involving perceptual decision making, memory retrieval, and value-based decision making.
 
-- ![overview of the package](vignettes/00-framework-overview/procedures.svg)
+![overview of the package](vignettes/00-framework-overview/procedures.svg)
 
 ## Links
 
