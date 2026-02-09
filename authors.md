@@ -13,12 +13,12 @@ Source:
 [`DESCRIPTION`](https://github.com/y-guang/eam/blob/main/DESCRIPTION)
 
 Zhu G, Yang G (2026). *eam: Evidence Accumulation Models*. R package
-version 1.0.1, <https://y-guang.github.io/eam>.
+version 1.1.0, <https://y-guang.github.io/eam>.
 
     @Manual{,
       title = {eam: Evidence Accumulation Models},
       author = {Guangyu Zhu and Guang Yang},
       year = {2026},
-      note = {R package version 1.0.1},
+      note = {R package version 1.1.0},
       url = {https://y-guang.github.io/eam},
     }

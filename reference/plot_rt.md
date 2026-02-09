@@ -36,6 +36,13 @@ plot_rt(simulated_output, observed_df, facet_x = c("item_idx"), facet_y = c())
 A plot showing predicted RT distributions (blue), with observed data
 (red) if provided
 
+## Details
+
+Posterior predictions are first summarized to their median RT within
+each condition and facet group before plotting. This provides a
+representative estimate from the posterior distribution rather than
+pooling all individual trial-level predictions.
+
 ## Examples
 
 ``` r

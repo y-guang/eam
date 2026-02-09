@@ -1,6 +1,6 @@
 # Changelog
 
-## eam (development version)
+## eam 1.1.0
 
 - Add `build_abi_input` function to create input for ABI anlysis from
   EAM simulation output.
@@ -14,6 +14,8 @@
   for proper name repair.
 - By convention of ABC, change the prior of `plot_posterior_parameters`
   to the hist graph.
+- By convention of ABC, change the posterior of `plot_rt` to reflect the
+  median RT within each condition.
 
 ### repo
 
