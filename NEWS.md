@@ -1,4 +1,4 @@
-# eam (development version)
+# eam 1.1.0
 
 - Add `build_abi_input` function to create input for ABI anlysis from EAM simulation output.
 - Simulation allow more than 1024 data chunks/arrow partitions. Now, it depends on the hard limit of the arrow library and the file system.
