@@ -24,6 +24,12 @@ A plot showing predicted RT distributions (blue), with observed data (red) if pr
 Visualize reaction time distributions from your model predictions.
 Overlay observed experimental data for reference.
 }
+\details{
+Posterior predictions are first summarized to their median RT within each
+condition and facet group before plotting. This provides a representative
+estimate from the posterior distribution rather than pooling all individual
+trial-level predictions.
+}
 \examples{
 # Load example posterior simulation output
 post_output_path <- system.file(
