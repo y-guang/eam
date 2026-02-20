@@ -1,5 +1,9 @@
 # Changelog
 
+## eam (development version)
+
+- Add inst/CITATION file with the pre-print citation information.
+
 ## eam 1.1.0
 
 CRAN release: 2026-02-09
