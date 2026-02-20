@@ -1,3 +1,7 @@
+# eam (development version)
+
+- Add inst/CITATION file with the pre-print citation information.
+
 # eam 1.1.0
 
 - Add `build_abi_input` function to create input for ABI anlysis from EAM simulation output.
