@@ -10,15 +10,18 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/y-guang/eam/blob/main/DESCRIPTION)
+[`inst/CITATION`](https://github.com/y-guang/eam/blob/main/inst/CITATION)
 
-Zhu G, Yang G (2026). *eam: Evidence Accumulation Models*. R package
-version 1.1.0, <https://y-guang.github.io/eam/>.
+Zhu, G., & Yang, G. (2026). Simulation-Based Evidence Accumulation
+Modeling for Single- and Multi-Response Tasks: The eam Package.
+PsyArXiv. https://doi.org/10.31234/osf.io/dg7c2_v1
 
-    @Manual{,
-      title = {eam: Evidence Accumulation Models},
+    @Article{,
+      title = {Simulation-Based Evidence Accumulation Modeling for Single- and Multi-Response Tasks: The eam Package},
       author = {Guangyu Zhu and Guang Yang},
       year = {2026},
-      note = {R package version 1.1.0},
-      url = {https://y-guang.github.io/eam/},
+      doi = {10.31234/osf.io/dg7c2_v1},
+      url = {https://osf.io/preprints/psyarxiv/dg7c2_v1},
+      note = {PsyArXiv preprint},
+      journal = {PsyArXiv},
     }

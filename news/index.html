@@ -55,7 +55,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1.0" id="eam-110">eam 1.1.0<a class="anchor" aria-label="anchor" href="#eam-110"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.1.0" id="eam-110">eam 1.1.0<a class="anchor" aria-label="anchor" href="#eam-110"></a></h2><p class="text-muted">CRAN release: 2026-02-09</p>
 <ul><li>Add <code>build_abi_input</code> function to create input for ABI anlysis from EAM simulation output.</li>
 <li>Simulation allow more than 1024 data chunks/arrow partitions. Now, it depends on the hard limit of the arrow library and the file system.</li>
 <li>Fix <code><a href="../reference/summarise_by.html">summarise_by()</a></code> to handle invalid column names returned by summary functions (e.g., quantile functions returning “90%”, “95%”). Now uses <code><a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names()</a></code> for proper name repair.</li>

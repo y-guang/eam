@@ -571,12 +571,6 @@ summary(postpr_result)
 #> model_2  0.6949  1.0000
 ```
 
-According to the results, the model comparison indicated moderate
-evidence in favor of the model with $\rho = 0.5$ (the correct $\rho$
-configuration) over the model with $\rho = 0.7$ (the incorrect $\rho$
-configuration), with a posterior probability of 0.87 and a Bayes factor
-of approximately 6.7.
-
 This is the end of this example.
 
 ------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 
 ## eam 1.1.0
 
+CRAN release: 2026-02-09
+
 - Add `build_abi_input` function to create input for ABI anlysis from
   EAM simulation output.
 - Simulation allow more than 1024 data chunks/arrow partitions. Now, it
