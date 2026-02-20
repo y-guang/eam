@@ -1,0 +1,19 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "Simulation-Based Evidence Accumulation Modeling for Single- and Multi-Response Tasks: The eam Package",
+  author   = c(
+    person("Guangyu", "Zhu"),
+    person("Guang", "Yang")
+  ),
+  year     = "2026",
+  doi      = "10.31234/osf.io/dg7c2_v1",
+  url      = "https://osf.io/preprints/psyarxiv/dg7c2_v1",
+  note     = "PsyArXiv preprint",
+  journal  = "PsyArXiv",
+  textVersion = paste(
+    "Zhu, G., & Yang, G. (2026).",
+    "Simulation-Based Evidence Accumulation Modeling for Single- and Multi-Response Tasks: The eam Package.",
+    "PsyArXiv.",
+    "https://doi.org/10.31234/osf.io/dg7c2_v1"
+  )
+)
