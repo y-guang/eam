@@ -10,7 +10,7 @@
 #' @return Invisibly returns `NULL`. Called for its side effect of producing plots.
 #'
 #' @seealso
-#'   \code{\link{plot_cv_recovery.cv4abc}}
+#'   \code{\link{plot_cv_recovery.cv4abc}}, \code{\link{plot_cv_recovery.eam_abi_assess}}
 #'
 #' @examples
 #' # Load CV output from saved file
@@ -219,6 +219,198 @@ plot_cv_recovery.cv4abc <- function(data, ...) {
       if (interactive) {
         readline(prompt = "Press [Enter] to continue to the next page...")
       }
+    }
+  }
+
+  invisible(NULL)
+}
+
+#' @rdname plot_cv_recovery
+#' @method plot_cv_recovery eam_abi_assess
+#'
+#' @param data An \code{eam_abi_assess} object from \code{\link{abi_assess}}
+#'   containing recovery results with an \code{estimates} element. The
+#'   \code{estimates} element must be a data frame with columns
+#'   \code{parameter}, \code{estimate}, and \code{truth}.
+#' @param ... Additional arguments:
+#'   \describe{
+#'     \item{n_rows}{Integer; number of rows in the plot grid (default: 3)}
+#'     \item{n_cols}{Integer; number of columns in the plot grid, multiplied by 2
+#'       for paired plots (default: 1)}
+#'     \item{method}{Character; smoothing method for \code{geom_smooth} (default: "lm")}
+#'     \item{formula}{Formula; used in \code{geom_smooth} (default: y ~ x)}
+#'     \item{resid_tol}{Numeric; quantile threshold for filtering residuals by
+#'       absolute value. If specified, only observations with residuals below
+#'       this quantile are plotted (default: NULL, no filtering)}
+#'     \item{interactive}{Logical; whether to pause between pages and wait for
+#'       user input (default: FALSE)}
+#'   }
+#'
+#' @export
+plot_cv_recovery.eam_abi_assess <- function(data, ...) {
+  # Validate input structure
+  if (!"estimates" %in% names(data)) {
+    stop("data must contain 'estimates' element")
+  }
+
+  estimates_df <- data$estimates
+
+  if (!is.data.frame(estimates_df)) {
+    stop("data$estimates must be a data.frame")
+  }
+
+  required_cols <- c("parameter", "estimate", "truth")
+  missing_cols <- setdiff(required_cols, names(estimates_df))
+  if (length(missing_cols) > 0) {
+    stop(paste0(
+      "data$estimates must contain columns: ",
+      paste(missing_cols, collapse = ", ")
+    ))
+  }
+
+  # Extract parameters
+  dots <- rlang::list2(...)
+  n_rows <- dots$n_rows %||% 3
+  dots$n_rows <- rlang::zap()
+  n_cols <- dots$n_cols %||% 1
+  dots$n_cols <- rlang::zap()
+  method <- dots$method %||% "lm"
+  dots$method <- rlang::zap()
+  formula <- dots$formula %||% (y ~ x)
+  dots$formula <- rlang::zap()
+  resid_tol <- dots$resid_tol %||% NULL
+  dots$resid_tol <- rlang::zap()
+  interactive <- dots$interactive %||% FALSE
+  dots$interactive <- rlang::zap()
+
+  # Get unique parameter names for plotting
+  param_names <- unique(estimates_df$parameter)
+  n_params <- length(param_names)
+
+  # Calculate plot dimensions
+  plot_per_parameter <- 2
+  n_cols <- n_cols * plot_per_parameter
+  plots_per_page <- n_rows * n_cols
+  n_pages <- ceiling(n_params * plot_per_parameter / plots_per_page)
+
+  # NSE variable bindings for R CMD check
+  true <- estimate <- residual <- NULL
+
+  # Create list to store plots
+  plot_list <- list()
+  plot_idx <- 1
+
+  # Loop through each parameter
+  for (i in seq_along(param_names)) {
+    param_name <- param_names[i]
+
+    # Filter data for this parameter
+    param_data <- estimates_df[estimates_df$parameter == param_name, ]
+
+    # Calculate residuals
+    residuals <- param_data$estimate - param_data$truth
+
+    # Filter by residual tolerance if specified
+    if (!is.null(resid_tol)) {
+      threshold <- stats::quantile(abs(residuals), resid_tol, na.rm = TRUE)
+      keep_idx <- abs(residuals) <= threshold
+      param_data <- param_data[keep_idx, ]
+      residuals <- residuals[keep_idx]
+    }
+
+    # Calculate correlation
+    cor_value <- stats::cor(
+      param_data$truth,
+      param_data$estimate,
+      use = "complete.obs"
+    )
+
+    # Prepare plot data
+    plot_df <- data.frame(
+      true = param_data$truth,
+      estimate = param_data$estimate,
+      residual = residuals
+    )
+
+    # Plot 1: Estimate vs True
+    p1 <- ggplot2::ggplot(plot_df, ggplot2::aes(x = true, y = estimate)) +
+      ggplot2::geom_point() +
+      ggplot2::geom_abline(
+        intercept = 0,
+        slope = 1,
+        linetype = "dashed",
+        color = "red",
+        alpha = 0.5
+      ) +
+      ggplot2::geom_smooth(
+        method = method,
+        formula = formula,
+        se = FALSE,
+        color = scales::alpha("blue", 0.5),
+        alpha = 0.5,
+        linewidth = 0.8
+      ) +
+      ggplot2::labs(
+        title = paste0(param_name),
+        x = "True",
+        y = "Estimated"
+      ) +
+      ggplot2::annotate(
+        "text",
+        x = -Inf,
+        y = Inf,
+        label = sprintf("r = %.4f", cor_value),
+        hjust = -0.1,
+        vjust = 1.5,
+        size = 3
+      ) +
+      theme_eam
+
+    # Plot 2: Density of residuals (estimate - true)
+    p2 <- ggplot2::ggplot(plot_df, ggplot2::aes(x = residual)) +
+      ggplot2::geom_density(
+        color = "blue",
+      ) +
+      ggplot2::geom_vline(
+        xintercept = 0,
+        linetype = "dashed",
+        color = "red",
+        alpha = 0.5
+      ) +
+      ggplot2::labs(
+        title = paste0("Residuals"),
+        x = "Estimate - True",
+        y = "Density"
+      ) +
+      theme_eam
+
+    # Add plots to list
+    plot_list[[plot_idx]] <- p1
+    plot_list[[plot_idx + 1]] <- p2
+    plot_idx <- plot_idx + plot_per_parameter
+  }
+
+  # Render pages
+  for (page in 1:n_pages) {
+    start_idx <- (page - 1) * plots_per_page + 1
+    end_idx <- min(page * plots_per_page, length(plot_list))
+
+    page_plots <- plot_list[start_idx:end_idx]
+
+    # Arrange plots for this page
+    gridExtra::grid.arrange(
+      grobs = page_plots,
+      ncol = n_cols,
+      nrow = n_rows,
+      top = grid::textGrob(
+        paste0("Recovery (page ", page, "/", n_pages, ")"),
+        gp = grid::gpar(fontsize = 16, fontface = "bold")
+      )
+    )
+
+    # interactive mode
+    if (interactive) {
+      readline(prompt = "Press [Enter] to continue to the next page...")
     }
   }
 
