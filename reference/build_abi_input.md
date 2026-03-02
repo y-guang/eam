@@ -121,7 +121,7 @@ abi_input <- build_abi_input(
 
 # view the structure of the ABI input
 str(abi_input)
-#> List of 8
+#> List of 11
 #>  $ theta_train: num [1:2, 1:400] 0.579 0.265 0.602 0.141 0.239 ...
 #>   ..- attr(*, "dimnames")=List of 2
 #>   .. ..$ : chr [1:2] "V_beta_1" "V_beta_group"
@@ -929,7 +929,10 @@ str(abi_input)
 #>  $ train_idx  : int [1:400] 443 166 365 237 25 309 163 45 210 407 ...
 #>  $ val_idx    : int [1:100] 2 9 22 33 35 47 53 62 64 66 ...
 #>  $ train_ratio: num 0.8
+#>  $ test_ratio : NULL
 #>  $ rank_levels: int [1:3] 1 2 3
+#>  $ theta      : chr [1:2] "V_beta_1" "V_beta_group"
+#>  $ Z          : chr [1:3] "item_idx" "rt" "choice"
 
 if (FALSE) { # \dontrun{
 # Example of using the ABI input for training
