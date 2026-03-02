@@ -1,5 +1,6 @@
 # eam (development version)
 
+- Add optional test_ratio param to build_abi_input to allow splitting data into train/test/val sets.
 - Add inst/CITATION file with the pre-print citation information.
 
 # eam 1.1.0
