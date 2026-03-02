@@ -154,7 +154,7 @@ build_abi_input <- function(
   n_total <- length(condition_idx)
   n_train <- floor(n_total * train_ratio)
   train_idx <- sample(condition_idx, n_train, replace = FALSE)
-  
+
   if (!is.null(test_ratio)) {
     # Three-way split: train, test, val
     remaining_idx <- setdiff(condition_idx, train_idx)
@@ -178,7 +178,7 @@ build_abi_input <- function(
     theta,
     val_idx
   )
-  
+
   if (!is.null(test_ratio)) {
     theta_test <- build_abi_input.theta(
       conditions,
@@ -186,7 +186,7 @@ build_abi_input <- function(
       test_idx
     )
   }
-  
+
   z_train <- build_abi_input.Z(
     output,
     Z,
@@ -202,7 +202,7 @@ build_abi_input <- function(
     val_idx,
     simulation_output$simulation_config$n_trials_per_condition
   )
-  
+
   if (!is.null(test_ratio)) {
     z_test <- build_abi_input.Z(
       output,
@@ -227,7 +227,7 @@ build_abi_input <- function(
     theta = theta,
     Z = Z
   )
-  
+
   if (!is.null(test_ratio)) {
     abi_input$theta_test <- theta_test
     abi_input$Z_test <- z_test
