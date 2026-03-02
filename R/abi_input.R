@@ -43,6 +43,8 @@
 #'   \item{train_ratio}{The training ratio used}
 #'   \item{test_ratio}{The test ratio used, NULL if not specified}
 #'   \item{rank_levels}{The rank levels included in Z matrices}
+#'   \item{theta}{Character vector of parameter names used}
+#'   \item{Z}{Character vector of summary statistic names used}
 #' }
 #'
 #' @examples
@@ -221,7 +223,9 @@ build_abi_input <- function(
     val_idx = val_idx,
     train_ratio = train_ratio,
     test_ratio = test_ratio,
-    rank_levels = rank_levels
+    rank_levels = rank_levels,
+    theta = theta,
+    Z = Z
   )
   
   if (!is.null(test_ratio)) {
