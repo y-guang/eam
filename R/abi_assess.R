@@ -21,9 +21,6 @@
 #' }
 #'
 #' @details
-#' This function requires the \code{NeuralEstimators} package to be installed.
-#' If not available, the function will throw an error with installation instructions.
-#'
 #' This function extracts test or validation parameters and summary statistics
 #' from the ABI input object, along with parameter names (\code{theta}), and
 #' passes them to \code{NeuralEstimators::assess()}. If test set is available
@@ -32,6 +29,8 @@
 #'
 #' The returned object has class \code{eam_abi_assess}, which enables the use of
 #' S3 methods like \code{\link{plot_cv_recovery}} for visualization.
+#'
+#' @note This function initializes the global Julia environment on first call.
 #'
 #' @examples
 #' \dontrun{
@@ -58,15 +57,8 @@ abi_assess <- function(
     estimator_name = NULL,
     use_gpu = TRUE,
     verbose = TRUE) {
-  # Check if NeuralEstimators package is available
-  if (!requireNamespace("NeuralEstimators", quietly = TRUE)) {
-    stop(
-      "Package 'NeuralEstimators' is required for this function.\n",
-      "Please install it via:\n",
-      "  install.packages('NeuralEstimators')\n",
-      call. = FALSE
-    )
-  }
+  # Initialize Julia environment
+  init_julia_env()
 
   # Validate abi_input
   if (!is.list(abi_input)) {
