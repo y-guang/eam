@@ -78,15 +78,9 @@ abi_assess <- function(
   if ("theta_test" %in% names(abi_input) && "Z_test" %in% names(abi_input)) {
     theta_assess <- abi_input$theta_test
     Z_assess <- abi_input$Z_test
-    if (verbose) {
-      message("Using test set for assessment")
-    }
   } else {
     theta_assess <- abi_input$theta_val
     Z_assess <- abi_input$Z_val
-    if (verbose) {
-      message("Test set not available, using validation set for assessment")
-    }
   }
 
   # Extract parameter names from abi_input
