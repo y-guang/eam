@@ -145,5 +145,11 @@ plot_cv_recovery(assessment)
 ##################
 # point estimate #
 ##################
-point_est <- estimate(trained_estimator$trained_estimator, abi_input$Z_test[[1]])
-# TODO: impl it
+point_est <- abi_estimate(
+  trained_estimator = trained_estimator,
+  Z = abi_input$Z_test[[1]]
+)
+
+########################
+# posterior estimation #
+########################
