@@ -125,12 +125,9 @@ point_estimator <- "
   estimator = PointEstimator(deepset)
 "
 
-trained_estimator <- train(
-  point_estimator,
-  theta_train = abi_input$theta_train,
-  Z_train = abi_input$Z_train,
-  theta_val = abi_input$theta_val,
-  Z_val = abi_input$Z_val,
+trained_estimator <- abi_train(
+  estimator = point_estimator,
+  abi_input = abi_input,
   epochs = 50,
   stopping_epochs = 20
 )
@@ -139,8 +136,7 @@ trained_estimator <- train(
 # cross validation #
 ####################
 assessment <- abi_assess(
-  trained_estimator,
-  abi_input,
+  trained_estimator = trained_estimator,
   estimator_name = "NBE"
 )
 
@@ -149,5 +145,5 @@ plot_cv_recovery(assessment)
 ##################
 # point estimate #
 ##################
-point_est <- estimate(trained_estimator, abi_input$Z_test[[1]])
+point_est <- estimate(trained_estimator$trained_estimator, abi_input$Z_test[[1]])
 # TODO: impl it

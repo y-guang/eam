@@ -31,7 +31,7 @@
 #' @param verbose Logical; whether to print training information (default: TRUE).
 #' @param ... Additional arguments passed to \code{NeuralEstimators::train()}.
 #'
-#' @return A list with class \code{eam_abi_trained_model} containing:
+#' @return A list with class \code{eam_abi_trained_estimator} containing:
 #' \describe{
 #'   \item{original_estimator}{The initial estimator before training}
 #'   \item{trained_estimator}{The trained neural estimator}

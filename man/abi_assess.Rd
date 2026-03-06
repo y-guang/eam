@@ -2,24 +2,19 @@
 % Please edit documentation in R/abi_assess.R
 \name{abi_assess}
 \alias{abi_assess}
-\title{Assess neural estimator using ABI input}
+\title{Assess neural estimator using trained estimator}
 \usage{
 abi_assess(
-  estimator,
-  abi_input,
+  trained_estimator,
   estimator_name = NULL,
   use_gpu = TRUE,
   verbose = TRUE
 )
 }
 \arguments{
-\item{estimator}{A neural estimator to assess.
-See \code{NeuralEstimators::assess} for details.}
-
-\item{abi_input}{An ABI input object created by \code{\link{build_abi_input}}.
-Must contain \code{theta_val}, \code{Z_val}, and \code{theta} elements.
-If \code{theta_test} and \code{Z_test} are available, they will be used;
-otherwise the validation set will be used for assessment.}
+\item{trained_estimator}{A trained estimator object returned by \code{\link{abi_train}}.
+Must be of class \code{eam_abi_trained_estimator} and contain
+\code{trained_estimator} and \code{abi_input} elements.}
 
 \item{estimator_name}{Character string; optional name for the estimator (default: NULL).}
 
@@ -36,13 +31,14 @@ A list with class \code{eam_abi_assess} containing:
 }
 \description{
 A wrapper around \code{NeuralEstimators::assess()} that automatically unpacks
-parameters and summary statistics from an ABI input object created by
-\code{\link{build_abi_input}}.
+the trained estimator and ABI input from a trained estimator object created by
+\code{\link{abi_train}}.
 }
 \details{
-This function extracts test or validation parameters and summary statistics
-from the ABI input object, along with parameter names (\code{theta}), and
-passes them to \code{NeuralEstimators::assess()}. If test set is available
+This function extracts the trained estimator and ABI input from the trained
+estimator object, then extracts test or validation parameters and summary statistics
+from the ABI input, along with parameter names (\code{theta}), and passes them
+to \code{NeuralEstimators::assess()}. If test set is available
 (\code{theta_test} and \code{Z_test}), it will be used; otherwise the
 validation set (\code{theta_val} and \code{Z_val}) will be used.
 
@@ -54,10 +50,16 @@ This function initializes the global Julia environment on first call.
 }
 \examples{
 \dontrun{
-# Assuming you have a trained estimator and ABI input with test set
-assessment <- abi_assess(
+# Train an estimator first
+trained_estimator <- abi_train(
   estimator = estimator,
   abi_input = abi_input,
+  epochs = 100
+)
+
+# Assess the trained estimator
+assessment <- abi_assess(
+  trained_estimator = trained_estimator,
   estimator_name = "MyEstimator",
   use_gpu = TRUE,
   verbose = TRUE

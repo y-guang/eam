@@ -1,15 +1,12 @@
-#' Assess neural estimator using ABI input
+#' Assess neural estimator using trained estimator
 #'
 #' A wrapper around \code{NeuralEstimators::assess()} that automatically unpacks
-#' parameters and summary statistics from an ABI input object created by
-#' \code{\link{build_abi_input}}.
+#' the trained estimator and ABI input from a trained estimator object created by
+#' \code{\link{abi_train}}.
 #'
-#' @param estimator A neural estimator to assess.
-#'   See \code{NeuralEstimators::assess} for details.
-#' @param abi_input An ABI input object created by \code{\link{build_abi_input}}.
-#'   Must contain \code{theta_val}, \code{Z_val}, and \code{theta} elements.
-#'   If \code{theta_test} and \code{Z_test} are available, they will be used;
-#'   otherwise the validation set will be used for assessment.
+#' @param trained_estimator A trained estimator object returned by \code{\link{abi_train}}.
+#'   Must be of class \code{eam_abi_trained_estimator} and contain
+#'   \code{trained_estimator} and \code{abi_input} elements.
 #' @param estimator_name Character string; optional name for the estimator (default: NULL).
 #' @param use_gpu Logical; whether to use GPU for assessment (default: TRUE).
 #' @param verbose Logical; whether to print progress information (default: TRUE).
@@ -21,9 +18,10 @@
 #' }
 #'
 #' @details
-#' This function extracts test or validation parameters and summary statistics
-#' from the ABI input object, along with parameter names (\code{theta}), and
-#' passes them to \code{NeuralEstimators::assess()}. If test set is available
+#' This function extracts the trained estimator and ABI input from the trained
+#' estimator object, then extracts test or validation parameters and summary statistics
+#' from the ABI input, along with parameter names (\code{theta}), and passes them
+#' to \code{NeuralEstimators::assess()}. If test set is available
 #' (\code{theta_test} and \code{Z_test}), it will be used; otherwise the
 #' validation set (\code{theta_val} and \code{Z_val}) will be used.
 #'
@@ -34,10 +32,16 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Assuming you have a trained estimator and ABI input with test set
-#' assessment <- abi_assess(
+#' # Train an estimator first
+#' trained_estimator <- abi_train(
 #'   estimator = estimator,
 #'   abi_input = abi_input,
+#'   epochs = 100
+#' )
+#'
+#' # Assess the trained estimator
+#' assessment <- abi_assess(
+#'   trained_estimator = trained_estimator,
 #'   estimator_name = "MyEstimator",
 #'   use_gpu = TRUE,
 #'   verbose = TRUE
@@ -52,13 +56,21 @@
 #'
 #' @export
 abi_assess <- function(
-    estimator,
-    abi_input,
+    trained_estimator,
     estimator_name = NULL,
     use_gpu = TRUE,
     verbose = TRUE) {
   # Initialize Julia environment
   init_julia_env()
+
+  # Validate trained_estimator
+  if (!inherits(trained_estimator, "eam_abi_trained_estimator")) {
+    stop("trained_estimator must be an object of class 'eam_abi_trained_estimator' returned by abi_train()")
+  }
+
+  # Extract trained estimator and abi_input from trained_estimator object
+  estimator <- trained_estimator$trained_estimator
+  abi_input <- trained_estimator$abi_input
 
   # Validate abi_input
   if (!inherits(abi_input, "eam_abi_input")) {
