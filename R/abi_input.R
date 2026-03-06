@@ -90,6 +90,9 @@ build_abi_input <- function(
     train_ratio = 0.8,
     test_ratio = NULL,
     rank_levels = NULL) {
+  # TODO: totally re-design current api for abi, only pass the index of conditions,
+  # and load data in julia rather than r.
+
   # Validate inputs
   if (!inherits(simulation_output, "eam_simulation_output")) {
     stop("simulation_output must be a eam_simulation_output object")
@@ -233,6 +236,8 @@ build_abi_input <- function(
     abi_input$Z_test <- z_test
     abi_input$test_idx <- test_idx
   }
+
+  class(abi_input) <- c("eam_abi_input", "list")
 
   return(abi_input)
 }

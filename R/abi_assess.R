@@ -61,17 +61,8 @@ abi_assess <- function(
   init_julia_env()
 
   # Validate abi_input
-  if (!is.list(abi_input)) {
-    stop("abi_input must be a list")
-  }
-
-  required_elements <- c("theta_val", "Z_val", "theta")
-  missing_elements <- setdiff(required_elements, names(abi_input))
-  if (length(missing_elements) > 0) {
-    stop(paste0(
-      "abi_input must contain elements: ",
-      paste(missing_elements, collapse = ", ")
-    ))
+  if (!inherits(abi_input, "eam_abi_input")) {
+    stop("abi_input must be an object of class 'eam_abi_input' created by build_abi_input()")
   }
 
   # Check if test set is available, otherwise use validation set

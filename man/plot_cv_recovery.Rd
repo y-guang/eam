@@ -3,15 +3,20 @@
 \name{plot_cv_recovery}
 \alias{plot_cv_recovery}
 \alias{plot_cv_recovery.cv4abc}
+\alias{plot_cv_recovery.eam_abi_assess}
 \title{Plot CV parameter recovery}
 \usage{
 plot_cv_recovery(data, ...)
 
 \method{plot_cv_recovery}{cv4abc}(data, ...)
+
+\method{plot_cv_recovery}{eam_abi_assess}(data, ...)
 }
 \arguments{
-\item{data}{A \code{cv4abc} object containing true parameters and
-cross-validated estimates.}
+\item{data}{An \code{eam_abi_assess} object from \code{\link{abi_assess}}
+containing recovery results with an \code{estimates} element. The
+\code{estimates} element must be a data frame with columns
+\code{parameter}, \code{estimate}, and \code{truth}.}
 
 \item{...}{Additional arguments:
 \describe{
@@ -52,5 +57,5 @@ plot_cv_recovery(
 
 }
 \seealso{
-\code{\link{plot_cv_recovery.cv4abc}}
+\code{\link{plot_cv_recovery.cv4abc}}, \code{\link{plot_cv_recovery.eam_abi_assess}}
 }

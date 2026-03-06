@@ -100,24 +100,11 @@ abi_input <- build_abi_input(
   test_ratio = 0.1
 )
 
-theta_train <- abi_input$theta_train
-theta_eval <- abi_input$theta_val
-Z_train <- abi_input$Z_train
-Z_eval <- abi_input$Z_val
-
-library("NeuralEstimators")
-library("JuliaConnectoR")
-
-# activate env
-julia_env_path <- system.file("julia/env", package = "eam")
-juliaEval(sprintf("using Pkg; Pkg.activate(\"%s\")", julia_env_path))
-juliaEval("using NeuralEstimators, Flux")
-
 #####################
 # user define model #
 #####################
 
-point_estimator <- juliaEval("
+point_estimator <- "
   d = 14    # dimension of each replicate
   w = 32   # number of neurons in each hidden layer
 
@@ -136,7 +123,7 @@ point_estimator <- juliaEval("
   phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
   deepset = DeepSet(psi, phi)
   estimator = PointEstimator(deepset)
-")
+"
 
 trained_estimator <- train(
   point_estimator,
@@ -158,3 +145,9 @@ assessment <- abi_assess(
 )
 
 plot_cv_recovery(assessment)
+
+##################
+# point estimate #
+##################
+point_est <- estimate(trained_estimator, abi_input$Z_test[[1]])
+# TODO: impl it
