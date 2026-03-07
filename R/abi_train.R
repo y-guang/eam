@@ -105,12 +105,6 @@ abi_train <- function(
     stop("val_subset must be one of: ", paste(valid_subsets, collapse = ", "))
   }
 
-  # Check if test subset is requested but not available
-  if ((train_subset == "test" || val_subset == "test") && 
-      (is.null(abi_input$theta_test) || is.null(abi_input$Z_test))) {
-    stop("test subset requested but not available in abi_input")
-  }
-
   # Handle estimator as string (Julia code)
   if (is.character(estimator) && length(estimator) == 1L) {
     estimator <- JuliaConnectoR::juliaEval(estimator)

@@ -19,11 +19,10 @@
 #'
 #' @details
 #' This function extracts the trained estimator and ABI input from the trained
-#' estimator object, then extracts test or validation parameters and summary statistics
-#' from the ABI input, along with parameter names (\code{theta}), and passes them
-#' to \code{NeuralEstimators::assess()}. If test set is available
-#' (\code{theta_test} and \code{Z_test}), it will be used; otherwise the
-#' validation set (\code{theta_val} and \code{Z_val}) will be used.
+#' estimator object, then extracts test parameters and summary statistics
+#' from the ABI input, along with parameter names (\\code{theta}), and passes them
+#' to \\code{NeuralEstimators::assess()}. The test set (\\code{theta_test} and
+#' \\code{Z_test}) is used for assessment.
 #'
 #' The returned object has class \code{eam_abi_assess}, which enables the use of
 #' S3 methods like \code{\link{plot_cv_recovery}} for visualization.
@@ -77,14 +76,9 @@ abi_assess <- function(
     stop("abi_input must be an object of class 'eam_abi_input' created by build_abi_input()")
   }
 
-  # Check if test set is available, otherwise use validation set
-  if ("theta_test" %in% names(abi_input) && "Z_test" %in% names(abi_input)) {
-    theta_assess <- abi_input$theta_test
-    Z_assess <- abi_input$Z_test
-  } else {
-    theta_assess <- abi_input$theta_val
-    Z_assess <- abi_input$Z_val
-  }
+  # Use test set for assessment
+  theta_assess <- abi_input$theta_test
+  Z_assess <- abi_input$Z_test
 
   # Extract parameter names from abi_input
   parameter_names <- abi_input$theta

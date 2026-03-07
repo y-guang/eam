@@ -24,8 +24,8 @@
 #' @param train_ratio Numeric value between 0 and 1 specifying the proportion
 #'   of conditions to use for training (default: 0.8).
 #' @param test_ratio Numeric value between 0 and 1 specifying the proportion
-#'   of conditions to use for testing (default: NULL). When specified,
-#'   train + test + val = 1. When NULL, only train and val sets are created.
+#'   of conditions to use for testing (default: 0.1).
+#'   Must satisfy train_ratio + test_ratio < 1.
 #' @param rank_levels Numeric vector specifying which rank indices to include.
 #'   If NULL (default), uses all ranks from 1 to n_items from simulation config.
 #'
@@ -33,15 +33,15 @@
 #' \describe{
 #'   \item{theta_train}{Matrix of training parameters (parameters × conditions)}
 #'   \item{theta_val}{Matrix of validation parameters (parameters × conditions)}
-#'   \item{theta_test}{Matrix of test parameters (parameters × conditions), only when test_ratio is specified}
+#'   \item{theta_test}{Matrix of test parameters (parameters × conditions)}
 #'   \item{Z_train}{List of matrices, one per training condition (ranks*Z × trials)}
 #'   \item{Z_val}{List of matrices, one per validation condition (ranks*Z × trials)}
-#'   \item{Z_test}{List of matrices, one per test condition (ranks*Z × trials), only when test_ratio is specified}
+#'   \item{Z_test}{List of matrices, one per test condition (ranks*Z × trials)}
 #'   \item{train_idx}{Vector of condition indices used for training}
 #'   \item{val_idx}{Vector of condition indices used for validation}
-#'   \item{test_idx}{Vector of condition indices used for testing, only when test_ratio is specified}
+#'   \item{test_idx}{Vector of condition indices used for testing}
 #'   \item{train_ratio}{The training ratio used}
-#'   \item{test_ratio}{The test ratio used, NULL if not specified}
+#'   \item{test_ratio}{The test ratio used}
 #'   \item{rank_levels}{The rank levels included in Z matrices}
 #'   \item{theta}{Character vector of parameter names used}
 #'   \item{Z}{Character vector of summary statistic names used}
@@ -88,7 +88,7 @@ build_abi_input <- function(
     theta,
     Z,
     train_ratio = 0.8,
-    test_ratio = NULL,
+    test_ratio = 0.1,
     rank_levels = NULL) {
   # TODO: totally re-design current api for abi, only pass the index of conditions,
   # and load data in julia rather than r.
@@ -114,16 +114,14 @@ build_abi_input <- function(
     stop("train_ratio must be between 0 and 1")
   }
 
-  if (!is.null(test_ratio)) {
-    if (!is.numeric(test_ratio) || length(test_ratio) != 1) {
-      stop("test_ratio must be NULL or a single numeric value")
-    }
-    if (test_ratio <= 0 || test_ratio >= 1) {
-      stop("test_ratio must be between 0 and 1")
-    }
-    if (train_ratio + test_ratio >= 1) {
-      stop("train_ratio + test_ratio must be less than 1")
-    }
+  if (!is.numeric(test_ratio) || length(test_ratio) != 1) {
+    stop("test_ratio must be a single numeric value")
+  }
+  if (test_ratio <= 0 || test_ratio >= 1) {
+    stop("test_ratio must be between 0 and 1")
+  }
+  if (train_ratio + test_ratio >= 1) {
+    stop("train_ratio + test_ratio must be less than 1")
   }
 
   if (!is.null(rank_levels) && !is.numeric(rank_levels)) {
@@ -153,22 +151,16 @@ build_abi_input <- function(
     dplyr::collect() |>
     dplyr::pull(condition_idx)
 
-  # Split into train, test (optional), and validation sets
+  # Split into train, test, and validation sets
   n_total <- length(condition_idx)
   n_train <- floor(n_total * train_ratio)
   train_idx <- sample(condition_idx, n_train, replace = FALSE)
 
-  if (!is.null(test_ratio)) {
-    # Three-way split: train, test, val
-    remaining_idx <- setdiff(condition_idx, train_idx)
-    n_test <- floor(n_total * test_ratio)
-    test_idx <- sample(remaining_idx, n_test, replace = FALSE)
-    val_idx <- setdiff(remaining_idx, test_idx)
-  } else {
-    # Two-way split: train, val
-    test_idx <- NULL
-    val_idx <- setdiff(condition_idx, train_idx)
-  }
+  # Three-way split: train, test, val
+  remaining_idx <- setdiff(condition_idx, train_idx)
+  n_test <- floor(n_total * test_ratio)
+  test_idx <- sample(remaining_idx, n_test, replace = FALSE)
+  val_idx <- setdiff(remaining_idx, test_idx)
 
   # build theta matrices
   theta_train <- build_abi_input.theta(
@@ -181,14 +173,11 @@ build_abi_input <- function(
     theta,
     val_idx
   )
-
-  if (!is.null(test_ratio)) {
-    theta_test <- build_abi_input.theta(
-      conditions,
-      theta,
-      test_idx
-    )
-  }
+  theta_test <- build_abi_input.theta(
+    conditions,
+    theta,
+    test_idx
+  )
 
   z_train <- build_abi_input.Z(
     output,
@@ -206,36 +195,31 @@ build_abi_input <- function(
     simulation_output$simulation_config$n_trials_per_condition
   )
 
-  if (!is.null(test_ratio)) {
-    z_test <- build_abi_input.Z(
-      output,
-      Z,
-      rank_levels,
-      test_idx,
-      simulation_output$simulation_config$n_trials_per_condition
-    )
-  }
+  z_test <- build_abi_input.Z(
+    output,
+    Z,
+    rank_levels,
+    test_idx,
+    simulation_output$simulation_config$n_trials_per_condition
+  )
 
   # build output list
   abi_input <- list(
     theta_train = theta_train,
     theta_val = theta_val,
+    theta_test = theta_test,
     Z_train = z_train,
     Z_val = z_val,
+    Z_test = z_test,
     train_idx = train_idx,
     val_idx = val_idx,
+    test_idx = test_idx,
     train_ratio = train_ratio,
     test_ratio = test_ratio,
     rank_levels = rank_levels,
     theta = theta,
     Z = Z
   )
-
-  if (!is.null(test_ratio)) {
-    abi_input$theta_test <- theta_test
-    abi_input$Z_test <- z_test
-    abi_input$test_idx <- test_idx
-  }
 
   class(abi_input) <- c("eam_abi_input", "list")
 

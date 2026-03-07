@@ -69,9 +69,6 @@ abi_sample_posterior <- function(
 
   # Use Z_test from abi_input if Z is not provided
   if (is.null(Z)) {
-    if (is.null(trained_estimator$abi_input$Z_test)) {
-      stop("Z is NULL and Z_test is not available in trained_estimator$abi_input")
-    }
     Z <- trained_estimator$abi_input$Z_test
   }
 
