@@ -10,7 +10,8 @@
 #' @return A data frame with summary statistics for each parameter.
 #'
 #' @seealso
-#'   \code{\link{summarise_posterior_parameters.abc}}
+#'   \code{\link{summarise_posterior_parameters.abc}},
+#'   \code{\link{summarise_posterior_parameters.eam_abi_posterior_samples}}
 #'
 #' @examples
 #' # Load ABC output from saved file
@@ -128,6 +129,100 @@ summarise_posterior_parameters.abc <- function(data, ..., ci_level = 0.95) {
   # Add attributes
   attr(summary_df, "ci_level") <- ci_level
   attr(summary_df, "n_samples") <- nrow(df)
+
+  return(summary_df)
+}
+
+#' @rdname summarise_posterior_parameters
+#' @method summarise_posterior_parameters eam_abi_posterior_samples
+#'
+#' @param data An \code{eam_abi_posterior_samples} object (tibble) containing
+#'   posterior samples with columns \code{dataset_id} and parameter columns.
+#' @param ci_level Numeric; confidence interval level (default: 0.95).
+#' @param ... Additional arguments for custom summary functions. Functions passed
+#'   as named arguments will be applied to each parameter's posterior samples.
+#'
+#' @export
+summarise_posterior_parameters.eam_abi_posterior_samples <- function(data, ..., ci_level = 0.95) {
+  # Check parameters
+  dots <- rlang::list2(...)
+
+  # Extract any custom summary functions from dots
+  is_fun <- vapply(dots, is.function, logical(1))
+  summary_funs <- dots[is_fun]
+  dots <- dots[!is_fun]
+
+  # Get parameter names (exclude dataset_id)
+  param_names <- setdiff(names(data), "dataset_id")
+
+  if (length(param_names) == 0) {
+    stop("No parameter columns found in data.")
+  }
+
+  # Calculate summaries for each dataset and parameter
+  results <- list()
+
+  dataset_ids <- unique(data$dataset_id)
+
+  for (dataset_id in dataset_ids) {
+    dataset_data <- data[data$dataset_id == dataset_id, ]
+
+    for (param in param_names) {
+      values <- dataset_data[[param]]
+      values <- values[is.finite(values)]
+
+      # Create dynamic column names with quantile values
+      alpha <- 1 - ci_level
+      ci_lower_name <- sprintf("ci_lower_%.3f", alpha / 2)
+      ci_upper_name <- sprintf("ci_upper_%.3f", 1 - alpha / 2)
+
+      row_key <- paste0(dataset_id, "_", param)
+
+      if (length(values) == 0) {
+        results[[row_key]] <- list(
+          dataset_id = dataset_id,
+          parameter = param,
+          mean = NA_real_,
+          median = NA_real_
+        )
+        results[[row_key]][[ci_lower_name]] <- NA_real_
+        results[[row_key]][[ci_upper_name]] <- NA_real_
+      } else {
+        # Basic summaries
+        ci_lower <- stats::quantile(values, probs = alpha / 2, na.rm = TRUE)
+        ci_upper <- stats::quantile(values, probs = 1 - alpha / 2, na.rm = TRUE)
+
+        results[[row_key]] <- list(
+          dataset_id = dataset_id,
+          parameter = param,
+          mean = mean(values, na.rm = TRUE),
+          median = stats::median(values, na.rm = TRUE)
+        )
+        results[[row_key]][[ci_lower_name]] <- as.numeric(ci_lower)
+        results[[row_key]][[ci_upper_name]] <- as.numeric(ci_upper)
+
+        # Apply custom summary functions if provided
+        if (length(summary_funs) > 0) {
+          for (fun_name in names(summary_funs)) {
+            fun <- summary_funs[[fun_name]]
+            results[[row_key]][[fun_name]] <- fun(values)
+          }
+        }
+      }
+    }
+  }
+
+  # Convert to data frame
+  summary_df <- do.call(rbind, lapply(results, function(row) {
+    as.data.frame(row)
+  }))
+
+  rownames(summary_df) <- NULL
+
+  # Add attributes
+  attr(summary_df, "ci_level") <- ci_level
+  attr(summary_df, "n_samples") <- nrow(data)
+  attr(summary_df, "n_datasets") <- length(dataset_ids)
 
   return(summary_df)
 }

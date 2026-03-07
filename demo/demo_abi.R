@@ -186,8 +186,12 @@ trained_posterior_estimator <- abi_train(
 )
 
 # Sample from posterior distribution
-# (returns 3D array: params × samples × datasets)
 posterior_samples <- abi_sample_posterior(
   trained_estimator = trained_posterior_estimator,
   N = 1000
 )
+posterior_samples
+
+# Summarise posterior parameters for each dataset
+posterior_summary <- summarise_posterior_parameters(posterior_samples)
+print(posterior_summary)

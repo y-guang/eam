@@ -16,17 +16,17 @@
 #'   \code{sampleposterior()}, applicable when estimator is a
 #'   likelihood-to-evidence-ratio estimator.
 #'
-#' @return A 3D array of class \code{eam_abi_posterior_samples} containing
-#'   posterior samples with dimensions (parameters × samples × datasets), where
-#'   the first dimension is the number of parameters, the second is N (number
-#'   of samples), and the third is the number of data sets in Z. The first
-#'   dimension is named using the parameter names from the ABI input.
+#' @return A tibble of class \code{eam_abi_posterior_samples} containing
+#'   posterior samples. Each row represents one posterior sample for one dataset.
+#'   Columns include \code{dataset_id} (integer dataset identifier) and one
+#'   column for each parameter.
 #'
 #' @details
 #' This function extracts the trained neural posterior estimator from the
 #' trained estimator object and uses it to sample from the approximate posterior
-#' distribution given data Z. The samples are returned as a 3D array stacked
-#' along the third dimension using Julia's \code{stack()} function.
+#' distribution given data Z. The samples are stacked using Julia's
+#' \code{stack()} function, then converted to a tibble in R for easy
+#' manipulation and summarization.
 #'
 #' @note This function initializes the global Julia environment on first call.
 #'
@@ -89,21 +89,43 @@ abi_sample_posterior <- function(
     posterior_sample_vector_of_matrices = posterior_sample_vector_of_matrices
   )
 
-  # Stack into 3D array using Julia
+  # Stack into 3D array using Julia (params × samples × datasets)
   posterior_sample_array <- JuliaConnectoR::juliaEval(
     "stack(eam_internal_posterior_sample_vector_of_matrices; dims=3)"
   )
 
-  # Set parameter names on the first dimension
+  # Get parameter names and dimensions
   param_names <- trained_estimator$abi_input$theta
-  dimnames(posterior_sample_array) <- list(
-    param_names,
-    NULL,
-    NULL
-  )
+  n_datasets <- dim(posterior_sample_array)[3]
 
-  # Add class
-  class(posterior_sample_array) <- c("eam_abi_posterior_samples", class(posterior_sample_array))
+  # Convert 3D array to tibble format
+  # Structure: each row is one sample for one dataset
+  samples_list <- list()
 
-  return(posterior_sample_array)
+  for (i in seq_len(n_datasets)) {
+    # Extract samples for this dataset: params × samples
+    dataset_samples <- posterior_sample_array[, , i]
+
+    # Transpose to samples × params and convert to data frame
+    df <- as.data.frame(t(dataset_samples))
+    colnames(df) <- param_names
+
+    # Add dataset identifier
+    df$dataset_id <- i
+
+    samples_list[[i]] <- df
+  }
+
+  # Combine all datasets into one tibble
+  samples_tbl <- dplyr::bind_rows(samples_list)
+
+  # Reorder columns to put dataset_id first
+  col_order <- c("dataset_id", setdiff(names(samples_tbl), "dataset_id"))
+  samples_tbl <- samples_tbl[, col_order]
+
+  # Convert to tibble and add class
+  samples_tbl <- tibble::as_tibble(samples_tbl)
+  class(samples_tbl) <- c("eam_abi_posterior_samples", class(samples_tbl))
+
+  return(samples_tbl)
 }
