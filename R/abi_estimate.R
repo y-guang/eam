@@ -77,5 +77,11 @@ abi_estimate <- function(
     use_gpu = use_gpu
   )
 
+  # Add names to result
+  if (!is.null(trained_estimator$abi_input$theta)) {
+    rownames(result) <- trained_estimator$abi_input$theta
+  }
+  colnames(result) <- "estimate"
+
   return(result)
 }

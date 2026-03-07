@@ -150,6 +150,8 @@ point_est <- abi_estimate(
   Z = abi_input$Z_test[[1]]
 )
 
+point_est
+
 ########################
 # posterior estimation #
 ########################
