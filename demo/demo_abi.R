@@ -125,7 +125,7 @@ point_estimator <- "
   estimator = PointEstimator(deepset)
 "
 
-trained_estimator <- abi_train(
+trained_point_estimator <- abi_train(
   estimator = point_estimator,
   abi_input = abi_input,
   epochs = 50,
@@ -136,7 +136,7 @@ trained_estimator <- abi_train(
 # cross validation #
 ####################
 assessment <- abi_assess(
-  trained_estimator = trained_estimator,
+  trained_estimator = trained_point_estimator,
   estimator_name = "NBE"
 )
 
@@ -146,10 +146,55 @@ plot_cv_recovery(assessment)
 # point estimate #
 ##################
 point_est <- abi_estimate(
-  trained_estimator = trained_estimator,
+  trained_estimator = trained_point_estimator,
   Z = abi_input$Z_test[[1]]
 )
 
 ########################
 # posterior estimation #
 ########################
+posterior_estimator <- "
+  d = 14    # dimension of each replicate
+  w = 32   # number of neurons in each hidden layer
+
+  # Layer to ensure valid estimates
+  final_layer = Parallel(
+      vcat,
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus)
+    )
+
+  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
+  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
+  deepset = DeepSet(psi, phi)
+  w = 6
+  q = NormalisingFlow(w, w)
+  estimator = PosteriorEstimator(q,deepset)
+"
+
+trained_posterior_estimator <- abi_train(
+  estimator = posterior_estimator,
+  abi_input = abi_input,
+  epochs = 50,
+  stopping_epochs = 20
+)
+
+sampled <- NeuralEstimators::sampleposterior(trained_posterior_estimator$trained_estimator,
+                                  trained_posterior_estimator$abi_input$Z_test)
+draw_array <- JuliaConnectoR::juliaGet(sampled)
+
+posterior_sample_vector_of_matrices <- NeuralEstimators::sampleposterior(
+  trained_posterior_estimator$trained_estimator,
+  trained_posterior_estimator$abi_input$Z_test
+)
+JuliaConnectoR::juliaLet(
+  "global eam_internal_posterior_sample_vector_of_matrices = posterior_sample_vector_of_matrices",
+  posterior_sample_vector_of_matrices = posterior_sample_vector_of_matrices
+)
+eam_internal_posterior_sample_array_julia <- JuliaConnectoR::juliaEval(
+  "stack(eam_internal_posterior_sample_vector_of_matrices; dims=3)"
+)
