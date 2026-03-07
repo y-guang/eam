@@ -36,11 +36,10 @@ the trained estimator and ABI input from a trained estimator object created by
 }
 \details{
 This function extracts the trained estimator and ABI input from the trained
-estimator object, then extracts test or validation parameters and summary statistics
-from the ABI input, along with parameter names (\code{theta}), and passes them
-to \code{NeuralEstimators::assess()}. If test set is available
-(\code{theta_test} and \code{Z_test}), it will be used; otherwise the
-validation set (\code{theta_val} and \code{Z_val}) will be used.
+estimator object, then extracts test parameters and summary statistics
+from the ABI input, along with parameter names (\\code{theta}), and passes them
+to \\code{NeuralEstimators::assess()}. The test set (\\code{theta_test} and
+\\code{Z_test}) is used for assessment.
 
 The returned object has class \code{eam_abi_assess}, which enables the use of
 S3 methods like \code{\link{plot_cv_recovery}} for visualization.
