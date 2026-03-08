@@ -42,15 +42,6 @@ summarise_posterior_parameters(abc_rejection_model)
 # Custom confidence interval level
 summarise_posterior_parameters(abc_rejection_model, ci_level = 0.90)
 
-\dontrun{
-# ABI posterior samples (requires trained estimator)
-posterior_samples <- abi_sample_posterior(
-  trained_estimator = trained_estimator,
-  N = 1000
-)
-summarise_posterior_parameters(posterior_samples)
-}
-
 }
 \seealso{
 \code{\link{summarise_posterior_parameters.abc}},
