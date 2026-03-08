@@ -20,9 +20,9 @@
 #' @details
 #' This function extracts the trained estimator and ABI input from the trained
 #' estimator object, then extracts test parameters and summary statistics
-#' from the ABI input, along with parameter names (\\code{theta}), and passes them
-#' to \\code{NeuralEstimators::assess()}. The test set (\\code{theta_test} and
-#' \\code{Z_test}) is used for assessment.
+#' from the ABI input, along with parameter names (\code{theta}), and passes them
+#' to \code{NeuralEstimators::assess()}. The test set (\code{theta_test} and
+#' \code{Z_test}) is used for assessment.
 #'
 #' The returned object has class \code{eam_abi_assess}, which enables the use of
 #' S3 methods like \code{\link{plot_cv_recovery}} for visualization.
