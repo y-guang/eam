@@ -3,15 +3,18 @@
 \name{summarise_posterior_parameters}
 \alias{summarise_posterior_parameters}
 \alias{summarise_posterior_parameters.abc}
+\alias{summarise_posterior_parameters.eam_abi_posterior_samples}
 \title{Summarise posterior parameter distributions}
 \usage{
 summarise_posterior_parameters(data, ...)
 
 \method{summarise_posterior_parameters}{abc}(data, ..., ci_level = 0.95)
+
+\method{summarise_posterior_parameters}{eam_abi_posterior_samples}(data, ..., ci_level = 0.95)
 }
 \arguments{
-\item{data}{An \code{abc} object containing posterior samples in
-\code{adj.values} or \code{unadj.values}.}
+\item{data}{An \code{eam_abi_posterior_samples} object (tibble) containing
+posterior samples with columns \code{dataset_id} and parameter columns.}
 
 \item{...}{Additional arguments for custom summary functions. Functions passed
 as named arguments will be applied to each parameter's posterior samples.}
@@ -41,5 +44,6 @@ summarise_posterior_parameters(abc_rejection_model, ci_level = 0.90)
 
 }
 \seealso{
-\code{\link{summarise_posterior_parameters.abc}}
+\code{\link{summarise_posterior_parameters.abc}},
+  \code{\link{summarise_posterior_parameters.eam_abi_posterior_samples}}
 }

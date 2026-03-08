@@ -3,15 +3,23 @@
 \name{plot_cv_recovery}
 \alias{plot_cv_recovery}
 \alias{plot_cv_recovery.cv4abc}
+\alias{plot_cv_recovery.eam_abi_assess}
+\alias{plot_cv_recovery.eam_abi_posterior_samples}
 \title{Plot CV parameter recovery}
 \usage{
 plot_cv_recovery(data, ...)
 
 \method{plot_cv_recovery}{cv4abc}(data, ...)
+
+\method{plot_cv_recovery}{eam_abi_assess}(data, ...)
+
+\method{plot_cv_recovery}{eam_abi_posterior_samples}(data, trained_estimator = NULL, theta = NULL, ...)
 }
 \arguments{
-\item{data}{A \code{cv4abc} object containing true parameters and
-cross-validated estimates.}
+\item{data}{An \code{eam_abi_posterior_samples} object from
+\code{\link{abi_sample_posterior}} containing posterior samples with columns
+\code{dataset_id} and parameter columns. The median of each parameter for
+each dataset is used as the point estimate for recovery assessment.}
 
 \item{...}{Additional arguments:
 \describe{
@@ -26,6 +34,16 @@ cross-validated estimates.}
   \item{interactive}{Logical; whether to pause between pages and wait for
     user input (default: FALSE)}
 }}
+
+\item{trained_estimator}{Optional. A trained estimator object returned by
+\code{\link{abi_train}}. If provided, the true parameter values are extracted
+from \code{trained_estimator$abi_input$theta_test}. Either \code{trained_estimator}
+or \code{theta} must be provided, but not both.}
+
+\item{theta}{Optional. A matrix of true parameter values with parameters as rows
+and datasets as columns. Column count must match the number of unique
+\code{dataset_id} values in \code{data}. Either \code{trained_estimator} or
+\code{theta} must be provided, but not both.}
 }
 \value{
 Invisibly returns `NULL`. Called for its side effect of producing plots.
@@ -50,7 +68,35 @@ plot_cv_recovery(
   resid_tol = 0.99
 )
 
+\dontrun{
+# Train a posterior estimator
+trained_estimator <- abi_train(
+  estimator = posterior_estimator,
+  abi_input = abi_input,
+  epochs = 50
+)
+
+# Sample from posterior using test data (default)
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_estimator,
+  N = 1000
+)
+
+# Plot recovery using trained_estimator to get true values
+plot_cv_recovery(
+  posterior_samples,
+  trained_estimator = trained_estimator
+)
+
+# Alternatively, provide true parameter values directly
+plot_cv_recovery(
+  posterior_samples,
+  theta = abi_input$theta_test
+)
+}
+
 }
 \seealso{
-\code{\link{plot_cv_recovery.cv4abc}}
+\code{\link{plot_cv_recovery.cv4abc}}, \code{\link{plot_cv_recovery.eam_abi_assess}},
+  \code{\link{plot_cv_recovery.eam_abi_posterior_samples}}
 }

@@ -1,15 +1,12 @@
-#' Assess neural estimator using ABI input
+#' Assess neural estimator using trained estimator
 #'
 #' A wrapper around \code{NeuralEstimators::assess()} that automatically unpacks
-#' parameters and summary statistics from an ABI input object created by
-#' \code{\link{build_abi_input}}.
+#' the trained estimator and ABI input from a trained estimator object created by
+#' \code{\link{abi_train}}.
 #'
-#' @param estimator A neural estimator to assess.
-#'   See \code{NeuralEstimators::assess} for details.
-#' @param abi_input An ABI input object created by \code{\link{build_abi_input}}.
-#'   Must contain \code{theta_val}, \code{Z_val}, and \code{theta} elements.
-#'   If \code{theta_test} and \code{Z_test} are available, they will be used;
-#'   otherwise the validation set will be used for assessment.
+#' @param trained_estimator A trained estimator object returned by \code{\link{abi_train}}.
+#'   Must be of class \code{eam_abi_trained_estimator} and contain
+#'   \code{trained_estimator} and \code{abi_input} elements.
 #' @param estimator_name Character string; optional name for the estimator (default: NULL).
 #' @param use_gpu Logical; whether to use GPU for assessment (default: TRUE).
 #' @param verbose Logical; whether to print progress information (default: TRUE).
@@ -21,24 +18,29 @@
 #' }
 #'
 #' @details
-#' This function requires the \code{NeuralEstimators} package to be installed.
-#' If not available, the function will throw an error with installation instructions.
-#'
-#' This function extracts test or validation parameters and summary statistics
-#' from the ABI input object, along with parameter names (\code{theta}), and
-#' passes them to \code{NeuralEstimators::assess()}. If test set is available
-#' (\code{theta_test} and \code{Z_test}), it will be used; otherwise the
-#' validation set (\code{theta_val} and \code{Z_val}) will be used.
+#' This function extracts the trained estimator and ABI input from the trained
+#' estimator object, then extracts test parameters and summary statistics
+#' from the ABI input, along with parameter names (\code{theta}), and passes them
+#' to \code{NeuralEstimators::assess()}. The test set (\code{theta_test} and
+#' \code{Z_test}) is used for assessment.
 #'
 #' The returned object has class \code{eam_abi_assess}, which enables the use of
 #' S3 methods like \code{\link{plot_cv_recovery}} for visualization.
 #'
+#' @note This function initializes the global Julia environment on first call.
+#'
 #' @examples
 #' \dontrun{
-#' # Assuming you have a trained estimator and ABI input with test set
-#' assessment <- abi_assess(
+#' # Train an estimator first
+#' trained_estimator <- abi_train(
 #'   estimator = estimator,
 #'   abi_input = abi_input,
+#'   epochs = 100
+#' )
+#'
+#' # Assess the trained estimator
+#' assessment <- abi_assess(
+#'   trained_estimator = trained_estimator,
 #'   estimator_name = "MyEstimator",
 #'   use_gpu = TRUE,
 #'   verbose = TRUE
@@ -53,49 +55,30 @@
 #'
 #' @export
 abi_assess <- function(
-    estimator,
-    abi_input,
+    trained_estimator,
     estimator_name = NULL,
     use_gpu = TRUE,
     verbose = TRUE) {
-  # Check if NeuralEstimators package is available
-  if (!requireNamespace("NeuralEstimators", quietly = TRUE)) {
-    stop(
-      "Package 'NeuralEstimators' is required for this function.\n",
-      "Please install it via:\n",
-      "  install.packages('NeuralEstimators')\n",
-      call. = FALSE
-    )
+  # Initialize Julia environment
+  init_julia_env()
+
+  # Validate trained_estimator
+  if (!inherits(trained_estimator, "eam_abi_trained_estimator")) {
+    stop("trained_estimator must be an object of class 'eam_abi_trained_estimator' returned by abi_train()")
   }
+
+  # Extract trained estimator and abi_input from trained_estimator object
+  estimator <- trained_estimator$trained_estimator
+  abi_input <- trained_estimator$abi_input
 
   # Validate abi_input
-  if (!is.list(abi_input)) {
-    stop("abi_input must be a list")
+  if (!inherits(abi_input, "eam_abi_input")) {
+    stop("abi_input must be an object of class 'eam_abi_input' created by build_abi_input()")
   }
 
-  required_elements <- c("theta_val", "Z_val", "theta")
-  missing_elements <- setdiff(required_elements, names(abi_input))
-  if (length(missing_elements) > 0) {
-    stop(paste0(
-      "abi_input must contain elements: ",
-      paste(missing_elements, collapse = ", ")
-    ))
-  }
-
-  # Check if test set is available, otherwise use validation set
-  if ("theta_test" %in% names(abi_input) && "Z_test" %in% names(abi_input)) {
-    theta_assess <- abi_input$theta_test
-    Z_assess <- abi_input$Z_test
-    if (verbose) {
-      message("Using test set for assessment")
-    }
-  } else {
-    theta_assess <- abi_input$theta_val
-    Z_assess <- abi_input$Z_val
-    if (verbose) {
-      message("Test set not available, using validation set for assessment")
-    }
-  }
+  # Use test set for assessment
+  theta_assess <- abi_input$theta_test
+  Z_assess <- abi_input$Z_test
 
   # Extract parameter names from abi_input
   parameter_names <- abi_input$theta

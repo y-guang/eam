@@ -1,7 +1,27 @@
 # eam (development version)
 
-- Add optional test_ratio param to build_abi_input to allow splitting data into train/test/val sets.
-- Add inst/CITATION file with the pre-print citation information.
+## New Features
+
+- **ABI (Approximate Bayesian Inference) Module**: Complete neural network-based parameter estimation workflow
+  - `abi_train()`: Train neural estimators using simulation-based inference
+  - `abi_estimate()`: Obtain point estimates from trained models
+  - `abi_assess()`: Assess trained estimator performance
+  - `abi_sample_posterior()`: Sample from posterior distribution
+  - Enhanced `build_abi_input()` with theta and Z outputs, test set support
+  
+- **Visualization**: New `plot_cv_recovery()` methods for ABI models (`eam_abi_assess` and `eam_abi_posterior_samples` classes)
+
+- **Posterior Summarization**: `summarise_posterior_parameters()` for aggregating posterior samples
+
+## Infrastructure
+
+- Julia environment integration via `init_julia_env()` for neural network backend
+- Add `tibble` dependency for improved output formatting
+
+## Documentation
+
+- Add inst/CITATION file with pre-print citation information
+- Various documentation improvements and formatting fixes
 
 # eam 1.1.0
 
