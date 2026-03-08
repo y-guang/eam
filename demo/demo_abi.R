@@ -259,3 +259,51 @@ plot_cv_recovery(
   posterior_samples,
   theta = abi_input$theta_test
 )
+
+#############################################
+# posterior simulation                      #
+# using median of posterior samples         #
+#############################################
+
+# Extract median estimates from first dataset's posterior samples
+dataset_1_samples <- posterior_samples |>
+  dplyr::filter(dataset_id == 1)
+
+posterior_medians <- dataset_1_samples |>
+  dplyr::select(-dataset_id) |>
+  dplyr::summarise(dplyr::across(dplyr::everything(), stats::median))
+
+# Convert to posterior_params format
+posterior_params_from_samples <- tibble::as_tibble(
+  c(
+    as.list(posterior_medians),
+    list(n_items = n_items)
+  )
+)
+
+# specify posterior simulation config
+post_sim_config_2 <- sim_config
+post_sim_config_2$prior_params <- posterior_params_from_samples
+post_sim_config_2$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+
+temp_output_path_post_2 <- file.path(temp_base_path, "posterior_output_2")
+
+post_output_2 <- run_simulation(
+  config = post_sim_config_2,
+  output_dir = temp_output_path_post_2
+)
+
+# plot the posterior rt and accuracy
+plot_rt(
+  post_output_2,
+  observed_data,
+  facet_x = c("item_idx"),
+  facet_y = c()
+)
+
+plot_accuracy(
+  post_output_2,
+  observed_data,
+  facet_x = c("ndt_beta_0"),
+  facet_y = c()
+)
