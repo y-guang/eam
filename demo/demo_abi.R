@@ -152,6 +152,53 @@ point_est <- abi_estimate(
 
 point_est
 
+###########################
+# posterior simulation    #
+# using point estimates   #
+###########################
+
+# Convert point estimates to posterior_params format
+posterior_params <- tibble::as_tibble(
+  c(
+    setNames(as.list(point_est[, 1]), rownames(point_est)),
+    list(n_items = n_items)
+  )
+)
+
+# Get observed data from simulation output
+# pretend observed data is condition 1
+observed_data <- sim_output$open_dataset() |>
+  dplyr::filter(chunk_idx == 1, condition_idx == 1) |>
+  dplyr::collect()
+
+# specify posterior simulation config
+# or you can re-create a new config from scratch with posterior_params
+post_sim_config <- sim_config
+post_sim_config$prior_params <- posterior_params
+post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+
+temp_output_path_post <- file.path(temp_base_path, "posterior_output")
+
+post_output <- run_simulation(
+  config = post_sim_config,
+  output_dir = temp_output_path_post
+)
+
+# plot the posterior rt and accuracy
+plot_rt(
+  post_output,
+  observed_data,
+  facet_x = c("item_idx"),
+  facet_y = c()
+)
+
+plot_accuracy(
+  post_output,
+  observed_data,
+  facet_x = c("ndt_beta_0"),
+  facet_y = c()
+)
+
 ########################
 # posterior estimation #
 ########################
@@ -195,3 +242,7 @@ posterior_samples
 # Summarise posterior parameters for each dataset
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
+
+####################
+# cross-validation #
+####################
