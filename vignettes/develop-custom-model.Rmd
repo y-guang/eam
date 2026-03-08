@@ -1,0 +1,94 @@
+---
+title: "开发定制模型"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "./develop-custom-model/",
+  dev = "svg",
+  fig.ext = "svg"
+)
+```
+
+本教程展示如何在 EAM 框架中开发一个定制模型。EAM 的设计是易于扩展的，因此用户可以在现有框架的基础上构建自己的模型。只需要关心极少数定义模型行为的核心代码即可。
+
+在本教程中，我们会将开发过程拆分为一系列简单的小步骤。每一步都对应一个清晰的任务，这些任务通常可以直接交给大语言模型（例如 ChatGPT, Copilot）完成。按照这些步骤逐步实现，您就可以得到一个可运行、性能可靠的定制模型，而无需深入了解框架的全部实现细节。
+
+## 定义您自己的模型
+
+在实现模型前，我们通常希望使用易读的代码来帮助我们确切地定义一个模型。这时候，先定义一个基于 r 代码的易于理解的模型描述是非常有帮助的。
+
+在这个示例中，我们希望实现一个一进一退的模型，即前后两个时间步的方向相反。
+
+我们可用将此直接键入 ChatGPT:
+
+```prompt
+我正在实现一个 Diffusion Decision Model 的定制模型。
+
+请帮我写一段最简短、概念性的 R 代码，用来完成逐时间步的噪音累加到证据的核心代码，直到其到达阈值，并在最后进行作图展示这个过程。要求代码尽量简单，只表达核心逻辑即可，不必考虑美观性。
+```
+
+结果得到直观可运行的代码是：
+
+```{r}
+set.seed(1)
+
+# parameters
+drift <- 0.1
+noise <- 1
+threshold <- 1
+
+# initialize
+evidence <- 0
+trajectory <- evidence
+
+# simulate accumulation
+while (abs(evidence) < threshold) {
+  evidence <- evidence + drift + rnorm(1, 0, noise)
+  trajectory <- c(trajectory, evidence)
+}
+
+# plot
+plot(
+  trajectory,
+  type = "l",
+  xlab = "time step",
+  ylab = "evidence"
+)
+
+abline(h = c(-threshold, threshold), lty = 2)
+```
+
+其中，核心逻辑只有这一句
+
+```r
+evidence <- evidence + drift + rnorm(1, 0, noise)
+```
+
+即：
+
+$$
+x_{t+1} = x_t + v + \epsilon_t
+$$
+
+其中
+
+* $(v) = drift$
+* $(\epsilon_t \sim N(0,\sigma))$
+
+一旦您完成了这一步，剩下的就是将这个核心逻辑转化为 C 语言，并将其嵌入到 EAM 的框架中。EAM 的设计使得这一过程非常直接，您只需要实现一个函数来定义模型的行为，然后将其注册到框架中即可。
+
+## 将概念性代码转化为 cpp 代码
+
+在 EAM 中，模型的核心逻辑通常需要用 C++ 来实现，以确保性能和效率。这一步通常会使大家感到有些挑战。
+
+但实际上，在大语言模型的帮助下借鉴已有代码，这个过程可以非常丝滑。甚至您不需要真正读懂或写任何一行 C 代码。
+
+下面是我给copilot一份提示词。
+
+```prompt
+please refer to  the `src` cpp code files to help me implement the conceptual model. Note, these cpp files contains many highly optimize currently, you do not need to apply all of them. Now faithful to the basic logic of the conceptual model.
+```
+
