@@ -243,6 +243,19 @@ posterior_samples
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
 
-####################
-# cross-validation #
-####################
+############################################
+# cross-validation: posterior recovery    #
+# using median of posterior samples       #
+############################################
+
+# Method 1: Using trained_estimator to get true values
+plot_cv_recovery(
+  posterior_samples,
+  trained_estimator = trained_posterior_estimator
+)
+
+# Method 2: Providing true parameter values directly
+plot_cv_recovery(
+  posterior_samples,
+  theta = abi_input$theta_test
+)
