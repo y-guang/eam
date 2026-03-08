@@ -11,14 +11,23 @@ plot_cv_recovery(data, ...)
 
 # S3 method for class 'cv4abc'
 plot_cv_recovery(data, ...)
+
+# S3 method for class 'eam_abi_assess'
+plot_cv_recovery(data, ...)
+
+# S3 method for class 'eam_abi_posterior_samples'
+plot_cv_recovery(data, trained_estimator = NULL, theta = NULL, ...)
 ```
 
 ## Arguments
 
 - data:
 
-  A `cv4abc` object containing true parameters and cross-validated
-  estimates.
+  An `eam_abi_posterior_samples` object from
+  [`abi_sample_posterior`](https://y-guang.github.io/eam/reference/abi_sample_posterior.md)
+  containing posterior samples with columns `dataset_id` and parameter
+  columns. The median of each parameter for each dataset is used as the
+  point estimate for recovery assessment.
 
 - ...:
 
@@ -52,6 +61,21 @@ plot_cv_recovery(data, ...)
   :   Logical; whether to pause between pages and wait for user input
       (default: FALSE)
 
+- trained_estimator:
+
+  Optional. A trained estimator object returned by
+  [`abi_train`](https://y-guang.github.io/eam/reference/abi_train.md).
+  If provided, the true parameter values are extracted from
+  `trained_estimator$abi_input$theta_test`. Either `trained_estimator`
+  or `theta` must be provided, but not both.
+
+- theta:
+
+  Optional. A matrix of true parameter values with parameters as rows
+  and datasets as columns. Column count must match the number of unique
+  `dataset_id` values in `data`. Either `trained_estimator` or `theta`
+  must be provided, but not both.
+
 ## Value
 
 Invisibly returns \`NULL\`. Called for its side effect of producing
@@ -59,7 +83,8 @@ plots.
 
 ## See also
 
-`plot_cv_recovery.cv4abc`
+`plot_cv_recovery.cv4abc`, `plot_cv_recovery.eam_abi_assess`,
+`plot_cv_recovery.eam_abi_posterior_samples`
 
 ## Examples
 
@@ -80,4 +105,31 @@ plot_cv_recovery(
 )
 
 
+
+if (FALSE) { # \dontrun{
+# Train a posterior estimator
+trained_estimator <- abi_train(
+  estimator = posterior_estimator,
+  abi_input = abi_input,
+  epochs = 50
+)
+
+# Sample from posterior using test data (default)
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_estimator,
+  N = 1000
+)
+
+# Plot recovery using trained_estimator to get true values
+plot_cv_recovery(
+  posterior_samples,
+  trained_estimator = trained_estimator
+)
+
+# Alternatively, provide true parameter values directly
+plot_cv_recovery(
+  posterior_samples,
+  theta = abi_input$theta_test
+)
+} # }
 ```

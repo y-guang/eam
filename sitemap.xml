@@ -16,6 +16,10 @@
 <url><loc>https://y-guang.github.io/eam/reference/abc_posterior_bootstrap.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abc_postpr.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abc_resample.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abi_assess.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abi_estimate.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abi_sample_posterior.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abi_train.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/accumulate_evidence_ddm.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/accumulate_evidence_ddm_2b.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/accumulate_evidence_lca_gi.html</loc></url>
@@ -37,6 +41,7 @@
 <url><loc>https://y-guang.github.io/eam/reference/get_column_names.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/get_config_env_names.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/index.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/init_julia_env.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/init_simulation_output_dir.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/load_simulation_output.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/map_by_condition.html</loc></url>

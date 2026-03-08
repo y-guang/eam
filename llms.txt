@@ -76,6 +76,14 @@ author.
   : ABC model comparison wrapper
 - [`abc_resample()`](https://y-guang.github.io/eam/reference/abc_resample.md)
   : ABC with resampling
+- [`abi_assess()`](https://y-guang.github.io/eam/reference/abi_assess.md)
+  : Assess neural estimator using trained estimator
+- [`abi_estimate()`](https://y-guang.github.io/eam/reference/abi_estimate.md)
+  : Estimate parameters using trained neural estimator
+- [`abi_sample_posterior()`](https://y-guang.github.io/eam/reference/abi_sample_posterior.md)
+  : Sample from posterior distribution using trained neural estimator
+- [`abi_train()`](https://y-guang.github.io/eam/reference/abi_train.md)
+  : Train neural estimator using ABI input
 - [`build_abc_input()`](https://y-guang.github.io/eam/reference/build_abc_input.md)
   : Build input for Approximate Bayesian Computation (ABC)
 - [`build_abi_input()`](https://y-guang.github.io/eam/reference/build_abi_input.md)

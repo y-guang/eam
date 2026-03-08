@@ -80,16 +80,16 @@ results <- abc_resample(
 str(results)
 #> List of 2
 #>  $ :List of 12
-#>   ..$ unadj.values: Named num [1:2] 0.111 0.123
+#>   ..$ unadj.values: Named num [1:2] 0.45 0.277
 #>   .. ..- attr(*, "names")= chr [1:2] "V_beta_1" "V_beta_group"
-#>   ..$ ss          : Named num [1:36] 0.948 0.261 0.484 0.68 1.153 ...
+#>   ..$ ss          : Named num [1:36] 0.794 0.239 0.408 0.613 0.9 ...
 #>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...
-#>   ..$ dist        : Named num [1:2] 12.23 8.75
-#>   .. ..- attr(*, "names")= chr [1:2] "263" "151"
+#>   ..$ dist        : Named num [1:2] 17.2 22.3
+#>   .. ..- attr(*, "names")= chr [1:2] "466" "288"
 #>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")
 #>   ..$ na.action   : logi [1:2] TRUE TRUE
-#>   ..$ region      : Named logi [1:2] FALSE TRUE
-#>   .. ..- attr(*, "names")= chr [1:2] "263" "151"
+#>   ..$ region      : Named logi [1:2] TRUE FALSE
+#>   .. ..- attr(*, "names")= chr [1:2] "466" "288"
 #>   ..$ transf      : chr [1:2] "none" "none"
 #>   ..$ logit.bounds: num [1:2] 0 0
 #>   ..$ method      : chr "rejection"
@@ -100,16 +100,16 @@ str(results)
 #>   .. ..$ statistics.names: chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...
 #>   ..- attr(*, "class")= chr "abc"
 #>  $ :List of 12
-#>   ..$ unadj.values: Named num [1:2] 0.099 0.279
+#>   ..$ unadj.values: Named num [1:2] 0.154 0.244
 #>   .. ..- attr(*, "names")= chr [1:2] "V_beta_1" "V_beta_group"
-#>   ..$ ss          : Named num [1:36] 1.036 0.247 0.491 0.745 1.241 ...
+#>   ..$ ss          : Named num [1:36] 0.977 0.264 0.477 0.823 1.143 ...
 #>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...
-#>   ..$ dist        : Named num [1:2] 33.3 31.6
-#>   .. ..- attr(*, "names")= chr [1:2] "472" "34"
+#>   ..$ dist        : Named num [1:2] 8.03 1.69
+#>   .. ..- attr(*, "names")= chr [1:2] "197" "311"
 #>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")
 #>   ..$ na.action   : logi [1:2] TRUE TRUE
 #>   ..$ region      : Named logi [1:2] FALSE TRUE
-#>   .. ..- attr(*, "names")= chr [1:2] "472" "34"
+#>   .. ..- attr(*, "names")= chr [1:2] "197" "311"
 #>   ..$ transf      : chr [1:2] "none" "none"
 #>   ..$ logit.bounds: num [1:2] 0 0
 #>   ..$ method      : chr "rejection"

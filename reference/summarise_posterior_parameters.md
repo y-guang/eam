@@ -10,14 +10,17 @@ summarise_posterior_parameters(data, ...)
 
 # S3 method for class 'abc'
 summarise_posterior_parameters(data, ..., ci_level = 0.95)
+
+# S3 method for class 'eam_abi_posterior_samples'
+summarise_posterior_parameters(data, ..., ci_level = 0.95)
 ```
 
 ## Arguments
 
 - data:
 
-  An `abc` object containing posterior samples in `adj.values` or
-  `unadj.values`.
+  An `eam_abi_posterior_samples` object (tibble) containing posterior
+  samples with columns `dataset_id` and parameter columns.
 
 - ...:
 
@@ -34,7 +37,8 @@ A data frame with summary statistics for each parameter.
 
 ## See also
 
-`summarise_posterior_parameters.abc`
+`summarise_posterior_parameters.abc`,
+`summarise_posterior_parameters.eam_abi_posterior_samples`
 
 ## Examples
 

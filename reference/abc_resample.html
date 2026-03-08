@@ -140,16 +140,16 @@ producing multiple posterior estimates for comparison.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ unadj.values: Named num [1:2] 0.111 0.123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ unadj.values: Named num [1:2] 0.45 0.277</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "V_beta_1" "V_beta_group"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ss          : Named num [1:36] 0.948 0.261 0.484 0.68 1.153 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ss          : Named num [1:36] 0.794 0.239 0.408 0.613 0.9 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ dist        : Named num [1:2] 12.23 8.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "263" "151"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ dist        : Named num [1:2] 17.2 22.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "466" "288"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ na.action   : logi [1:2] TRUE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ region      : Named logi [1:2] FALSE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "263" "151"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ region      : Named logi [1:2] TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "466" "288"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ transf      : chr [1:2] "none" "none"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ logit.bounds: num [1:2] 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ method      : chr "rejection"</span>
@@ -160,16 +160,16 @@ producing multiple posterior estimates for comparison.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ statistics.names: chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "class")= chr "abc"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ unadj.values: Named num [1:2] 0.099 0.279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ unadj.values: Named num [1:2] 0.154 0.244</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "V_beta_1" "V_beta_group"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ss          : Named num [1:36] 1.036 0.247 0.491 0.745 1.241 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ss          : Named num [1:36] 0.977 0.264 0.477 0.823 1.143 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ dist        : Named num [1:2] 33.3 31.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "472" "34"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ dist        : Named num [1:2] 8.03 1.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "197" "311"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ na.action   : logi [1:2] TRUE TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ region      : Named logi [1:2] FALSE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "472" "34"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "197" "311"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ transf      : chr [1:2] "none" "none"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ logit.bounds: num [1:2] 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ method      : chr "rejection"</span>

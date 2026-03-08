@@ -56,9 +56,34 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="eam-development-version">eam (development version)<a class="anchor" aria-label="anchor" href="#eam-development-version"></a></h2>
-<ul><li>Add optional test_ratio param to build_abi_input to allow splitting data into train/test/val sets.</li>
-<li>Add inst/CITATION file with the pre-print citation information.</li>
+<div class="section level3">
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>
+<p><strong>ABI (Approximate Bayesian Inference) Module</strong>: Complete neural network-based parameter estimation workflow</p>
+<ul><li>
+<code><a href="../reference/abi_train.html">abi_train()</a></code>: Train neural estimators using simulation-based inference</li>
+<li>
+<code><a href="../reference/abi_estimate.html">abi_estimate()</a></code>: Obtain point estimates from trained models</li>
+<li>
+<code><a href="../reference/abi_assess.html">abi_assess()</a></code>: Assess trained estimator performance</li>
+<li>
+<code><a href="../reference/abi_sample_posterior.html">abi_sample_posterior()</a></code>: Sample from posterior distribution</li>
+<li>Enhanced <code><a href="../reference/build_abi_input.html">build_abi_input()</a></code> with theta and Z outputs, test set support</li>
+</ul></li>
+<li><p><strong>Visualization</strong>: New <code><a href="../reference/plot_cv_recovery.html">plot_cv_recovery()</a></code> methods for ABI models (<code>eam_abi_assess</code> and <code>eam_abi_posterior_samples</code> classes)</p></li>
+<li><p><strong>Posterior Summarization</strong>: <code><a href="../reference/summarise_posterior_parameters.html">summarise_posterior_parameters()</a></code> for aggregating posterior samples</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="infrastructure-development-version">Infrastructure<a class="anchor" aria-label="anchor" href="#infrastructure-development-version"></a></h3>
+<ul><li>Julia environment integration via <code><a href="../reference/init_julia_env.html">init_julia_env()</a></code> for neural network backend</li>
+<li>Add <code>tibble</code> dependency for improved output formatting</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
+<ul><li>Add inst/CITATION file with pre-print citation information</li>
+<li>Various documentation improvements and formatting fixes</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.0" id="eam-110">eam 1.1.0<a class="anchor" aria-label="anchor" href="#eam-110"></a></h2><p class="text-muted">CRAN release: 2026-02-09</p>
 <ul><li>Add <code>build_abi_input</code> function to create input for ABI anlysis from EAM simulation output.</li>

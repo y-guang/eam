@@ -75,6 +75,7 @@ them into matrices suitable for neural network training.</p>
 <span>  <span class="va">theta</span>,</span>
 <span>  <span class="va">Z</span>,</span>
 <span>  train_ratio <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  test_ratio <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  rank_levels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -103,6 +104,12 @@ the simulation output dataset (e.g., "rt", "item_idx", "choice").</p></dd>
 of conditions to use for training (default: 0.8).</p></dd>
 
 
+<dt id="arg-test-ratio">test_ratio<a class="anchor" aria-label="anchor" href="#arg-test-ratio"></a></dt>
+<dd><p>Numeric value between 0 and 1 specifying the proportion
+of conditions to use for testing (default: 0.1).
+Must satisfy train_ratio + test_ratio &lt; 1.</p></dd>
+
+
 <dt id="arg-rank-levels">rank_levels<a class="anchor" aria-label="anchor" href="#arg-rank-levels"></a></dt>
 <dd><p>Numeric vector specifying which rank indices to include.
 If NULL (default), uses all ranks from 1 to n_items from simulation config.</p></dd>
@@ -116,11 +123,17 @@ If NULL (default), uses all ranks from 1 to n_items from simulation config.</p><
   <dt>theta_val</dt>
 <dd><p>Matrix of validation parameters (parameters × conditions)</p></dd>
 
+  <dt>theta_test</dt>
+<dd><p>Matrix of test parameters (parameters × conditions)</p></dd>
+
   <dt>Z_train</dt>
 <dd><p>List of matrices, one per training condition (ranks*Z × trials)</p></dd>
 
   <dt>Z_val</dt>
 <dd><p>List of matrices, one per validation condition (ranks*Z × trials)</p></dd>
+
+  <dt>Z_test</dt>
+<dd><p>List of matrices, one per test condition (ranks*Z × trials)</p></dd>
 
   <dt>train_idx</dt>
 <dd><p>Vector of condition indices used for training</p></dd>
@@ -128,11 +141,23 @@ If NULL (default), uses all ranks from 1 to n_items from simulation config.</p><
   <dt>val_idx</dt>
 <dd><p>Vector of condition indices used for validation</p></dd>
 
+  <dt>test_idx</dt>
+<dd><p>Vector of condition indices used for testing</p></dd>
+
   <dt>train_ratio</dt>
 <dd><p>The training ratio used</p></dd>
 
+  <dt>test_ratio</dt>
+<dd><p>The test ratio used</p></dd>
+
   <dt>rank_levels</dt>
 <dd><p>The rank levels included in Z matrices</p></dd>
+
+  <dt>theta</dt>
+<dd><p>Character vector of parameter names used</p></dd>
+
+  <dt>Z</dt>
+<dd><p>Character vector of summary statistic names used</p></dd>
 
 
 </dl></div>
@@ -169,12 +194,16 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># view the structure of the ABI input</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">abi_input</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> List of 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> List of 14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ theta_train: num [1:2, 1:400] 0.579 0.265 0.602 0.141 0.239 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "V_beta_1" "V_beta_group"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ theta_val  : num [1:2, 1:100] 0.121 0.248 0.214 0.136 0.95 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ theta_val  : num [1:2, 1:50] 0.121 0.248 0.214 0.136 0.95 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "V_beta_1" "V_beta_group"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ theta_test : num [1:2, 1:50] 0.562 0.179 0.395 0.143 0.367 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "V_beta_1" "V_beta_group"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : NULL</span>
@@ -283,10 +312,6 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.314 0.44 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.383 0.553 0.592 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
@@ -295,7 +320,15 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.27 0.285 0.759 1 -1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.297 1.24 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.338 1.489 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -435,14 +468,6 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.388 0.559 0.629 1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.355 0.476 0.751 1 1 1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.268 0.384 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
@@ -519,15 +544,15 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.239 0.614 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.383 1.644 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.359 0.375 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.265 0.72 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -563,20 +588,24 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.259 1.124 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.454 0.525 0.716 1 1 1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.505 1.144 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.123 0.167 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.236 0.314 0.393 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.259 0.487 0.978 -1 -1 -1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. [list output truncated]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Z_val      :List of 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Z_val      :List of 50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.391 1.068 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
@@ -589,27 +618,7 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.27 0.285 0.759 1 -1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.338 1.489 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.508 0.54 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.73 0.858 0.894 1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.643 0.756 0.943 -1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.287 1.052 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -617,15 +626,7 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.449 0.928 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.391 0.655 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.338 0.723 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -637,19 +638,7 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.239 0.614 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.232 0.954 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.36 0.408 0.461 1 1 1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.293 0.416 0.635 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -661,15 +650,212 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.72 1.37 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.259 1.124 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.454 0.525 0.716 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.382 0.412 0.656 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.266 0.499 0.532 1 -1 -1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.148 0.418 0.564 1 1 -1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.12 0.677 0.806 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.422 0.614 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.138 1.053 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.43 0.529 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.1 0.449 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 1.08 1.1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.396 0.42 0.629 1 -1 -1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.185 0.416 0.619 1 -1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.367 0.411 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.176 0.251 0.78 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.281 0.313 0.342 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.193 0.349 0.585 1 1 -1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.648 0.782 0.912 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.344 0.935 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.143 0.248 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.488 0.57 0.679 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.127 0.408 0.56 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.155 0.49 0.94 1 1 -1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.229 0.519 0.769 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.252 0.282 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.089 0.31 0.5 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.59 0.642 0.697 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.287 1.041 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.245 0.428 0.836 1 -1 -1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.41 0.506 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.633 0.875 0.945 1 1 -1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 1.29 1.4 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.119 1.138 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.329 1.611 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.818 0.866 0.924 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.217 0.35 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.255 0.488 0.605 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.792 0.987 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ Z_test     :List of 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.314 0.44 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.508 0.54 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.643 0.756 0.943 -1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.287 1.052 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.449 0.928 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.388 0.559 0.629 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.355 0.476 0.751 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.338 0.723 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.232 0.954 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.265 0.72 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.293 0.416 0.635 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.199 0.519 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.172 0.307 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.72 1.37 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -681,15 +867,11 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.259 0.487 0.978 -1 -1 -1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.346 0.425 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.382 0.412 0.656 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.268 0.304 0.887 1 1 1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -705,31 +887,11 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.266 0.499 0.532 1 -1 -1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.12 0.677 0.806 1 1 1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.422 0.614 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.504 1.179 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.17 0.939 0.978 1 1 1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.24 0.442 0.548 1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.198 0.609 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.35 0.558 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -741,47 +903,23 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.43 0.529 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.166 0.633 0.691 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 1.36 1.47 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.404 0.82 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.1 0.449 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.613 1.002 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.566 1.128 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.452 0.541 0.665 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.142 1.745 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.494 0.677 0.815 -1 1 1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 1.08 1.1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.423 0.918 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.396 0.42 0.629 1 -1 -1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.362 0.409 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.295 0.381 0.767 1 -1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.364 0.75 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -789,59 +927,23 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.13 0.136 0.568 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.406 1.26 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.363 0.618 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.62 0.688 0.91 -1 1 1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.111 0.905 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.312 0.336 0.975 1 -1 1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.21 0.278 0.933 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.261 0.539 0.693 1 -1 -1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.334 0.897 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.166 0.335 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.486 0.601 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.437 0.64 0.714 -1 1 1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.169 0.624 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.143 0.248 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.455 1.673 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.662 1.313 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.317 1.263 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.183 0.628 0.703 1 1 1 2 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.874 0.927 0.996 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -849,23 +951,11 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.229 0.519 0.769 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.179 0.463 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.252 0.282 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.437 0.638 0.65 1 1 1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.262 0.4 0.575 1 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.323 0.53 0.708 1 1 1 3 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.374 0.381 0.994 1 1 1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -873,35 +963,19 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.386 0.433 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.294 0.535 0.664 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.433 0.637 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.234 0.291 0.436 1 1 1 1 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.59 0.642 0.697 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.665 1.281 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.688 0.816 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.538 1.402 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.143 0.995 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.245 0.428 0.836 1 -1 -1 2 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.294 0.353 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.477 0.664 0.679 1 1 1 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
@@ -909,78 +983,39 @@ statistics formatted as lists of matrices (one per condition, with trials as col
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.277 0.426 0.645 -1 -1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.292 0.478 0.504 -1 1 -1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.182 0.419 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.555 0.697 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.271 0.391 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.393 0.723 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.284 0.748 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.161 0.308 0.756 1 1 1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.346 0.88 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 1 2 0.368 0.794 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 3 2 1 0.186 0.425 0.605 1 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.225 0.342 0.565 -1 1 -1 3 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.633 0.875 0.945 1 1 -1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.947 0.966 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.952 1.436 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 1 3 0.46 1.07 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.291 0.382 0.411 1 1 1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.293 0.381 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.354 0.603 0.608 -1 1 -1 3 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 3 2 0.305 0.397 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 2 3 1 0.177 0.198 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : num [1:9, 1:100] 1 2 3 0.429 0.714 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : chr [1:9] "rank_1_item_idx" "rank_2_item_idx" "rank_3_item_idx" "rank_1_rt" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ : NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. [list output truncated]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ train_idx  : int [1:400] 443 166 365 237 25 309 163 45 210 407 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ val_idx    : int [1:100] 2 9 22 33 35 47 53 62 64 66 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ train_idx  : int [1:400] 11 417 292 263 151 472 34 456 329 307 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ val_idx    : int [1:50] 2 9 22 53 66 81 88 93 105 111 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ test_idx   : int [1:50] 130 126 350 118 241 77 251 358 64 368 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ train_ratio: num 0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ test_ratio : NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ test_ratio : num 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ rank_levels: int [1:3] 1 2 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ theta      : chr [1:2] "V_beta_1" "V_beta_group"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Z          : chr [1:3] "item_idx" "rt" "choice"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr [1:2] "eam_abi_input" "list"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Example of using the ABI input for training</span></span></span>

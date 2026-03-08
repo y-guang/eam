@@ -67,6 +67,9 @@ parameters from ABC results.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'abc'</span></span>
+<span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, ci_level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'eam_abi_posterior_samples'</span></span>
 <span><span class="fu">summarise_posterior_parameters</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span>, ci_level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -75,8 +78,8 @@ parameters from ABC results.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An <code>abc</code> object containing posterior samples in
-<code>adj.values</code> or <code>unadj.values</code>.</p></dd>
+<dd><p>An <code>eam_abi_posterior_samples</code> object (tibble) containing
+posterior samples with columns <code>dataset_id</code> and parameter columns.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -94,7 +97,8 @@ as named arguments will be applied to each parameter's posterior samples.</p></d
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code>summarise_posterior_parameters.abc</code></p></div>
+    <div class="dont-index"><p><code>summarise_posterior_parameters.abc</code>,
+  <code>summarise_posterior_parameters.eam_abi_posterior_samples</code></p></div>
     </div>
 
     <div class="section level2">
