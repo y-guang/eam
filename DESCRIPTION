@@ -35,6 +35,7 @@ Imports:
   purrr,
   scales,
   vctrs,
+  tibble,
   JuliaConnectoR,
   NeuralEstimators
 Suggests:
