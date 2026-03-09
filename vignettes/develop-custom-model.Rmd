@@ -74,7 +74,7 @@ $$
 
 其中
 
-* $v = drift$ （漂移率）
+* $v$ = 漂移率（drift rate）
 * $\epsilon_t \sim N(0,\sigma)$ （原始噪音）
 * $|\epsilon_t|$ 是噪音的绝对值
 * $s_t \in \{-1, +1\}$ 是交替符号，满足 $s_{t+1} = -s_t$
@@ -89,10 +89,12 @@ $$
 
 但实际上，在大语言模型的帮助下借鉴已有代码，这个过程可以非常丝滑。甚至您不需要真正读懂或写任何一行 C 代码。
 
-下面是我给copilot一份提示词。
+下面是我给copilot一份提示词，您也需要将之前的 r 代码附带在后面。
 
 ```prompt
-please refer to  the `src` cpp code files to help me implement the conceptual model as a custom cpp model file. Note, these cpp files contains many highly optimize currently, you do not need to apply all of them. Now faithful to the basic logic of the conceptual model.
+Please refer to the `src` cpp code files to help me implement the conceptual model as a custom cpp model file. Note, these cpp files contain many optimizations currently, you do not need to apply all of them. Stay faithful to the basic logic of the conceptual model.
+
+IMPORTANT: You must use the EAM framework's standard parameter naming conventions: A (threshold), V (drift rate), Z (starting point), ndt (non-decision time). Refer to the parameter naming in the existing ddm.cpp file.
 ```
 
 这样，我们就得到了一个简洁的 C++ 实现。新创建的 `src/ddm-custom.cpp` 文件包含了核心的证据累加逻辑：
@@ -104,7 +106,7 @@ double abs_noise = std::abs(noise[i]);
 // 2. 应用符号（正负方向）
 double signed_noise = abs_noise * sign[i];
 // 3. 累加证据
-evidence[i] = evidence[i] + drift[i] * dt + signed_noise;
+evidence[i] = evidence[i] + V_dt[i] + signed_noise;
 // 4. 翻转符号（下一步相反方向）
 sign[i] = -sign[i];
 ```
@@ -117,6 +119,65 @@ noise <- noise * sign                  # 应用方向符号
 evidence <- evidence + drift + noise   # 累加证据
 sign <- -sign                          # 翻转符号
 ```
-
 该实现保持了简单性，同时遵循了 EAM 框架的基本结构，忠实地体现了"一进一退"的核心逻辑。
 
+## 注册模型
+
+下一步是让我们的模型被 EAM 识别并能够被调用。为此，我们需要将新实现的 C++ 模型注册到 EAM 的模型路由器中。
+
+同样，AI 能很轻易做到这一点：
+
+```prompt
+Please wrap the cpp function as a model, see `R/simulation_models.R`, and then register the model in `R/simulation_router.R`.
+
+IMPORTANT: Parameter naming must follow the EAM framework conventions: A (threshold), V (drift rate), Z (starting point), ndt (non-decision time). The detector should return this backend when the model name is "ddm-custom".
+```
+
+这一步会完成以下几个关键任务：
+
+1. **在 `R/simulation_models.R` 中创建包装函数**：创建 `run_trial_ddm_custom()` 函数，它负责：
+   - 评估参数公式
+   - 准备噪音函数
+   - 调用底层 C++ 函数 `accumulate_evidence_ddm_custom()`
+   - 返回模拟结果
+
+2. **在 `R/simulation_router.R` 中注册检测器**：创建 `detect_backend_ddm_custom()` 函数，它会：
+   - 检查模型名称是否为 "ddm-custom"
+   - 返回对应的 backend 名称
+
+3. **在 `R/simulation.R` 中添加路由**：在 switch 语句中添加 "ddm-custom" 分支，当检测到该 backend 时调用我们的包装函数。
+
+完成这些注册后，EAM 框架就能自动识别并使用我们的自定义模型了。
+
+## 测试
+
+在完成代码后，您可能会希望验证代码的正确性。这一步您同样可以交给 AI 来做。参考现有的测试文件（如 `tests/testthat`），让 AI 为您的自定义模型生成类似的测试用例：
+
+```prompt
+Please write test cases for my custom model. Look at the existing test folder `tests/testthat` for reference, and create a similar test file `tests/testthat/test-accumulate_evidence_ddm_custom.R`.
+```
+
+AI 会创建一个完整的测试文件，包含多个测试用例来验证。
+
+```r
+# 运行所有测试
+devtools::test()
+```
+
+创建测试文件后，您可以运行测试来验证实现。
+
+如果所有测试通过，说明您的自定义模型已经成功集成到 EAM 框架中！
+
+此外，您还可以指示它测试您模型的行为，例如，noise 非常小，而 drift 为一个很大的值，那么您能精确估计这个线性模型的结束时间。如果它能通过测试，说明您的累计机制是正确的。类似地，您也可以反过来，noise 生成一个必然在前两个时间步结束的 rt, 并测试您的模型能否在这个条件下正确地结束。
+
+## 使用您的自制模型
+
+之后，您只需要在 rstudio 的 build 界面中点击 install，然后就能像其他模型一样使用您的自定义模型了！
+
+```r
+sim_config <- new_simulation_config(
+  ...,
+  model = "ddm-custom",
+  ...
+)
+```

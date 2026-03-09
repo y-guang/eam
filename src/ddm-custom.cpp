@@ -8,10 +8,9 @@ using namespace Rcpp;
 //' The noise is taken as absolute value and then multiplied by a sign that flips
 //' at each time step, creating an "advance-retreat" pattern.
 //' 
-//' @param n_items Number of items to simulate
-//' @param threshold Decision threshold (A parameter)
-//' @param drift Drift rate (V parameter) - can be a vector for each item
-//' @param starting_point Starting evidence (Z parameter) - can be a vector for each item
+//' @param A Decision threshold - can be a vector for each item
+//' @param V Drift rate - can be a vector for each item
+//' @param Z Starting evidence - can be a vector for each item
 //' @param ndt Non-decision time - can be a vector for each item
 //' @param max_t Maximum time allowed for accumulation
 //' @param dt Time step size
@@ -25,41 +24,43 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 List accumulate_evidence_ddm_custom(
-  int n_items,
-  double threshold,
-  NumericVector drift,
-  NumericVector starting_point,
+  NumericVector A,
+  NumericVector V,
+  NumericVector Z,
   NumericVector ndt,
   double max_t,
   double dt,
   int max_reached,
   Function noise_func
 ) {
+  // size of V is the number of items
+  int n_items = V.size();
+  
   // Input validation
-  if (n_items <= 0) {
-    stop("n_items must be > 0");
+  if (A.size() > n_items || A.size() < max_reached) {
+    stop("Length of A must be <= number of items and >= max_reached");
   }
-  if (threshold <= 0) {
-    stop("threshold must be > 0");
+  if (max_reached <= 0 || max_reached > n_items) {
+    stop("max_reached must be > 0 and <= n_items");
+  }
+  if (ndt.size() != n_items) {
+    stop("Length of ndt must be equal to number of items");
+  }
+  if (Z.size() != n_items) {
+    stop("Length of Z must be equal to number of items");
   }
   if (dt <= 0 || max_t <= 0) {
     stop("dt and max_t must be > 0");
   }
-  if (max_reached <= 0) {
-    stop("max_reached must be > 0");
-  }
-  if (drift.size() != n_items) {
-    stop("Length of drift must be equal to n_items");
-  }
-  if (starting_point.size() != n_items) {
-    stop("Length of starting_point must be equal to n_items");
-  }
-  if (ndt.size() != n_items) {
-    stop("Length of ndt must be equal to n_items");
+  
+  // Copy V to STL vector and compute V * dt
+  std::vector<double> V_dt(n_items);
+  for (size_t i = 0; i < static_cast<size_t>(n_items); i++) {
+    V_dt[i] = V[i] * dt;
   }
   
   // Initialize vectors for tracking each item
-  std::vector<double> evidence(starting_point.begin(), starting_point.end());
+  std::vector<double> evidence(Z.begin(), Z.end());
   std::vector<double> time_passed(ndt.begin(), ndt.end());
   std::vector<bool> is_active(n_items, true);
   std::vector<int> sign(n_items, 1);  // Track alternating sign for each item
@@ -89,14 +90,14 @@ List accumulate_evidence_ddm_custom(
         double abs_noise = std::abs(noise[i]);
         // 2. Apply sign (alternates each step)
         double signed_noise = abs_noise * sign[i];
-        // 3. Accumulate: evidence = evidence + drift * dt + signed_noise
-        evidence[i] = evidence[i] + drift[i] * dt + signed_noise;
+        // 3. Accumulate: evidence = evidence + V * dt + signed_noise
+        evidence[i] = evidence[i] + V_dt[i] + signed_noise;
         
         // 4. Flip sign for next step
         sign[i] = -sign[i];
         
         // Check if threshold is reached
-        if (std::abs(evidence[i]) >= threshold) {
+        if (std::abs(evidence[i]) >= A[n_recalled]) {
           reached_item_idx.push_back(i + 1); // R uses 1-based indexing
           reaction_times.push_back(time_passed[i]);
           is_active[i] = false;

@@ -183,6 +183,16 @@ run_condition <- function(
           dt = dt,
           noise_factory = noise_factory,
           trajectories = trajectories
+        ),
+        "ddm-custom" = run_trial_ddm_custom(
+          trial_setting = trial_setting,
+          item_formulas = item_formulas,
+          n_items = n_items,
+          max_reached = max_reached,
+          max_t = max_t,
+          dt = dt,
+          noise_factory = noise_factory,
+          trajectories = trajectories
         )
       )
     }

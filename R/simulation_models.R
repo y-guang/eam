@@ -187,3 +187,60 @@ run_trial_lca_gi <- function(
 
   sim_result
 }
+
+
+#' Run a single trial of the custom DDM simulation
+#'
+#' This function runs a single trial of the custom DDM simulation with
+#' alternating noise direction. It's a wrapper around the core C++ function.
+#' @param trial_setting A list of named values representing the trial settings
+#' @param item_formulas A list of formulas defining the item parameters
+#' @param n_items The number of items to simulate
+#' @param max_reached The threshold for evidence accumulation
+#' @param max_t The maximum time to simulate
+#' @param dt The step size for each increment
+#' @param noise_factory A function that takes trial_setting and returns a noise
+#' function with signature function(n, dt)
+#' @param trajectories Whether to return full output including trajectories.
+#' @return A list containing the simulation results
+#' @note After evaluation, parameters A, V, Z, and ndt are expected to be
+#' numeric vectors of length n_items. They are matched by position according
+#' to standard EAM naming conventions.
+#' @keywords internal
+run_trial_ddm_custom <- function(
+    trial_setting,
+    item_formulas,
+    n_items,
+    max_reached,
+    max_t,
+    dt,
+    noise_factory,
+    trajectories = FALSE) {
+  # prepare
+  item_params <- evaluate_with_dt(
+    item_formulas,
+    data = trial_setting,
+    n = n_items
+  )
+  noise_fun <- noise_factory(trial_setting)
+
+  # default Z to 0 if not provided
+  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
+
+  sim_result <- accumulate_evidence_ddm_custom(
+    item_params$A,
+    item_params$V,
+    Z,
+    item_params$ndt,
+    max_t,
+    dt,
+    max_reached,
+    noise_fun
+  )
+
+  if (trajectories) {
+    sim_result$.item_params <- item_params
+  }
+
+  sim_result
+}
