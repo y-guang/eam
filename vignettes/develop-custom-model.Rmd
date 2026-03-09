@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 我们可用将此直接键入 ChatGPT:
 
 ```prompt
-我正在实现一个 Diffusion Decision Model 的定制模型。
+我正在实现一个 Diffusion Decision Model 的定制模型。它要求对噪音取绝对值，然后重新赋予正负符号，即前后两个时间步的方向绝对相反。
 
 请帮我写一段最简短、概念性的 R 代码，用来完成逐时间步的噪音累加到证据的核心代码，直到其到达阈值，并在最后进行作图展示这个过程。要求代码尽量简单，只表达核心逻辑即可，不必考虑美观性。
 ```
@@ -35,50 +35,53 @@ knitr::opts_chunk$set(
 ```{r}
 set.seed(1)
 
-# parameters
-drift <- 0.1
-noise <- 1
 threshold <- 1
-
-# initialize
+drift <- 0.05
 evidence <- 0
-trajectory <- evidence
+trajectory <- c(evidence)
 
-# simulate accumulation
+sign <- 1
+
 while (abs(evidence) < threshold) {
-  evidence <- evidence + drift + rnorm(1, 0, noise)
+  
+  noise <- abs(rnorm(1, sd=0.05))        # absolute noise
+  noise <- noise * sign         # enforce opposite direction
+  
+  evidence <- evidence + drift + noise
   trajectory <- c(trajectory, evidence)
+  
+  sign <- -sign                 # flip sign each step
 }
 
-# plot
-plot(
-  trajectory,
-  type = "l",
-  xlab = "time step",
-  ylab = "evidence"
-)
-
+plot(trajectory, type = "l")
 abline(h = c(-threshold, threshold), lty = 2)
 ```
 
-其中，核心逻辑只有这一句
+其中，核心逻辑只有这三句
 
 ```r
-evidence <- evidence + drift + rnorm(1, 0, noise)
+  noise <- abs(rnorm(1, sd=0.05))        # 绝对噪音
+  noise <- noise * sign         # 应用方向符号
+  
+  evidence <- evidence + drift + noise
 ```
 
 即：
 
 $$
-x_{t+1} = x_t + v + \epsilon_t
+x_{t+1} = x_t + v + s_t \cdot |\epsilon_t|
 $$
 
 其中
 
-* $(v) = drift$
-* $(\epsilon_t \sim N(0,\sigma))$
+* $v = drift$ （漂移率）
+* $\epsilon_t \sim N(0,\sigma)$ （原始噪音）
+* $|\epsilon_t|$ 是噪音的绝对值
+* $s_t \in \{-1, +1\}$ 是交替符号，满足 $s_{t+1} = -s_t$
 
-一旦您完成了这一步，剩下的就是将这个核心逻辑转化为 C 语言，并将其嵌入到 EAM 的框架中。EAM 的设计使得这一过程非常直接，您只需要实现一个函数来定义模型的行为，然后将其注册到框架中即可。
+这个公式的关键特征是噪音的方向由 $s_t$ 控制，而 $s_t$ 在每个时间步都翻转，从而产生"一进一退"的效果。
+
+一旦您完成了这一步，剩下的就是将这个核心逻辑转化为 C++ 语言，并将其嵌入到 EAM 的框架中。EAM 的设计使得这一过程非常直接，您只需要实现一个函数来定义模型的行为，然后将其注册到框架中即可。
 
 ## 将概念性代码转化为 cpp 代码
 
@@ -89,6 +92,31 @@ $$
 下面是我给copilot一份提示词。
 
 ```prompt
-please refer to  the `src` cpp code files to help me implement the conceptual model. Note, these cpp files contains many highly optimize currently, you do not need to apply all of them. Now faithful to the basic logic of the conceptual model.
+please refer to  the `src` cpp code files to help me implement the conceptual model as a custom cpp model file. Note, these cpp files contains many highly optimize currently, you do not need to apply all of them. Now faithful to the basic logic of the conceptual model.
 ```
+
+这样，我们就得到了一个简洁的 C++ 实现。新创建的 `src/ddm-custom.cpp` 文件包含了核心的证据累加逻辑：
+
+```cpp
+// 核心累加逻辑（一进一退模型）
+// 1. 取噪音绝对值
+double abs_noise = std::abs(noise[i]);
+// 2. 应用符号（正负方向）
+double signed_noise = abs_noise * sign[i];
+// 3. 累加证据
+evidence[i] = evidence[i] + drift[i] * dt + signed_noise;
+// 4. 翻转符号（下一步相反方向）
+sign[i] = -sign[i];
+```
+
+这与我们之前定义的概念性 R 代码完全对应：
+
+```r
+noise <- abs(rnorm(1, sd=0.05))        # 绝对噪音
+noise <- noise * sign                  # 应用方向符号
+evidence <- evidence + drift + noise   # 累加证据
+sign <- -sign                          # 翻转符号
+```
+
+该实现保持了简单性，同时遵循了 EAM 框架的基本结构，忠实地体现了"一进一退"的核心逻辑。
 
