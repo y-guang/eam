@@ -22,9 +22,18 @@ init_julia_env <- function() {
 
   message("eam package: Activating Julia environment...")
 
-  julia_env_path <- system.file("julia/env", package = "eam")
-  JuliaConnectoR::juliaEval(sprintf("using Pkg; Pkg.activate(\"%s\")", julia_env_path))
-  JuliaConnectoR::juliaEval("using NeuralEstimators, Flux")
+  julia_env_path <- normalizePath(
+    system.file("julia/env", package = "eam"),
+    winslash = "/",
+    mustWork = TRUE
+  )
+  JuliaConnectoR::juliaEval(paste(
+    "using Pkg",
+    sprintf("Pkg.activate(\"%s\")", julia_env_path),
+    "Pkg.instantiate()",
+    "using NeuralEstimators, Flux",
+    sep = "\n"
+  ))
 
   eam_julia_env$julia_initialized <- TRUE
   invisible(TRUE)
