@@ -61,6 +61,9 @@ plot_accuracy_graph <- function(
   y_sym <- rlang::sym(y)
   source_sym <- rlang::sym("source")
 
+  accuracy_df <- accuracy_df |>
+    dplyr::mutate(source = factor(source, levels = c("posterior", "observed"), labels = c("Simulation", "Observed")))
+
   # Create bar plot with x on x-axis and source as fill, grouped by source
   p <- accuracy_df |>
     ggplot2::ggplot() +
@@ -70,7 +73,7 @@ plot_accuracy_graph <- function(
       position = "dodge",
       alpha = 0.25
     ) +
-    ggplot2::scale_fill_manual(values = c(posterior = "steelblue", observed = "red")) +
+    ggplot2::scale_fill_manual(values = c(Simulation = "steelblue", Observed = "red")) +
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   # Add faceting if facet_x or facet_y are specified
@@ -90,11 +93,12 @@ plot_accuracy_graph <- function(
   }
 
   p <- p +
-    ggplot2::theme_minimal() +
+    ggplot2::theme_bw() +
     ggplot2::labs(
       x = x,
       y = gsub("_", " ", y),
-      fill = "Source"
+      fill = "Data",
+      title = "Accuracy: Simulation vs Observed"
     )
 
   return(p)
