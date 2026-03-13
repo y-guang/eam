@@ -67,9 +67,10 @@ plot_accuracy_graph <- function(
     ggplot2::geom_bar(
       ggplot2::aes(x = !!x_sym, y = !!y_sym, fill = !!source_sym),
       stat = "identity",
-      position = "dodge"
+      position = "dodge",
+      alpha = 0.25
     ) +
-    ggplot2::scale_fill_manual(values = c(posterior = "blue", observed = "red")) +
+    ggplot2::scale_fill_manual(values = c(posterior = "steelblue", observed = "red")) +
     ggplot2::scale_y_continuous(limits = c(0, 1), labels = scales::percent)
 
   # Add faceting if facet_x or facet_y are specified

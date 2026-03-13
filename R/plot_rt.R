@@ -75,8 +75,13 @@ plot_rt <- function(
   # Plot densities
   p <- combined_df |>
     ggplot2::ggplot() +
-    ggplot2::geom_density(ggplot2::aes(x = rt, fill = source), alpha = 0.6) +
-    ggplot2::scale_fill_manual(values = c(posterior = "blue", observed = "red"))
+    ggplot2::geom_density(
+      ggplot2::aes(x = rt, color = source, fill = source),
+      alpha = 0.25,
+      linewidth = 1
+    ) +
+    ggplot2::scale_fill_manual(values = c(posterior = "steelblue", observed = "red")) +
+    ggplot2::scale_color_manual(values = c(posterior = "steelblue", observed = "red"))
 
   # Add faceting: use facet_grid if both x and y specified, otherwise facet_wrap
   if (length(facet_y) > 0) {
