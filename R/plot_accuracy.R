@@ -177,34 +177,13 @@ plot_accuracy_ddm <- function(
   # Avoid NSE warnings
   hit <- rt <- NULL
 
-  # Get simulation configuration parameters
-  config <- simulated_output$simulation_config
-  n_conditions <- config$n_conditions
-  n_trials_per_condition <- config$n_trials_per_condition
-  n_items <- config$n_items
-
   # Determine all columns to select (DDM has rt column)
-  cols_to_select <- unique(c("rt", "condition_idx", "trial_idx", "item_idx", x, facet_x, facet_y))
+  cols_to_select <- unique(c("rt", "item_idx", x, facet_x, facet_y))
 
-  # Create expanded grid of all possible trial combinations for simulated data
-  all_trials_df <- tidyr::expand_grid(
-    condition_idx = seq_len(n_conditions),
-    trial_idx = seq_len(n_trials_per_condition),
-    item_idx = seq_len(n_items)
-  )
-
-  # Get simulated data and left join with all possible trials
+  # Get simulated data at trial level
   simulated_df <- simulated_output$open_dataset() |>
     dplyr::select(dplyr::all_of(cols_to_select)) |>
-    dplyr::collect()
-
-  # Left join to include all possible trials
-  # In DDM, presence of rt (reaction time) means hit, absence (NA) means no hit
-  simulated_df <- all_trials_df |>
-    dplyr::left_join(
-      simulated_df,
-      by = c("condition_idx", "trial_idx", "item_idx")
-    ) |>
+    dplyr::collect() |>
     dplyr::mutate(
       source = "posterior",
       hit = dplyr::if_else(is.na(rt), 0, 1)

@@ -11,10 +11,9 @@
 #' @param facet_y Variables to split plots vertically. Default is none (\code{c()})
 #'
 #' @details
-#' Posterior predictions are first summarized to their median RT within each
-#' condition and facet group before plotting. This provides a representative
-#' estimate from the posterior distribution rather than pooling all individual
-#' trial-level predictions.
+#' Posterior predictions are plotted directly at the trial level. This pools
+#' all simulated trials for the requested facets without condition-level
+#' aggregation.
 #'
 #' @return A plot showing predicted RT distributions (blue), with observed data (red) if provided
 #'
@@ -54,14 +53,12 @@ plot_rt <- function(
   rt <- source <- NULL
 
   # Determine all columns to select
-  cols_to_select <- unique(c("rt", "item_idx", "condition_idx", facet_x, facet_y))
+  cols_to_select <- unique(c("rt", "item_idx", facet_x, facet_y))
 
-  # Get simulated data from output object and summarize to posterior medians
+  # Get simulated data from output object at trial level
   simulated_df <- simulated_output$open_dataset() |>
     dplyr::select(dplyr::all_of(cols_to_select)) |>
     dplyr::collect() |>
-    dplyr::group_by(dplyr::across(dplyr::all_of(c("condition_idx", facet_x, facet_y)))) |>
-    dplyr::summarise(rt = stats::median(rt), .groups = "drop") |>
     dplyr::mutate(source = "posterior")
 
   # Get observed data with same columns

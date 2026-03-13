@@ -235,20 +235,23 @@ summarise_resample_medians(abc_resample_result)
 #############
 posterior_params <- abc_posterior_bootstrap(
   abc_neuralnet_model,
-  n_samples = 500
+  n_samples = 1
 )
+posterior_params$n_items <- c('10')
 
 # specify posterior simulation config
 # or you can re-create a new config from scratch with posterior_params
 post_sim_config <- sim_config
 post_sim_config$prior_params <- posterior_params
 post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+post_sim_config$n_conditions <- 1
+post_sim_config$n_trials_per_condition <- 500
 
 # (optional) specify a path to save posterior simulations result
 temp_output_path_post <- file.path(temp_base_path, "posterior_output")
 
 post_output <- run_simulation(
-  config = sim_config,
+  config = post_sim_config,
   output_dir = temp_output_path_post
 )
 
