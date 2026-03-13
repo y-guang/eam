@@ -85,10 +85,10 @@ plot_rt <- function(
       "~",
       paste(facet_x, collapse = " + ")
     ))
-    p <- p + ggplot2::facet_grid(facet_formula)
+    p <- p + ggplot2::facet_grid(facet_formula, scales = "free_y")
   } else {
     facet_formula <- stats::as.formula(paste("~", paste(facet_x, collapse = " + ")))
-    p <- p + ggplot2::facet_wrap(facet_formula)
+    p <- p + ggplot2::facet_wrap(facet_formula, scales = "free_y")
   }
 
   p <- p +
