@@ -171,11 +171,16 @@ observed_data <- sim_output$open_dataset() |>
   dplyr::filter(chunk_idx == 1, condition_idx == 1) |>
   dplyr::collect()
 
-# specify posterior simulation config
-# or you can re-create a new config from scratch with posterior_params
-post_sim_config <- sim_config
-post_sim_config$prior_params <- posterior_params
-post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+# manual way (kept as reference)
+manual_post_sim_config <- sim_config
+manual_post_sim_config$prior_params <- posterior_params
+manual_post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+
+# recommended helper way
+post_sim_config <- update_config_from_posterior(
+  config = sim_config,
+  posterior_params = posterior_params
+)
 
 temp_output_path_post <- file.path(temp_base_path, "posterior_output")
 
@@ -281,10 +286,16 @@ posterior_params_from_samples <- tibble::as_tibble(
   )
 )
 
-# specify posterior simulation config
-post_sim_config_2 <- sim_config
-post_sim_config_2$prior_params <- posterior_params_from_samples
-post_sim_config_2$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+# manual way (kept as reference)
+manual_post_sim_config_2 <- sim_config
+manual_post_sim_config_2$prior_params <- posterior_params_from_samples
+manual_post_sim_config_2$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+
+# recommended helper way
+post_sim_config_2 <- update_config_from_posterior(
+  config = sim_config,
+  posterior_params = posterior_params_from_samples
+)
 
 temp_output_path_post_2 <- file.path(temp_base_path, "posterior_output_2")
 
