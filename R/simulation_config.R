@@ -492,3 +492,170 @@ new_simulation_config.chunk_size.heuristic <- function(
 
   return(n_conditions_per_chunk)
 }
+
+
+#' Update a simulation config with posterior parameter values
+#'
+#' Applies posterior parameter samples to an existing simulation configuration.
+#' For each name in \code{posterior_params}: any matching entry in
+#' \code{prior_params} is removed, any matching formula in \code{prior_formulas}
+#' is dropped, and the posterior value is appended to \code{prior_params} as a
+#' fixed constant.
+#'
+#' @param config An \code{eam_simulation_config} object.
+#' @param posterior_params A named list or data frame of posterior parameter
+#'   values.
+#' @param n_conditions_per_chunk Number of conditions per processing chunk.
+#'   \code{NULL} (default) recomputes the value via the internal heuristic.
+#' @param n_conditions Total number of conditions to simulate. Defaults to the
+#'   value already stored in \code{config}.
+#' @param n_trials_per_condition Number of trials per condition. Defaults to
+#'   the value already stored in \code{config}.
+#' @param n_items Number of items per trial. Defaults to the value already
+#'   stored in \code{config}.
+#' @return A modified \code{eam_simulation_config} with updated
+#'   \code{prior_params}, pruned \code{prior_formulas}, and the four
+#'   simulation-dimension fields.
+#' @note
+#' This helper is intentionally restrictive. Parameters that appear on the
+#' left-hand side of \code{between_trial_formulas} or \code{item_formulas}
+#' cannot be replaced — doing so would silently break downstream formula
+#' dependencies that rely on those symbols being derived, not fixed. If your
+#' model has complex inter-formula dependencies, please rebuild the
+#' configuration manually using \code{\link{new_simulation_config}}.
+#' @export
+update_config_from_posterior <- function(
+    config,
+    posterior_params,
+    n_conditions_per_chunk = NULL,
+    n_conditions = config$n_conditions,
+    n_trials_per_condition = config$n_trials_per_condition,
+    n_items = config$n_items) {
+  if (!inherits(config, "eam_simulation_config")) {
+    stop("config must be an eam_simulation_config object")
+  }
+
+  if (!is.data.frame(posterior_params) &&
+    !(is.list(posterior_params) && !is.null(names(posterior_params)))) {
+    stop("posterior_params must be a named list or a named data frame")
+  }
+
+  pp_names <- names(posterior_params)
+
+  # Only between_trial and item formula LHS symbols are forbidden — replacing
+  # them would silently break downstream formula dependencies.
+  other_formulas <- c(config$between_trial_formulas, config$item_formulas)
+  other_lhs <- vapply(
+    other_formulas,
+    function(f) as.character(rlang::f_lhs(f)),
+    character(1L)
+  )
+
+  conflicts <- intersect(pp_names, other_lhs)
+  if (length(conflicts) > 0) {
+    msgs <- vapply(conflicts, function(param) {
+      for (f in other_formulas) {
+        if (as.character(rlang::f_lhs(f)) == param) {
+          return(sprintf(
+            "posterior_param '%s' is re-assigned in formula '%s'",
+            param, deparse(f)
+          ))
+        }
+      }
+    }, character(1L))
+    stop(
+      paste(msgs, collapse = "; "),
+      "; due to ambiguity, please build it manually."
+    )
+  }
+
+  # Validate: every name in posterior_params must exist in prior_params or
+  # prior_formulas LHS — no silent creation of new parameters.
+  prior_formulas <- config$prior_formulas
+  prior_lhs <- vapply(
+    prior_formulas,
+    function(f) as.character(rlang::f_lhs(f)),
+    character(1L)
+  )
+  valid_targets <- union(names(config$prior_params), prior_lhs)
+  unknown <- setdiff(pp_names, valid_targets)
+  if (length(unknown) > 0) {
+    stop(
+      "The following names in posterior_params are not found in prior_params ",
+      "or prior_formulas: ",
+      paste(unknown, collapse = ", "),
+      ". Please build the config manually if you intend to introduce new parameters."
+    )
+  }
+
+  # Drop prior_formulas whose LHS is being replaced by a posterior value.
+  prior_formulas <- prior_formulas[!(prior_lhs %in% pp_names)]
+
+  # Merge into prior_params: remove any existing entries for pp_names first,
+  # then append the posterior values (handles both list and data-frame priors).
+  prior <- config$prior_params
+
+  if (is.data.frame(prior)) {
+    # Drop columns that will be replaced, then cbind the posterior columns.
+    prior <- prior[, setdiff(names(prior), pp_names), drop = FALSE]
+    post_df <- if (is.data.frame(posterior_params)) {
+      posterior_params
+    } else {
+      as.data.frame(as.list(posterior_params))
+    }
+    prior <- cbind(prior, post_df)
+    n_prior <- nrow(prior)
+    n_post <- nrow(post_df)
+    if (n_post == 1L && n_prior > 1L) {
+      post_df <- post_df[rep(1L, n_prior), , drop = FALSE]
+      rownames(post_df) <- NULL
+    } else if (n_post != n_prior) {
+      stop(
+        "Row count mismatch: prior_params has ", n_prior, " rows but ",
+        "posterior_params has ", n_post, " rows. ",
+        "Supply a single-row posterior (broadcast) or one with the same ",
+        "number of rows as prior_params."
+      )
+    }
+  } else {
+    # prior is a named list
+    prior[intersect(pp_names, names(prior))] <- NULL
+
+    if (is.data.frame(posterior_params) && nrow(posterior_params) > 1L) {
+      # Promote list to data frame: broadcast constants, then append columns.
+      prior <- as.data.frame(lapply(prior, function(v) rep(v, nrow(posterior_params))))
+      for (nm in pp_names) {
+        prior[[nm]] <- posterior_params[[nm]]
+      }
+    } else {
+      post_list <- if (is.data.frame(posterior_params)) {
+        as.list(posterior_params[1L, , drop = FALSE])
+      } else {
+        posterior_params
+      }
+      for (nm in pp_names) {
+        prior[[nm]] <- post_list[[nm]]
+      }
+    }
+  }
+
+  new_config <- config
+  new_config$prior_params <- prior
+  new_config$prior_formulas <- prior_formulas
+  new_config$n_conditions <- n_conditions
+  new_config$n_trials_per_condition <- n_trials_per_condition
+  new_config$n_items <- n_items
+  new_config$n_conditions_per_chunk <- if (!is.null(n_conditions_per_chunk)) {
+    n_conditions_per_chunk
+  } else {
+    new_simulation_config.chunk_size.heuristic(
+      n_conditions = n_conditions,
+      n_trials_per_condition = n_trials_per_condition,
+      n_items = n_items,
+      parallel = new_config$parallel,
+      n_cores = new_config$n_cores
+    )
+  }
+
+  new_config
+}
