@@ -496,7 +496,7 @@ new_simulation_config.chunk_size.heuristic <- function(
 
 #' Update a simulation config with posterior parameter values
 #'
-#' Applies posterior parameter samples to an existing simulation configuration.
+#' Applies one posterior draw to an existing simulation configuration.
 #' For each name in \code{posterior_params}: any matching entry in
 #' \code{prior_params} is removed, any matching formula in \code{prior_formulas}
 #' is dropped, and the posterior value is appended to \code{prior_params} as a
@@ -504,7 +504,7 @@ new_simulation_config.chunk_size.heuristic <- function(
 #'
 #' @param config An \code{eam_simulation_config} object.
 #' @param posterior_params A named list or data frame of posterior parameter
-#'   values.
+#'   values representing exactly one posterior draw.
 #' @param n_conditions_per_chunk Number of conditions per processing chunk.
 #'   \code{NULL} (default) recomputes the value via the internal heuristic.
 #' @param n_conditions Total number of conditions to simulate. Defaults to the
@@ -517,12 +517,20 @@ new_simulation_config.chunk_size.heuristic <- function(
 #'   \code{prior_params}, pruned \code{prior_formulas}, and the four
 #'   simulation-dimension fields.
 #' @note
-#' This helper is intentionally restrictive. Parameters that appear on the
-#' left-hand side of \code{between_trial_formulas} or \code{item_formulas}
-#' cannot be replaced — doing so would silently break downstream formula
-#' dependencies that rely on those symbols being derived, not fixed. If your
-#' model has complex inter-formula dependencies, please rebuild the
-#' configuration manually using \code{\link{new_simulation_config}}.
+#' This helper is intentionally conservative and mainly for teaching,
+#' demonstrations, and quick posterior predictive checks. It freezes selected
+#' top-level parameters to fixed posterior values for convenience, but it does
+#' not reconstruct or reinterpret the full dependency structure of the
+#' simulation specification.
+#' If \code{config$prior_params} is a data frame with multiple rows, the
+#' single posterior draw is broadcast across those rows when inserted.
+#'
+#' It does not re-route backend selection and does not create a new model.
+#' Parameters that appear on the left-hand side of
+#' \code{between_trial_formulas} or \code{item_formulas} cannot be replaced
+#' automatically. If you need full control and clarity over internal parameter
+#' structure, rebuild the configuration manually using
+#' \code{\link{new_simulation_config}}.
 #' @export
 update_config_from_posterior <- function(
     config,
@@ -540,7 +548,28 @@ update_config_from_posterior <- function(
     stop("posterior_params must be a named list or a named data frame")
   }
 
+  if (is.data.frame(posterior_params) && nrow(posterior_params) != 1L) {
+    stop("posterior_params data frame must contain exactly one row (one posterior draw)")
+  }
+
+  if (is.list(posterior_params) && !is.data.frame(posterior_params)) {
+    value_lengths <- vapply(posterior_params, length, integer(1L))
+    if (any(value_lengths != 1L)) {
+      bad <- names(posterior_params)[value_lengths != 1L]
+      stop(
+        "posterior_params list entries must each be a single value. Invalid entries: ",
+        paste(bad, collapse = ", ")
+      )
+    }
+  }
+
   pp_names <- names(posterior_params)
+  if (is.null(pp_names) || any(!nzchar(trimws(pp_names)))) {
+    stop("posterior_params names must be non-empty")
+  }
+  if (anyDuplicated(pp_names)) {
+    stop("posterior_params names must be unique")
+  }
 
   # Only between_trial and item formula LHS symbols are forbidden — replacing
   # them would silently break downstream formula dependencies.
@@ -557,7 +586,7 @@ update_config_from_posterior <- function(
       for (f in other_formulas) {
         if (as.character(rlang::f_lhs(f)) == param) {
           return(sprintf(
-            "posterior_param '%s' is re-assigned in formula '%s'",
+            "posterior_param '%s' is defined in between_trial_formulas or item_formulas via '%s' and cannot be replaced automatically",
             param, deparse(f)
           ))
         }
@@ -596,16 +625,17 @@ update_config_from_posterior <- function(
   prior <- config$prior_params
 
   if (is.data.frame(prior)) {
-    # Drop columns that will be replaced, then cbind the posterior columns.
+    # Drop columns that will be replaced, then append posterior columns.
     prior <- prior[, setdiff(names(prior), pp_names), drop = FALSE]
     post_df <- if (is.data.frame(posterior_params)) {
       posterior_params
     } else {
       as.data.frame(as.list(posterior_params))
     }
-    prior <- cbind(prior, post_df)
+
     n_prior <- nrow(prior)
     n_post <- nrow(post_df)
+
     if (n_post == 1L && n_prior > 1L) {
       post_df <- post_df[rep(1L, n_prior), , drop = FALSE]
       rownames(post_df) <- NULL
@@ -613,29 +643,24 @@ update_config_from_posterior <- function(
       stop(
         "Row count mismatch: prior_params has ", n_prior, " rows but ",
         "posterior_params has ", n_post, " rows. ",
-        "Supply a single-row posterior (broadcast) or one with the same ",
-        "number of rows as prior_params."
+        "Supply exactly one posterior draw (single row), which will be ",
+        "broadcast across prior_params rows when needed."
       )
     }
+
+    prior <- cbind(prior, post_df)
   } else {
     # prior is a named list
     prior[intersect(pp_names, names(prior))] <- NULL
 
-    if (is.data.frame(posterior_params) && nrow(posterior_params) > 1L) {
-      # Promote list to data frame: broadcast constants, then append columns.
-      prior <- as.data.frame(lapply(prior, function(v) rep(v, nrow(posterior_params))))
-      for (nm in pp_names) {
-        prior[[nm]] <- posterior_params[[nm]]
-      }
+    post_list <- if (is.data.frame(posterior_params)) {
+      as.list(posterior_params[1L, , drop = FALSE])
     } else {
-      post_list <- if (is.data.frame(posterior_params)) {
-        as.list(posterior_params[1L, , drop = FALSE])
-      } else {
-        posterior_params
-      }
-      for (nm in pp_names) {
-        prior[[nm]] <- post_list[[nm]]
-      }
+      posterior_params
+    }
+
+    for (nm in pp_names) {
+      prior[[nm]] <- post_list[[nm]]
     }
   }
 

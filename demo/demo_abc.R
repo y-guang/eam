@@ -239,21 +239,22 @@ posterior_params <- abc_posterior_bootstrap(
 )
 posterior_params$n_items <- c('10')
 
-# specify posterior simulation config
-# or you can re-create a new config from scratch with posterior_params
-post_sim_config <- sim_config
-post_sim_config$prior_params <- posterior_params
-post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
-post_sim_config$n_conditions <- 1
-post_sim_config$n_trials_per_condition <- 500
+# manual way (kept as reference)
+manual_post_sim_config <- sim_config
+manual_post_sim_config$prior_params <- posterior_params
+manual_post_sim_config$prior_formulas <- list(noise_coef ~ 1) # exclude drawn posteriors
+manual_post_sim_config$n_conditions <- 1
+manual_post_sim_config$n_trials_per_condition <- 500
 
-# (optional) specify a path to save posterior simulations result
-temp_output_path_post <- file.path(temp_base_path, "posterior_output")
-
-post_output <- run_simulation(
-  config = post_sim_config,
-  output_dir = temp_output_path_post
+# recommended helper way
+post_sim_config <- update_config_from_posterior(
+  config = sim_config,
+  posterior_params = posterior_params,
+  n_conditions = 1,
+  n_trials_per_condition = 500
 )
+
+post_output <- run_simulation(post_sim_config)
 
 # plot the posterior rt and accuracy
 plot_rt(
