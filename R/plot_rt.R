@@ -53,7 +53,7 @@ plot_rt <- function(
   rt <- source <- NULL
 
   # Determine all columns to select
-  cols_to_select <- unique(c("rt", "item_idx", facet_x, facet_y))
+  cols_to_select <- unique(c("rt", facet_x, facet_y))
 
   # Get simulated data from output object at trial level
   simulated_df <- simulated_output$open_dataset() |>

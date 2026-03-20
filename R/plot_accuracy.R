@@ -123,7 +123,7 @@ plot_accuracy_ddm_2b <- function(
   choice <- correct <- NULL
 
   # Determine all columns to select
-  cols_to_select <- unique(c("choice", "item_idx", x, facet_x, facet_y))
+  cols_to_select <- unique(c("choice", x, facet_x, facet_y))
 
   # Get simulated data from output object
   simulated_df <- simulated_output$open_dataset() |>
@@ -182,7 +182,7 @@ plot_accuracy_ddm <- function(
   hit <- rt <- NULL
 
   # Determine all columns to select (DDM has rt column)
-  cols_to_select <- unique(c("rt", "item_idx", x, facet_x, facet_y))
+  cols_to_select <- unique(c("rt", x, facet_x, facet_y))
 
   # Get simulated data at trial level
   simulated_df <- simulated_output$open_dataset() |>
