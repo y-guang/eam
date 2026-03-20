@@ -72,12 +72,20 @@ plot_rt <- function(
   combined_df <- combined_df |>
     dplyr::mutate(source = factor(source, levels = c("posterior", "observed"), labels = c("Simulation", "Observed")))
 
-  # Plot densities
+  # Plot densities for simulated and histogram for observed
   p <- combined_df |>
     ggplot2::ggplot(ggplot2::aes(x = rt, color = source, fill = source)) +
     ggplot2::geom_density(
+      data = dplyr::filter(combined_df, source == "Simulation"),
       alpha = 0.25,
       linewidth = 1
+    ) +
+    ggplot2::geom_histogram(
+      data = dplyr::filter(combined_df, source == "Observed"),
+      ggplot2::aes(y = ggplot2::after_stat(density)),
+      alpha = 0.25,
+      bins = 30,
+      position = "identity"
     ) +
     ggplot2::scale_fill_manual(values = c(Simulation = "steelblue", Observed = "red")) +
     ggplot2::scale_color_manual(values = c(Simulation = "steelblue", Observed = "red"))
