@@ -27,7 +27,7 @@ abc_resample(
 
 \item{replace}{Logical, whether to sample with replacement (default FALSE)}
 
-\item{...}{Additional arguments passed to abc::abc}
+\item{...}{Additional arguments passed to abc_abc}
 }
 \value{
 A list of length \code{n_iterations}, where each element is an object

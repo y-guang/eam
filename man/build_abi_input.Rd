@@ -9,7 +9,7 @@ build_abi_input(
   theta,
   Z,
   train_ratio = 0.8,
-  test_ratio = 0.1,
+  n_test = 100,
   rank_levels = NULL
 )
 }
@@ -24,11 +24,11 @@ These parameters will be used as the target variables for inference.}
 the simulation output dataset (e.g., "rt", "item_idx", "choice").}
 
 \item{train_ratio}{Numeric value between 0 and 1 specifying the proportion
-of conditions to use for training (default: 0.8).}
+of non-test conditions to use for training, with the remainder used for
+validation (default: 0.8).}
 
-\item{test_ratio}{Numeric value between 0 and 1 specifying the proportion
-of conditions to use for testing (default: 0.1).
-Must satisfy train_ratio + test_ratio < 1.}
+\item{n_test}{Integer specifying the number of conditions to use for testing
+(default: 10).}
 
 \item{rank_levels}{Numeric vector specifying which rank indices to include.
 If NULL (default), uses all ranks from 1 to n_items from simulation config.}
@@ -45,8 +45,8 @@ A list with components suitable for \code{abi} package training:
   \item{train_idx}{Vector of condition indices used for training}
   \item{val_idx}{Vector of condition indices used for validation}
   \item{test_idx}{Vector of condition indices used for testing}
-  \item{train_ratio}{The training ratio used}
-  \item{test_ratio}{The test ratio used}
+  \item{train_ratio}{The training ratio used (train / non-test conditions)}
+  \item{n_test}{The number of test conditions used}
   \item{rank_levels}{The rank levels included in Z matrices}
   \item{theta}{Character vector of parameter names used}
   \item{Z}{Character vector of summary statistic names used}

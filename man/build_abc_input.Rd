@@ -22,7 +22,7 @@ simulation_summary (excluding 'wider_by' columns).}
 These parameters will be used as the parameter space for ABC estimation.}
 }
 \value{
-A list with components suitable for \code{abc::abc}
+A list with components suitable for \code{abc_abc}
 }
 \description{
 Prepares simulation output, summary statistics, and target data for ABC
@@ -38,7 +38,7 @@ or \code{\link{load_simulation_output}}, and both \code{simulation_summary} and
 \code{target_summary} must be generated using \code{\link{summarise_by}}. If
 your data originates from external sources or custom pipelines, you should
 manually construct the ABC input list instead, ensuring proper matrix formatting
-and column alignment as expected by \code{abc::abc}.
+and column alignment as expected by \code{abc_abc}.
 }
 \section{Required format for summary statistics}{
 
@@ -85,10 +85,8 @@ abc_input <- build_abc_input(
 )
 
 # Perform ABC parameter estimation using rejection method
-abc_rejection_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
+abc_rejection_model <- abc_abc(
+  abc_input = abc_input,
   tol = 0.5,
   method = "rejection"
 )
