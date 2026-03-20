@@ -204,6 +204,21 @@ plot_accuracy(
   facet_y = c()
 )
 
+# third way: high-level wrapper for point estimator
+abi_post_point_3rd <- abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_point_estimator,
+  estimator_type = "point",
+  observed_df = observed_data,
+  Z = abi_input$Z_test[[1]],
+  fixed_params = list(n_items = n_items),
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("ndt_beta_0"),
+  accuracy_facet_y = c()
+)
+
 ########################
 # posterior estimation #
 ########################
@@ -317,4 +332,21 @@ plot_accuracy(
   observed_data,
   facet_x = c("ndt_beta_0"),
   facet_y = c()
+)
+
+# third way: high-level wrapper for posterior estimator
+abi_post_posterior_3rd <- abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_posterior_estimator,
+  estimator_type = "posterior",
+  observed_df = observed_data,
+  Z = abi_input$Z_test,
+  posterior_dataset_id = 1,
+  posterior_n_samples = 1000,
+  fixed_params = list(n_items = n_items),
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("ndt_beta_0"),
+  accuracy_facet_y = c()
 )

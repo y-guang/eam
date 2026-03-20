@@ -270,3 +270,18 @@ plot_accuracy(
   facet_x = c("group"),
   facet_y = c()
 )
+
+# third way: high-level wrapper (keeps the teaching workflow above intact)
+post_pred_3rd <- abc_posterior_predictive_check(
+  config = sim_config,
+  abc_result = abc_neuralnet_model,
+  observed_df = observed_data,
+  fixed_params = list(n_items = 10),
+  n_conditions = 1,
+  n_trials_per_condition = 500,
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("group"),
+  accuracy_facet_y = c()
+)
