@@ -40,8 +40,7 @@ build_abc_input(simulation_output, simulation_summary, target_summary, param)
 
 ## Value
 
-A list with components suitable for
-[`abc::abc`](https://rdrr.io/pkg/abc/man/abc.html)
+A list with components suitable for `abc_abc`
 
 ## Details
 
@@ -56,8 +55,7 @@ using
 [`summarise_by`](https://y-guang.github.io/eam/reference/summarise_by.md).
 If your data originates from external sources or custom pipelines, you
 should manually construct the ABC input list instead, ensuring proper
-matrix formatting and column alignment as expected by
-[`abc::abc`](https://rdrr.io/pkg/abc/man/abc.html).
+matrix formatting and column alignment as expected by `abc_abc`.
 
 ## Required format for summary statistics
 
@@ -108,10 +106,8 @@ abc_input <- build_abc_input(
 )
 
 # Perform ABC parameter estimation using rejection method
-abc_rejection_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
+abc_rejection_model <- abc_abc(
+  abc_input = abc_input,
   tol = 0.5,
   method = "rejection"
 )

@@ -47,7 +47,7 @@ abc_resample(
 
 - ...:
 
-  Additional arguments passed to abc::abc
+  Additional arguments passed to abc_abc
 
 ## Value
 
@@ -86,7 +86,7 @@ str(results)
 #>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...
 #>   ..$ dist        : Named num [1:2] 17.2 22.3
 #>   .. ..- attr(*, "names")= chr [1:2] "466" "288"
-#>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")
+#>   ..$ call        : language abc::abc(target = abc_input$target, param = abc_input$param, sumstat = abc_input$sumstat,      tol = tol, method | __truncated__
 #>   ..$ na.action   : logi [1:2] TRUE TRUE
 #>   ..$ region      : Named logi [1:2] TRUE FALSE
 #>   .. ..- attr(*, "names")= chr [1:2] "466" "288"
@@ -106,7 +106,7 @@ str(results)
 #>   .. ..- attr(*, "names")= chr [1:36] "rt_mean" "rt_quantiles_10%" "rt_quantiles_30%" "rt_quantiles_50%" ...
 #>   ..$ dist        : Named num [1:2] 8.03 1.69
 #>   .. ..- attr(*, "names")= chr [1:2] "197" "311"
-#>   ..$ call        : language abc::abc(target = target, param = param_boot, sumstat = sumstat_boot, tol = 0.5,      method = "rejection")
+#>   ..$ call        : language abc::abc(target = abc_input$target, param = abc_input$param, sumstat = abc_input$sumstat,      tol = tol, method | __truncated__
 #>   ..$ na.action   : logi [1:2] TRUE TRUE
 #>   ..$ region      : Named logi [1:2] FALSE TRUE
 #>   .. ..- attr(*, "names")= chr [1:2] "197" "311"

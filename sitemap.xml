@@ -13,11 +13,15 @@
 <url><loc>https://y-guang.github.io/eam/authors.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/index.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/news/index.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abc_abc.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abc_cv.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abc_posterior_bootstrap.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abc_posterior_predictive_check.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abc_postpr.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abc_resample.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abi_assess.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abi_estimate.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/abi_posterior_predictive_check.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abi_sample_posterior.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/abi_train.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/accumulate_evidence_ddm.html</loc></url>
@@ -78,5 +82,6 @@
 <url><loc>https://y-guang.github.io/eam/reference/summarise_by_impl.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/summarise_posterior_parameters.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/summarise_resample_medians.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/update_config_from_posterior.html</loc></url>
 </urlset>
 

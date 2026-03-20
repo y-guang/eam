@@ -51,6 +51,6 @@ results <- abc_resample(
 summary_stats <- summarise_resample_medians(results, ci_level = 0.95)
 print(summary_stats)
 #>      parameter      mean    median ci_lower_0.025 ci_upper_0.975
-#> 1     V_beta_1 0.2621378 0.2603617      0.2340602      0.3033628
-#> 2 V_beta_group 0.1905191 0.1895562      0.1689325      0.2099907
+#> 1     V_beta_1 0.2596896 0.2615067      0.2298569      0.2860811
+#> 2 V_beta_group 0.1897507 0.1877551      0.1723026      0.2123175
 ```

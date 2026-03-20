@@ -23,3 +23,5 @@
 - Comment only for readability and explain non-trivial logic. Avoid
   reply user in comments - assume user are senior R programmers, who can
   understand common logic.
+- Ignore `.\man` files, as they are generated from roxygen2, and the
+  documentation is maintained in the source docstrings.

@@ -38,10 +38,9 @@ A plot showing predicted RT distributions (blue), with observed data
 
 ## Details
 
-Posterior predictions are first summarized to their median RT within
-each condition and facet group before plotting. This provides a
-representative estimate from the posterior distribution rather than
-pooling all individual trial-level predictions.
+Posterior predictions are plotted directly at the trial level. This
+pools all simulated trials for the requested facets without
+condition-level aggregation.
 
 ## Examples
 

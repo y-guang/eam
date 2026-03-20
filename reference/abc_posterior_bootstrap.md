@@ -30,7 +30,7 @@ Data frame of bootstrapped parameter values
 
 ``` r
 # Load an example abc output, you should generate it by applying ABC to your data
-# check abc::abc for details on fitting ABC models
+# check abc_abc for details on fitting ABC models
 rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
 abc_model <- readRDS(file.path(rdm_minimal_example, "abc", "abc_neuralnet_model.rds"))
 

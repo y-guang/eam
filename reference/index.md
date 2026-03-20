@@ -2,8 +2,14 @@
 
 ## Reference
 
+- [`abc_abc()`](https://y-guang.github.io/eam/reference/abc_abc.md) :
+  Approximate Bayesian Computation wrapper
+- [`abc_cv()`](https://y-guang.github.io/eam/reference/abc_cv.md) :
+  Cross-validation for ABC model
 - [`abc_posterior_bootstrap()`](https://y-guang.github.io/eam/reference/abc_posterior_bootstrap.md)
   : Bootstrap resample ABC posterior samples
+- [`abc_posterior_predictive_check()`](https://y-guang.github.io/eam/reference/abc_posterior_predictive_check.md)
+  : ABC posterior predictive check
 - [`abc_postpr()`](https://y-guang.github.io/eam/reference/abc_postpr.md)
   : ABC model comparison wrapper
 - [`abc_resample()`](https://y-guang.github.io/eam/reference/abc_resample.md)
@@ -12,6 +18,8 @@
   : Assess neural estimator using trained estimator
 - [`abi_estimate()`](https://y-guang.github.io/eam/reference/abi_estimate.md)
   : Estimate parameters using trained neural estimator
+- [`abi_posterior_predictive_check()`](https://y-guang.github.io/eam/reference/abi_posterior_predictive_check.md)
+  : ABI posterior predictive check
 - [`abi_sample_posterior()`](https://y-guang.github.io/eam/reference/abi_sample_posterior.md)
   : Sample from posterior distribution using trained neural estimator
 - [`abi_train()`](https://y-guang.github.io/eam/reference/abi_train.md)
@@ -54,3 +62,5 @@
   : Summarise posterior parameter distributions
 - [`summarise_resample_medians()`](https://y-guang.github.io/eam/reference/summarise_resample_medians.md)
   : Summarise resample medians
+- [`update_config_from_posterior()`](https://y-guang.github.io/eam/reference/update_config_from_posterior.md)
+  : Update a simulation config with posterior parameter values
