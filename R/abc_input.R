@@ -13,7 +13,7 @@
 #' \code{target_summary} must be generated using \code{\link{summarise_by}}. If
 #' your data originates from external sources or custom pipelines, you should
 #' manually construct the ABC input list instead, ensuring proper matrix formatting
-#' and column alignment as expected by \code{abc::abc}.
+#' and column alignment as expected by \code{abc_abc}.
 #'
 #' @section Required format for summary statistics:
 #' Both \code{simulation_summary} and \code{target_summary} must be created using
@@ -36,7 +36,7 @@
 #' @param param Character vector of parameter names to extract from simulation_output.
 #'   These parameters will be used as the parameter space for ABC estimation.
 #'
-#' @return A list with components suitable for \code{abc::abc}
+#' @return A list with components suitable for \code{abc_abc}
 #'
 #' @examples
 #' \donttest{
@@ -71,10 +71,8 @@
 #' )
 #'
 #' # Perform ABC parameter estimation using rejection method
-#' abc_rejection_model <- abc::abc(
-#'   target = abc_input$target,
-#'   param = abc_input$param,
-#'   sumstat = abc_input$sumstat,
+#' abc_rejection_model <- abc_abc(
+#'   abc_input = abc_input,
 #'   tol = 0.5,
 #'   method = "rejection"
 #' )
@@ -218,7 +216,7 @@ build_abc_input <- function(
   target_vector <- as.numeric(target_summary[1, sumstat_cols])
   names(target_vector) <- sumstat_cols
 
-  # Return list suitable for abc::abc
+  # Return list suitable for abc_abc
   result <- list(
     param = param_matrix,
     sumstat = sumstat_matrix,

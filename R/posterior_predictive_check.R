@@ -1,7 +1,7 @@
 #' ABC posterior predictive check
 #'
 #' High-level convenience wrapper for posterior predictive checks from
-#' \code{abc::abc()} outputs.
+#' \code{abc_abc()} outputs.
 #'
 #' This function is for teaching and quick demonstrations.
 #' It is intentionally specific to one input shape (an \code{abc} object).
@@ -10,7 +10,7 @@
 #' and \code{run_simulation()}.
 #'
 #' @param config Simulation configuration object.
-#' @param abc_result Fitted object from \code{abc::abc()}.
+#' @param abc_result Fitted object from \code{abc_abc()}.
 #' @param observed_df Observed trial-level data frame.
 #' @param n_conditions Number of posterior predictive conditions.
 #' @param n_trials_per_condition Number of trials per condition.

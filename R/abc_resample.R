@@ -10,7 +10,7 @@
 #' @param n_iterations Number of resample iterations
 #' @param n_samples Number of samples to draw in each iteration
 #' @param replace Logical, whether to sample with replacement (default FALSE)
-#' @param ... Additional arguments passed to abc::abc
+#' @param ... Additional arguments passed to abc_abc
 #'
 #' @return A list of length \code{n_iterations}, where each element is an object
 #'   of class \code{abc} returned by \code{\link[abc]{abc}}. Each list element
@@ -75,11 +75,13 @@ abc_resample <- function(
     param_boot <- param[sample_idx, , drop = FALSE]
     sumstat_boot <- sumstat[sample_idx, , drop = FALSE]
 
-    # Call abc::abc with bootstrapped data
-    results[[i]] <- abc::abc(
-      target = target,
-      param = param_boot,
-      sumstat = sumstat_boot,
+    # Call abc_abc with bootstrapped data
+    results[[i]] <- abc_abc(
+      abc_input = list(
+        target = target,
+        param = param_boot,
+        sumstat = sumstat_boot
+      ),
       ...
     )
   }

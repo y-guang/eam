@@ -223,10 +223,9 @@ abc_rejection_model |> saveRDS(file = file.path(base_dir, "abc", "abc_rejection_
 ####################
 # cross validation #
 ####################
-abc_neuralnet_cv <- abc::cv4abc(
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  abc.out = abc_neuralnet_model,
+abc_neuralnet_cv <- abc_cv(
+  abc_input = abc_input,
+  abc_result = abc_neuralnet_model,
   nval = 10,
   tols = c(0.05, 0.1)
 )

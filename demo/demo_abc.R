@@ -147,27 +147,21 @@ abc_input <- build_abc_input(
 #####################
 # ABC model fitting #
 #####################
-abc_rejection_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
+abc_rejection_model <- abc_abc(
+  abc_input = abc_input,
   tol = 0.5,
   method = "rejection"
 )
 
-abc_loclinear_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
+abc_loclinear_model <- abc_abc(
+  abc_input = abc_input,
   tol = 0.5,
   method = "loclinear",
   transf = c("log", "log", "log", "none", "log", "log")
 )
 
-abc_neuralnet_model <- abc::abc(
-  target = abc_input$target,
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
+abc_neuralnet_model <- abc_abc(
+  abc_input = abc_input,
   tol = 0.05,
   method = "neuralnet",
   sizenet = 8,
@@ -180,10 +174,9 @@ abc_neuralnet_model <- abc::abc(
 ####################
 # cross validation #
 ####################
-abc_neuralnet_cv <- abc::cv4abc(
-  param = abc_input$param,
-  sumstat = abc_input$sumstat,
-  abc.out = abc_neuralnet_model,
+abc_neuralnet_cv <- abc_cv(
+  abc_input = abc_input,
+  abc_result = abc_neuralnet_model,
   nval = 10,
   tols = c(0.05, 0.1)
 )
