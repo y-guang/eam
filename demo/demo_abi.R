@@ -97,7 +97,7 @@ abi_input <- build_abi_input(
     "rt"
   ),
   train_ratio = 0.8,
-  test_ratio = 0.1
+  n_test = 100
 )
 
 #####################
@@ -205,7 +205,7 @@ plot_accuracy(
 )
 
 # third way: high-level wrapper for point estimator
-abi_post_point_3rd <- abi_posterior_predictive_check(
+abi_posterior_predictive_check(
   config = sim_config,
   trained_estimator = trained_point_estimator,
   estimator_type = "point",
@@ -335,7 +335,7 @@ plot_accuracy(
 )
 
 # third way: high-level wrapper for posterior estimator
-abi_post_posterior_3rd <- abi_posterior_predictive_check(
+abi_posterior_predictive_check(
   config = sim_config,
   trained_estimator = trained_posterior_estimator,
   estimator_type = "posterior",

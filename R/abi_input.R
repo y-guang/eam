@@ -22,10 +22,10 @@
 #' @param Z Character vector of summary statistic column names to extract from
 #'   the simulation output dataset (e.g., "rt", "item_idx", "choice").
 #' @param train_ratio Numeric value between 0 and 1 specifying the proportion
-#'   of conditions to use for training (default: 0.8).
-#' @param test_ratio Numeric value between 0 and 1 specifying the proportion
-#'   of conditions to use for testing (default: 0.1).
-#'   Must satisfy train_ratio + test_ratio < 1.
+#'   of non-test conditions to use for training, with the remainder used for
+#'   validation (default: 0.8).
+#' @param n_test Integer specifying the number of conditions to use for testing
+#'   (default: 10).
 #' @param rank_levels Numeric vector specifying which rank indices to include.
 #'   If NULL (default), uses all ranks from 1 to n_items from simulation config.
 #'
@@ -40,8 +40,8 @@
 #'   \item{train_idx}{Vector of condition indices used for training}
 #'   \item{val_idx}{Vector of condition indices used for validation}
 #'   \item{test_idx}{Vector of condition indices used for testing}
-#'   \item{train_ratio}{The training ratio used}
-#'   \item{test_ratio}{The test ratio used}
+#'   \item{train_ratio}{The training ratio used (train / non-test conditions)}
+#'   \item{n_test}{The number of test conditions used}
 #'   \item{rank_levels}{The rank levels included in Z matrices}
 #'   \item{theta}{Character vector of parameter names used}
 #'   \item{Z}{Character vector of summary statistic names used}
@@ -88,7 +88,7 @@ build_abi_input <- function(
     theta,
     Z,
     train_ratio = 0.8,
-    test_ratio = 0.1,
+    n_test = 100,
     rank_levels = NULL) {
   # TODO: totally re-design current api for abi, only pass the index of conditions,
   # and load data in julia rather than r.
@@ -114,14 +114,11 @@ build_abi_input <- function(
     stop("train_ratio must be between 0 and 1")
   }
 
-  if (!is.numeric(test_ratio) || length(test_ratio) != 1) {
-    stop("test_ratio must be a single numeric value")
+  if (!is.numeric(n_test) || length(n_test) != 1) {
+    stop("n_test must be a single numeric value")
   }
-  if (test_ratio <= 0 || test_ratio >= 1) {
-    stop("test_ratio must be between 0 and 1")
-  }
-  if (train_ratio + test_ratio >= 1) {
-    stop("train_ratio + test_ratio must be less than 1")
+  if (n_test < 1 || n_test != floor(n_test)) {
+    stop("n_test must be a positive integer")
   }
 
   if (!is.null(rank_levels) && !is.numeric(rank_levels)) {
@@ -153,14 +150,21 @@ build_abi_input <- function(
 
   # Split into train, test, and validation sets
   n_total <- length(condition_idx)
-  n_train <- floor(n_total * train_ratio)
-  train_idx <- sample(condition_idx, n_train, replace = FALSE)
-
-  # Three-way split: train, test, val
-  remaining_idx <- setdiff(condition_idx, train_idx)
-  n_test <- floor(n_total * test_ratio)
-  test_idx <- sample(remaining_idx, n_test, replace = FALSE)
-  val_idx <- setdiff(remaining_idx, test_idx)
+  
+  # Validate n_test
+  if (n_test >= n_total) {
+    stop("n_test must be less than the total number of conditions")
+  }
+  
+  # First, reserve test set
+  test_idx <- sample(condition_idx, n_test, replace = FALSE)
+  
+  # Split remaining conditions by train_ratio
+  remaining_idx <- setdiff(condition_idx, test_idx)
+  n_remaining <- length(remaining_idx)
+  n_train <- floor(n_remaining * train_ratio)
+  train_idx <- sample(remaining_idx, n_train, replace = FALSE)
+  val_idx <- setdiff(remaining_idx, train_idx)
 
   # build theta matrices
   theta_train <- build_abi_input.theta(
@@ -215,7 +219,7 @@ build_abi_input <- function(
     val_idx = val_idx,
     test_idx = test_idx,
     train_ratio = train_ratio,
-    test_ratio = test_ratio,
+    n_test = n_test,
     rank_levels = rank_levels,
     theta = theta,
     Z = Z
