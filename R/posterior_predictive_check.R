@@ -12,7 +12,6 @@
 #' @param config Simulation configuration object.
 #' @param abc_result Fitted object from \code{abc::abc()}.
 #' @param observed_df Observed trial-level data frame.
-#' @param fixed_params Named list/data frame of fixed values to merge into posterior parameters.
 #' @param n_conditions Number of posterior predictive conditions.
 #' @param n_trials_per_condition Number of trials per condition.
 #' @param n_items Number of items per trial.
@@ -30,7 +29,6 @@ abc_posterior_predictive_check <- function(
     config,
     abc_result,
     observed_df,
-    fixed_params = list(),
     n_conditions = 1,
     n_trials_per_condition = 500,
     n_items = config$n_items,
@@ -58,10 +56,6 @@ abc_posterior_predictive_check <- function(
 
   med <- vapply(abc_params, stats::median, numeric(1L), na.rm = TRUE)
   posterior_params <- as.data.frame(as.list(med), stringsAsFactors = FALSE)
-  posterior_params <- posterior_predictive_check.merge_fixed_params(
-    posterior_params = posterior_params,
-    fixed_params = fixed_params
-  )
 
   posterior_predictive_check.run_from_params(
     config = config,
@@ -101,7 +95,6 @@ abc_posterior_predictive_check <- function(
 #' @param Z Input data for ABI estimation/sampling. If \code{NULL}, uses \code{Z_test}.
 #' @param posterior_dataset_id Dataset id used when \code{estimator_type = "posterior"}.
 #' @param posterior_n_samples Number of samples when \code{estimator_type = "posterior"}.
-#' @param fixed_params Named list/data frame of fixed values to merge into posterior parameters.
 #' @param n_conditions Number of posterior predictive conditions.
 #' @param n_trials_per_condition Number of trials per condition.
 #' @param n_items Number of items per trial.
@@ -123,7 +116,6 @@ abi_posterior_predictive_check <- function(
     Z = NULL,
     posterior_dataset_id = 1,
     posterior_n_samples = 1000,
-    fixed_params = list(),
     n_conditions = 1,
     n_trials_per_condition = 500,
     n_items = config$n_items,
@@ -190,11 +182,6 @@ abi_posterior_predictive_check <- function(
     posterior_params <- as.data.frame(as.list(med), stringsAsFactors = FALSE)
     source_type <- "abi_posterior_median"
   }
-
-  posterior_params <- posterior_predictive_check.merge_fixed_params(
-    posterior_params = posterior_params,
-    fixed_params = fixed_params
-  )
 
   posterior_predictive_check.run_from_params(
     config = config,
@@ -276,41 +263,6 @@ posterior_predictive_check.run_from_params <- function(
   print(accuracy_plot)
 
   invisible(NULL)
-}
-
-
-#' @keywords internal
-posterior_predictive_check.merge_fixed_params <- function(posterior_params, fixed_params) {
-  if (is.null(fixed_params)) {
-    return(posterior_params)
-  }
-
-  if (is.list(fixed_params) && !is.data.frame(fixed_params)) {
-    fixed_params <- as.data.frame(as.list(fixed_params), stringsAsFactors = FALSE)
-  }
-
-  if (!is.data.frame(fixed_params)) {
-    stop("fixed_params must be NULL, a named list, or a one-row data frame")
-  }
-
-  if (nrow(fixed_params) > 1L) {
-    stop("fixed_params must be a one-row data frame")
-  }
-
-  if (nrow(fixed_params) == 0L) {
-    return(posterior_params)
-  }
-
-  if (is.null(names(fixed_params)) || any(!nzchar(trimws(names(fixed_params))))) {
-    stop("fixed_params names must be non-empty")
-  }
-  if (anyDuplicated(names(fixed_params))) {
-    stop("fixed_params names must be unique")
-  }
-
-  # fixed_params overwrite same-name posterior columns by design.
-  posterior_params[names(fixed_params)] <- NULL
-  cbind(posterior_params, fixed_params)
 }
 
 

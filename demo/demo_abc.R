@@ -3,7 +3,6 @@
 ###############
 n_items <- 10
 prior_formulas <- list(
-  n_items ~ 10,
   # parameters with distributions
   A_beta_0 ~ distributional::dist_uniform(1.00, 10.00),
   A_beta_1 ~ distributional::dist_uniform(1.00, 10.00),
@@ -42,6 +41,7 @@ noise_factory <- function(context) {
 # simulation setup #
 ####################
 sim_config <- new_simulation_config(
+  prior_params = list(n_items = n_items),
   prior_formulas = prior_formulas,
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
@@ -237,7 +237,6 @@ posterior_params <- abc_posterior_bootstrap(
   abc_neuralnet_model,
   n_samples = 1
 )
-posterior_params$n_items <- c('10')
 
 # manual way (kept as reference)
 manual_post_sim_config <- sim_config
@@ -276,7 +275,6 @@ abc_posterior_predictive_check(
   config = sim_config,
   abc_result = abc_neuralnet_model,
   observed_df = observed_data,
-  fixed_params = list(n_items = 10),
   n_conditions = 1,
   n_trials_per_condition = 500,
   rt_facet_x = c("item_idx"),
