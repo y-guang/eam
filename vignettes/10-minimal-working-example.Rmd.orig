@@ -2,8 +2,8 @@
 title: "Getting Started: A Minimal Working Example"
 author: "Guangyu Zhu"
 ---
-
-```{r, include = FALSE}
+  
+  ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -18,25 +18,25 @@ This section aims to help you grasp the basic workflow to run this package. In t
 The workflow implemented in **eam** follows the standard workflow in simulation-based inference. First, we begin by specifying a data-generating process, simulate data under a range of parameter values, and then use simulation-based inference to learn which parameters are most consistent with the observed data.
 
 Concretely, the workflow consists of four steps:
-
+  
 1. **Model specification and simulation**: Define an evidence accumulation model
-   by specifying its structural components (boundaries, drift, noise, and
-   non-decision processes), and simulate synthetic datasets from the prior.
+by specifying its structural components (boundaries, drift, noise, and
+                                         non-decision processes), and simulate synthetic datasets from the prior.
 2. **Summary statistics computation**: Reduce both simulated and observed data
-   to informative summary statistics that capture key data patterns.
+to informative summary statistics that capture key data patterns.
 3. **Parameter estimation and recovery**: Use ABC (or ABI) to infer posterior distributions
-   over parameters, and evaluate whether the inference procedure can reliably
-   recover known parameters.
+over parameters, and evaluate whether the inference procedure can reliably
+recover known parameters.
 4. **Model evaluation and comparison**: Assess model adequacy using posterior
-   predictive checks, and compare alternative model
-   specifications.
+predictive checks, and compare alternative model
+specifications.
 
 The following sections walk through these steps in detail using a simple DDM
 example, before extending the workflow to more complex models.
 
 ---
-
-In this example, we start with a simple three-parameter two-boundary Diffusion Decision Model (DDM).
+  
+  In this example, we start with a simple three-parameter two-boundary Diffusion Decision Model (DDM).
 
 Although the DDM has a trackable likelihood, we deliberately treat it as a generative model here. This allows us to demonstrate the full simulation-based workflow in a setting where the ground truth is known.
 
@@ -45,38 +45,38 @@ Here, we adopt a slightly different parameterization from the conventional DDM: 
 ### Description of the model
 
 The details of this model is listed below:
-
-**Priors on global parameters**
-\[
-\begin{aligned}
-A_0 &\sim \text{Uniform}(1, 5), \\
-V_0 &\sim \text{Uniform}(0.5, 3), \\
-ndt_0 &\sim \text{Uniform}(0, 1), \\
-\rho_0 &= 0.5 .
-\end{aligned}
-\]
+  
+  **Priors on global parameters**
+  \[
+    \begin{aligned}
+    A_0 &\sim \text{Uniform}(1, 5), \\
+    V_0 &\sim \text{Uniform}(0.5, 3), \\
+    ndt_0 &\sim \text{Uniform}(0, 1), \\
+    \rho_0 &= 0.5 .
+    \end{aligned}
+    \]
 
 **Item-level parameterization**
-\[
-\begin{aligned}
-\rho &= \rho_0, \\
-A_{\text{upper}} &= \rho A_0, \\
-A_{\text{lower}} &= -\rho A_0, \\
-V &= V_0, \\
-ndt &= ndt_0 .
-\end{aligned}
-\]
+  \[
+    \begin{aligned}
+    \rho &= \rho_0, \\
+    A_{\text{upper}} &= \rho A_0, \\
+    A_{\text{lower}} &= -\rho A_0, \\
+    V &= V_0, \\
+    ndt &= ndt_0 .
+    \end{aligned}
+    \]
 
 **Evidence accumulation dynamics**
-\[
-dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
-\]
+  \[
+    dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
+    \]
 
 A decision is made when $X(t)$ first reaches either $A_{\text{upper}}$ or $A_{\text{lower}}$, and the observed response time is
 
 \[
-RT = T_{\text{decision}} + ndt .
-\]
+  RT = T_{\text{decision}} + ndt .
+  \]
 
 
 ### Step one: Model setup
@@ -144,10 +144,10 @@ noise_factory <- function(context) {
 ```
 
 ---
-
-### Step two: Data simulation
-
-Once the model is specified, we can proceed to data simulation. The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
+  
+  ### Step two: Data simulation
+  
+  Once the model is specified, we can proceed to data simulation. The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
 
 ```{r,message=FALSE}
 ####################
@@ -192,10 +192,10 @@ sim_output <- run_simulation(
 ```
 
 ---
-
+  
 ### Step three: Load observed data
-
-For observed data, we create a small dataset using the **rtdists** package, which provides fast simulators for standard DDM. Specifically, we simulate N=500 trials from a two-boundary DDM with fixed parameters ($a$,$v$,$t0$) where a controls boundary separation, $v$ is the drift rate, and $t0$ captures non-decision time.
+  
+  For observed data, we create a small dataset using the **rtdists** package, which provides fast simulators for standard DDM. Specifically, we simulate N=500 trials from a two-boundary DDM with fixed parameters ($a$,$v$,$t0$) where a controls boundary separation, $v$ is the drift rate, and $t0$ captures non-decision time.
 
 The function *rdiffusion()* returns response labels (“upper”/“lower”) and response times. For consistency with the data format produced by our simulation engine, we recode responses into a numeric choice variable (1 for the upper boundary and -1 for the lower boundary), and we add a condition_idx field to indicate that all trials belong to a single experimental condition
 
@@ -211,7 +211,7 @@ N <- 500
 
 pars <- list(
   a  = 2.0,   # Decision boundary
-  v  = 2.0,   # Drift rate
+  v  = 1.0,   # Drift rate
   t0 = 0.5  # Non-decision time
 )
 
@@ -225,8 +225,11 @@ observed_data$condition_idx <- 1
 
 ---
 
+####### Approximate Bayesian Computation Pipleline #######  
+  
+    
 ### Step four: Extract summary statistics
-
+  
 we define a summary pipeline that extracts two types of common summary statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice category (1 vs. -1).
 
 We then apply the same summary procedure to every simulated dataset to obtain *simulation_sumstat*, and to the observed dataset to obtain *target_sumstat*. Finally, build_abc_input() aligns the simulated and observed summaries into a consistent structure.
@@ -268,14 +271,14 @@ abc_input <- build_abc_input(
 ```
 
 ---
-
+  
 ### Step five: Fit the model
-
+  
 With the simulated and observed summary statistics aligned, we can now estimate the posterior distribution of the model parameters using Approximate Bayesian Computation (ABC).
 
 Specifically, we fit an ABC model by comparing the simulated summary statistics to the observed summary statistics. Then we retain (or reweight) parameter draws that best reproduce the observed summaries under a tolerance level (tol=0.05).
 
-Here we use a neural-net-adjusted ABC variant (method = "neuralnet"), which learns a flexible mapping from summary statistics to parameters to improve posterior approximation.
+Here we use a regression-based-adjusted ABC variant (method = "loclinear"), which learns a flexible mapping from summary statistics to parameters to improve posterior approximation.
 
 These diagnostics help verify whether the posterior concentrates on plausible regions of the parameter space and whether the recovered parameters are consistent with the parameters in the *rdiffusion()* model.
 
@@ -290,13 +293,13 @@ abc_fit <- abc::abc(
   param  = abc_input$param,
   sumstat= abc_input$sumstat,
   tol    = 0.05,
-  method = "neuralnet"
+  method = "loclinear"
 )
 ```
 
 ---
-
-After fitting, we summarize the posterior means/medians and 95% credible intervals and visualize the resulting posterior distributions.
+  
+  After fitting, we summarize the posterior means/medians and 95% credible intervals and visualize the resulting posterior distributions.
 
 As shown, the true parameter values underlying the observed data lie well within the 95% credible intervals of the posterior distributions.
 
@@ -314,10 +317,10 @@ plot_posterior_parameters(
 ```
 
 ---
-
-### Step six: Model evaluation
-
-The next step is to evaluate parameter recovery for the model. To do so, we run *cv4abc()* as a cross-validation procedure.
+  
+  ### Step six: Model evaluation
+  
+  The next step is to evaluate parameter recovery for the model. To do so, we run *cv4abc()* as a cross-validation procedure.
 
 First, we specify the number of validation datasets (N=100). The function then randomly samples N conditions from the simulated summary statistics, treats their associated parameter values as known ground truth, and re-estimates the parameters using the fitted ABC object under the same tolerance level.
 
@@ -331,6 +334,13 @@ As shown, the three parameters exhibit excellent recovery.
 
 ```{r}
 # Parameter recovery check
+abc_cv <- abc_cv(
+  abc_input = abc_input,
+  abc_result = abc_fit,
+  nval = 100,
+  tols = c(0.05)
+)
+
 plot_cv_recovery(
   abc_cv,
   n_rows = 3,
@@ -341,7 +351,7 @@ plot_cv_recovery(
 ```
 
 ---
-
+  
 As a final diagnostic, we perform a posterior predictive check to assess the adequacy of the fitted model.
 
 Specifically, we generate the posterior data using posterior median estimates obtained from the ABC analysis. The resulting posterior predictive simulations are then compared with the observed dataset.
@@ -353,64 +363,23 @@ By visually inspecting the overlap between simulated and observed RT distributio
 # Posterior predictive check #
 ##############################
 
-# Use posterior median as input
-prior_formulas <- list(
-  # Decision boundary
-  A_0 ~ distributional::dist_uniform(1.96, 1.96),
-  # Drift rate
-  V_0 ~ distributional::dist_uniform(2.10, 2.10),
-  # Non-decision time
-  ndt_0 ~ distributional::dist_uniform(0.48,0.48),
-  # Relative starting point
-  rho_0 ~ 0.5
-)
-
-# Run the posteior simulation
-sim_config_post <- new_simulation_config(
-  prior_formulas = prior_formulas,
-  between_trial_formulas = between_trial_formulas,
-  item_formulas = item_formulas,
-  n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 1,
-  n_trials_per_condition = 500,
-  n_items = n_items,
-  max_reached = n_items,
-  max_t = 10,
-  dt = 0.001,
-  noise_mechanism = "add",
-  noise_factory = noise_factory,
-  model = "ddm-2b",
-  parallel = FALSE,
-  n_cores = NULL, # Will use default: detectCores() - 1
-  rand_seed = NULL # Will use default random seed
-)
-
-t0 <- Sys.time()
-temp_output_path <- tempfile("eam_demo_post_output")
-sim_output_post <- run_simulation(config = sim_config_post, output_dir = temp_output_path)
-
-post_output <- sim_output_post
-observed_data$item_idx <- 1
-
-# Plot the posterior rt and accuracy
-plot_rt(
-  post_output,
-  observed_data,
-  facet_x = c("item_idx"),
-  facet_y = c()
-)
-
-plot_accuracy(
-  post_output,
-  observed_data,
-  facet_x = c(),
-  facet_y = c()
+abc_posterior_predictive_check(
+  config = sim_config, # Simulation configuration
+  abc_result = abc_fit, # ABC fitting result
+  observed_df = observed_data,  # Observed dataset for comparison
+  n_conditions = 1, # Number of experimental conditions
+  n_trials_per_condition = 500, # Number of trials simulated per condition
+  rt_facet_x = c("choice"), # RT plot facet (x)
+  rt_facet_y = c(),   # RT plot facet (y)
+  accuracy_x = "rank_idx",  # Accuracy plot x-axis variable
+  accuracy_facet_x = c(), # Accuracy plot facet (x)
+  accuracy_facet_y = c()  # Accuracy plot facet (y)
 )
 ```
 ---
-
+  
 ### Step seven (optional): Model comparison
-
+  
 Beyond parameter estimation, the **eam** package also supports model comparison within a simulation-based inference framework.
 
 In this example, we construct an alternative model by deliberately modifying the prior specification of the relative starting point parameter $\rho$, while keeping all other components of the model unchanged. This allows us to isolate the contribution of this parameter assumption to overall model fit. Synthetic data are then generated under the alternative model, and the same summary statistics pipeline is applied to ensure comparability across models.
@@ -471,11 +440,334 @@ postpr_result <- abc_postpr(
 )
 
 summary(postpr_result)
+
+####### Amortized Bayesian Inference Pipleline (Point Estimation) #######  
+
+### Step four: Prepare input features
+
+We construct the input matrix 
+𝑍
+Z from the observed data, containing trial-level choice and reaction time (RT).
+
+The same structure is used for both simulated and observed datasets.
+
+The function build_abi_input() then aligns simulated data and parameters into a consistent format for training.
+
+```{r,message=FALSE}
+#####################
+# abc model prepare #
+#####################
+
+library(dplyr)
+library(tidyr)
+JuliaConnectoR::juliaEval("Pkg.instantiate()")
+
+Z_observed <- observed_data %>%              
+  mutate(trial = row_number()) %>%   
+  select(trial, choice, rt) %>%
+  pivot_longer(
+    cols = c(choice, rt),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  pivot_wider(
+    names_from = trial,
+    values_from = value
+  )
+
+Z_observed <- as.matrix(Z_observed[,-1])
+Z_observed
+
+# Align the simulated and observed summary statistics
+abi_input <- build_abi_input(
+  sim_output,
+  theta = c(
+    "A_0","V_0","ndt_0"
+  ),
+  Z = c(
+    "choice",
+    "rt"
+  ),
+  train_ratio = 0.8,
+  n_test = 100
+)
+
+```
+
+---
+  
+### Step five: Fit the model
+  
+We train a neural estimator to learn the mapping from observed data Z to model parameters θ.
+
+Here we use a point estimator, which directly predicts parameter values from the input data.
+
+The input dimension d=2 corresponds to the two observed variables per trial (choice and RT).
+The DeepSet encoder maps a set of trials into a fixed-length representation, which is then transformed into parameter estimates.
+
+The output dimension equals the number of parameters (p=3), with each parameter predicted by a dedicated output unit using a softplus activation to enforce valid (positive) values.
+
+```{r,message=FALSE}
+########################
+# Parameter estimation #
+########################
+
+# Fit abi model
+
+
+point_estimator <- "
+  d = 2    # dimension of data
+  w = 32   # number of neurons in each hidden layer
+
+  # Layer to ensure valid estimates
+  final_layer = Parallel(
+      vcat,
+      Dense(w, 1, softplus), #first parameter
+      Dense(w, 1, softplus), #second parameter
+      Dense(w, 1, softplus)  #third parameter 
+    )
+
+  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
+  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
+  deepset = DeepSet(psi, phi)
+  estimator = PointEstimator(deepset)
+"
+
+trained_point_estimator <- abi_train(
+  estimator = point_estimator,
+  abi_input = abi_input,
+  epochs = 100,
+  stopping_epochs = 20
+)
+```
+
+---
+  
+After training, we obtain point estimates of the parameters for the observed dataset.
+
+```{r}
+# Point estimation check
+point_est <- abi_estimate(
+  trained_estimator = trained_point_estimator,
+  Z = Z_observed
+)
+
+point_est
+```
+
+---
+  
+  ### Step six: Model evaluation
+  
+We evaluate parameter recovery using simulated datasets.
+
+The function abi_assess() performs a validation procedure by:
+
+  (1)sampling datasets with known parameters
+  (2)re-estimating parameters using the trained estimator
+  (3)comparing estimated vs true parameters
+
+Good recovery is indicated by high correlation between estimated and true values estimates concentrated around the identity line
+
+```{r}
+# Parameter recovery check
+assessment <- abi_assess(
+  trained_estimator = trained_point_estimator,
+  estimator_name = "NBE"
+)
+
+plot_cv_recovery(assessment)
+```
+
+---
+  
+We assess model fit by generating simulated data using the estimated parameters and comparing them to the observed data.
+
+This allows us to evaluate whether the model reproduces RT distributions and choice proportions
+```{r}
+##############################
+# Posterior predictive check #
+##############################
+
+abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_point_estimator,
+  estimator_type = "point",
+  observed_df = observed_data,
+  Z = Z_observed,
+  rt_facet_x = c("choice"),
+  rt_facet_y = c(),
+  accuracy_x = "",
+  accuracy_facet_x = c(),
+  accuracy_facet_y = c()
+)
+
+
+####### Amortized Bayesian Inference Pipleline (Posteiror Sample Estimation) #######  
+
+### Step four: Prepare input features
+
+(Same as above)
+
+```{r,message=FALSE}
+#####################
+# abc model prepare #
+#####################
+
+library(dplyr)
+library(tidyr)
+JuliaConnectoR::juliaEval("Pkg.instantiate()")
+
+Z_observed <- observed_data %>%              
+  mutate(trial = row_number()) %>%   
+  select(trial, choice, rt) %>%
+  pivot_longer(
+    cols = c(choice, rt),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  pivot_wider(
+    names_from = trial,
+    values_from = value
+  )
+
+Z_observed <- as.matrix(Z_observed[,-1])
+Z_observed
+
+# Align the simulated and observed summary statistics
+abi_input <- build_abi_input(
+  sim_output,
+  theta = c(
+    "A_0","V_0","ndt_0"
+  ),
+  Z = c(
+    "choice",
+    "rt"
+  ),
+  train_ratio = 0.8,
+  n_test = 100
+)
+
+```
+
+---
+  
+  ### Step five: Fit the model
+  
+Instead of predicting a single point estimate, we learn the full posterior distribution.
+
+The input dimension d=2 corresponds to the two observed variables per trial (choice and RT).
+
+The DeepSet encoder maps a set of trials into a fixed-length representation.
+
+The output dimension equals the number of parameters (p=3).
+
+Instead of producing point estimates, a normalizing flow is used to generate samples from the posterior distribution over parameters.
+
+
+```{r,message=FALSE}
+########################
+# Parameter estimation #
+########################
+
+# Fit abi model
+
+
+posterior_estimator <- "
+  d = 2    # dimension of each replicate
+  w = 32   # number of neurons in each hidden layer
+
+  # Layer to ensure valid estimates
+  final_layer = Parallel(
+      vcat,
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus)
+    )
+
+  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
+  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
+  deepset = DeepSet(psi, phi)
+  w = 3
+  q = NormalisingFlow(w, w)
+  estimator = PosteriorEstimator(q,deepset)
+"
+
+trained_posterior_estimator <- abi_train(
+  estimator = posterior_estimator,
+  abi_input = abi_input,
+  epochs = 100,
+  stopping_epochs = 20
+)
+```
+
+---
+  
+After training, we draw samples from the posterior distribution.
+
+```{r}
+# Posterior sample estimation check
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_posterior_estimator,
+  Z = Z_observed,
+  N = 1000
+)
+
+
+# Summarise posterior parameters
+posterior_summary <- summarise_posterior_parameters(posterior_samples)
+print(posterior_summary)
+```
+
+---
+  
+  ### Step six: Model evaluation
+  
+We evaluate posterior recovery by comparing median of posteiror samples of parameters with ground truth.
+
+```{r}
+# Parameter recovery check
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_posterior_estimator,
+  N = 1000
+)
+
+plot_cv_recovery(
+  posterior_samples,
+  trained_estimator = trained_posterior_estimator
+)
+```
+
+---
+  
+We assess model fit by generating simulated data using the median of posteiror samples of parameters and comparing them to the observed data.
+
+This allows us to evaluate whether the model reproduces RT distributions and choice proportions
+
+```{r}
+##############################
+# Posterior predictive check #
+##############################
+
+abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_posterior_estimator,
+  estimator_type = "posterior",
+  observed_df = observed_data,
+  Z = Z_observed,
+  posterior_dataset_id = 1,
+  posterior_n_samples = 1000,
+  rt_facet_x = c("choice"),
+  rt_facet_y = c(),
+  accuracy_x = "",
+  accuracy_facet_x = c(),
+  accuracy_facet_y = c()
+)
 ```
 
 This is the end of this example.
 
 ---
-
-This simple DDM example serves as a reference template for the rest of the tutorial. Once this workflow is clear, extending it to more complex models in eam mainly involves modifying the model components, while the overall inference pipeline remains unchanged.
+  
+  This simple DDM example serves as a reference template for the rest of the tutorial. Once this workflow is clear, extending it to more complex models in eam mainly involves modifying the model components, while the overall inference pipeline remains unchanged.
 
