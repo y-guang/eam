@@ -1,4 +1,8 @@
 {
+    "search.exclude": {
+        "**/docs": true,
+        "**/man": true
+    },
     "files.associations": {
         "atomic": "cpp",
         "bit": "cpp",
