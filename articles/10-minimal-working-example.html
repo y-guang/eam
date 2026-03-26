@@ -139,8 +139,8 @@ and
 <h3 id="description-of-the-model">Description of the model<a class="anchor" aria-label="anchor" href="#description-of-the-model"></a>
 </h3>
 <p>The details of this model is listed below:</p>
-<p><strong>Priors on global parameters</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>V</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.5</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ρ</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0.5</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><strong>Priors on global parameters</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>V</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0.5</mn><mo>,</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>ρ</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0.5</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 A_0 &amp;\sim \text{Uniform}(1, 5), \\
 V_0 &amp;\sim \text{Uniform}(0.5, 3), \\
@@ -148,8 +148,8 @@ ndt_0 &amp;\sim \text{Uniform}(0, 1), \\
 \rho_0 &amp;= 0.5 .
 \end{aligned}
 </annotation></semantics></math></p>
-<p><strong>Item-level parameterization</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>ρ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>ρ</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mtext mathvariant="normal">upper</mtext></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ρ</mi><msub><mi>A</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mtext mathvariant="normal">lower</mtext></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>−</mo><mi>ρ</mi><msub><mi>A</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>V</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>V</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><mi>t</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><strong>Item-level parameterization</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>ρ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>ρ</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mtext mathvariant="normal">upper</mtext></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ρ</mi><msub><mi>A</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>A</mi><mtext mathvariant="normal">lower</mtext></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mo>−</mo><mi>ρ</mi><msub><mi>A</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>V</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>V</mi><mn>0</mn></msub><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>n</mi><mi>d</mi><mi>t</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>n</mi><mi>d</mi><msub><mi>t</mi><mn>0</mn></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 \rho &amp;= \rho_0, \\
 A_{\text{upper}} &amp;= \rho A_0, \\
@@ -158,8 +158,8 @@ V &amp;= V_0, \\
 ndt &amp;= ndt_0 .
 \end{aligned}
 </annotation></semantics></math></p>
-<p><strong>Evidence accumulation dynamics</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>X</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>V</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>t</mi><mo>+</mo><mi>d</mi><mi>W</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>d</mi><mi>W</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>d</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<p><strong>Evidence accumulation dynamics</strong></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>X</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>V</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>t</mi><mo>+</mo><mi>d</mi><mi>W</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>d</mi><mi>W</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>d</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
 </annotation></semantics></math></p>
 <p>A decision is made when
@@ -181,6 +181,8 @@ RT = T_{\text{decision}} + ndt .
 <code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam/">eam</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rtdists/rtdists/" class="external-link">rtdists</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set a random seed for reproducibility</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -191,7 +193,7 @@ described above.</p>
 <span><span class="co"># Model specification #</span></span>
 <span><span class="co">#######################</span></span>
 <span><span class="co"># Define the number of accumulators</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">1</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
 <span><span class="co"># Set the number of accumulators in the model</span></span>
 <span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
@@ -205,22 +207,21 @@ described above.</p>
 <span>  <span class="co"># Drift rate</span></span>
 <span>  <span class="va">V_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Non-decision time</span></span>
-<span>  <span class="va">ndt_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="va">ndt_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Relative starting point</span></span>
 <span>  <span class="va">rho_0</span> <span class="op">~</span> <span class="fl">0.5</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specify the between-trial components (skipped here)</span></span>
-<span><span class="va">between_trial_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">between_trial_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specify the item-level parameters</span></span>
 <span><span class="va">item_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="co"># Relative starting point</span></span>
 <span>  <span class="va">rho</span> <span class="op">~</span> <span class="va">rho_0</span>,</span>
 <span>  <span class="co"># Decision boundary</span></span>
-<span>  <span class="va">A_upper</span> <span class="op">~</span> <span class="va">rho</span><span class="op">*</span><span class="op">(</span><span class="va">A_0</span><span class="op">)</span>, <span class="co"># upper </span></span>
-<span>  <span class="va">A_lower</span> <span class="op">~</span> <span class="op">-</span><span class="va">rho</span><span class="op">*</span><span class="op">(</span><span class="va">A_0</span><span class="op">)</span>, <span class="co"># lower</span></span>
+<span>  <span class="va">A_upper</span> <span class="op">~</span> <span class="va">rho</span> <span class="op">*</span> <span class="op">(</span><span class="va">A_0</span><span class="op">)</span>, <span class="co"># upper</span></span>
+<span>  <span class="va">A_lower</span> <span class="op">~</span> <span class="op">-</span><span class="va">rho</span> <span class="op">*</span> <span class="op">(</span><span class="va">A_0</span><span class="op">)</span>, <span class="co"># lower</span></span>
 <span>  <span class="co"># Drift rate</span></span>
 <span>  <span class="va">V</span> <span class="op">~</span> <span class="va">V_0</span>,</span>
 <span>  <span class="co"># Non-decision time</span></span>
@@ -233,7 +234,6 @@ described above.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<hr>
 </div>
 <div class="section level3">
 <h3 id="step-two-data-simulation">Step two: Data simulation<a class="anchor" aria-label="anchor" href="#step-two-data-simulation"></a>
@@ -253,7 +253,6 @@ represents a possible outcome implied by the assumed model.</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -273,72 +272,72 @@ represents a possible outcome implied by the assumed model.</p>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co">##################</span></span>
 <span><span class="co"># Run simulation #</span></span>
 <span><span class="co">##################</span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<hr>
 </div>
 <div class="section level3">
 <h3 id="step-three-load-observed-data">Step three: Load observed data<a class="anchor" aria-label="anchor" href="#step-three-load-observed-data"></a>
 </h3>
 <p>For observed data, we create a small dataset using the
 <strong>rtdists</strong> package, which provides fast simulators for
-standard DDM. Specifically, we simulate N=500 trials from a two-boundary
-DDM with fixed parameters
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">t0</annotation></semantics></math>)
-where a controls boundary separation,
+standard DDM. Specifically, we simulate <code>N = 500</code> trials from
+a two-boundary DDM with fixed parameters
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">t0</annotation></semantics></math>)
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+controls boundary separation,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>
 is the drift rate, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">t0</annotation></semantics></math>
 captures non-decision time.</p>
-<p>The function <em>rdiffusion()</em> returns response labels
-(“upper”/“lower”) and response times. For consistency with the data
-format produced by our simulation engine, we recode responses into a
-numeric choice variable (1 for the upper boundary and -1 for the lower
-boundary), and we add a condition_idx field to indicate that all trials
-belong to a single experimental condition</p>
+<p>The function <code>rdiffusion()</code> returns response labels
+(<code>"upper"</code>/<code>"lower"</code>) and response times. For
+consistency with the data format produced by our simulation engine, we
+recode responses into a numeric choice variable (1 for the upper
+boundary and -1 for the lower boundary), and we add a
+<code>condition_idx</code> field to indicate that all trials belong to a
+single experimental condition.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">############################</span></span>
 <span><span class="co"># Observed data generation #</span></span>
 <span><span class="co">############################</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rtdists/rtdists/" class="external-link">rtdists</a></span><span class="op">)</span></span>
-<span></span>
-<span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
 <span></span>
 <span><span class="va">pars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  a  <span class="op">=</span> <span class="fl">2.0</span>,   <span class="co"># Decision boundary</span></span>
-<span>  v  <span class="op">=</span> <span class="fl">2.0</span>,   <span class="co"># Drift rate</span></span>
+<span>  v  <span class="op">=</span> <span class="fl">1.0</span>,   <span class="co"># Drift rate</span></span>
 <span>  t0 <span class="op">=</span> <span class="fl">0.5</span>  <span class="co"># Non-decision time</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># rdiffusion() will return responses and RTs from a standard DDM </span></span>
+<span><span class="co"># rdiffusion() will return responses and RTs from a standard DDM</span></span>
 <span><span class="va">observed_data</span> <span class="op">&lt;-</span> <span class="fu">rdiffusion</span><span class="op">(</span>n <span class="op">=</span> <span class="va">N</span>, a <span class="op">=</span> <span class="va">pars</span><span class="op">$</span><span class="va">a</span>, v <span class="op">=</span> <span class="va">pars</span><span class="op">$</span><span class="va">v</span>, t0 <span class="op">=</span> <span class="va">pars</span><span class="op">$</span><span class="va">t0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Recode the data to be consistent with simulated data</span></span>
-<span><span class="va">observed_data</span><span class="op">$</span><span class="va">choice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">observed_data</span> <span class="op">$</span><span class="va">response</span> <span class="op">==</span> <span class="st">"upper"</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">observed_data</span><span class="op">$</span><span class="va">choice</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">observed_data</span><span class="op">$</span><span class="va">response</span> <span class="op">==</span> <span class="st">"upper"</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">observed_data</span><span class="op">$</span><span class="va">condition_idx</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></code></pre></div>
-<hr>
 </div>
+<div class="section level2">
+<h2 id="approximate-bayesian-computation-pipleline">Approximate Bayesian Computation Pipleline<a class="anchor" aria-label="anchor" href="#approximate-bayesian-computation-pipleline"></a>
+</h2>
 <div class="section level3">
 <h3 id="step-four-extract-summary-statistics">Step four: Extract summary statistics<a class="anchor" aria-label="anchor" href="#step-four-extract-summary-statistics"></a>
 </h3>
-<p>we define a summary pipeline that extracts two types of common
+<p>We define a summary pipeline that extracts two types of common
 summary statistics of the DDM data: (i) the accuracy and (ii) RT
 quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice
 category (1 vs. -1).</p>
 <p>We then apply the same summary procedure to every simulated dataset
-to obtain <em>simulation_sumstat</em>, and to the observed dataset to
-obtain <em>target_sumstat</em>. Finally, build_abc_input() aligns the
-simulated and observed summaries into a consistent structure.</p>
+to obtain <code>simulation_sumstat</code>, and to the observed dataset
+to obtain <code>target_sumstat</code>. Finally,
+<code><a href="../reference/build_abc_input.html">build_abc_input()</a></code> aligns the simulated and observed
+summaries into a consistent structure.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#####################</span></span>
 <span><span class="co"># abc model prepare #</span></span>
@@ -371,7 +370,7 @@ simulated and observed summaries into a consistent structure.</p>
 <span>  simulation_output <span class="op">=</span> <span class="va">sim_output</span>,</span>
 <span>  simulation_summary <span class="op">=</span> <span class="va">simulation_sumstat</span>,</span>
 <span>  target_summary     <span class="op">=</span> <span class="va">target_sumstat</span>,</span>
-<span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_0"</span>,<span class="st">"V_0"</span>,<span class="st">"ndt_0"</span><span class="op">)</span></span>
+<span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_0"</span>, <span class="st">"V_0"</span>, <span class="st">"ndt_0"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
@@ -384,14 +383,15 @@ Approximate Bayesian Computation (ABC).</p>
 <p>Specifically, we fit an ABC model by comparing the simulated summary
 statistics to the observed summary statistics. Then we retain (or
 reweight) parameter draws that best reproduce the observed summaries
-under a tolerance level (tol=0.05).</p>
-<p>Here we use a neural-net-adjusted ABC variant (method = “neuralnet”),
-which learns a flexible mapping from summary statistics to parameters to
-improve posterior approximation.</p>
+under a tolerance level (<code>tol = 0.05</code>).</p>
+<p>Here we use a regression-based-adjusted ABC variant
+(<code>method = "loclinear"</code>), which learns a flexible mapping
+from summary statistics to parameters to improve posterior
+approximation.</p>
 <p>These diagnostics help verify whether the posterior concentrates on
 plausible regions of the parameter space and whether the recovered
 parameters are consistent with the parameters in the
-<em>rdiffusion()</em> model.</p>
+<code>rdiffusion()</code> model.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">########################</span></span>
 <span><span class="co"># Parameter estimation #</span></span>
@@ -403,11 +403,9 @@ parameters are consistent with the parameters in the
 <span>  param  <span class="op">=</span> <span class="va">abc_input</span><span class="op">$</span><span class="va">param</span>,</span>
 <span>  sumstat<span class="op">=</span> <span class="va">abc_input</span><span class="op">$</span><span class="va">sumstat</span>,</span>
 <span>  tol    <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"neuralnet"</span></span>
+<span>  method <span class="op">=</span> <span class="st">"loclinear"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: All parameters are "none" transformed.</span></span>
-<span><span class="co">#&gt; 12345678910</span></span>
-<span><span class="co">#&gt; 12345678910</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: All parameters are "none" transformed.</span></span></code></pre></div>
 <hr>
 <p>After fitting, we summarize the posterior means/medians and 95%
 credible intervals and visualize the resulting posterior
@@ -422,9 +420,9 @@ distributions.</p>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   parameter      mean    median ci_lower_0.025 ci_upper_0.975</span></span>
-<span><span class="co">#&gt; 1       A_0 1.8527969 1.8472045      1.6285389      2.1260080</span></span>
-<span><span class="co">#&gt; 2       V_0 1.9133499 1.9342754      1.7349258      2.0046695</span></span>
-<span><span class="co">#&gt; 3     ndt_0 0.4854268 0.4860683      0.4370122      0.5083276</span></span>
+<span><span class="co">#&gt; 1       A_0 2.2699966 2.2522988      1.9978171      2.5227772</span></span>
+<span><span class="co">#&gt; 2       V_0 1.1104511 1.1080758      0.9895468      1.1966138</span></span>
+<span><span class="co">#&gt; 3     ndt_0 0.4130898 0.4182996      0.3370902      0.4748187</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_posterior_parameters.html">plot_posterior_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_fit</span>,</span>
@@ -439,15 +437,16 @@ distributions.</p>
 <h3 id="step-six-model-evaluation">Step six: Model evaluation<a class="anchor" aria-label="anchor" href="#step-six-model-evaluation"></a>
 </h3>
 <p>The next step is to evaluate parameter recovery for the model. To do
-so, we run <em>cv4abc()</em> as a cross-validation procedure.</p>
-<p>First, we specify the number of validation datasets (N=100). The
-function then randomly samples N conditions from the simulated summary
-statistics, treats their associated parameter values as known ground
-truth, and re-estimates the parameters using the fitted ABC object under
-the same tolerance level.</p>
-<p>Recovery performance is visualized using <em>plot_cv_recovery()</em>,
-which compares the estimated parameters with their true values across
-validation datasets.</p>
+so, we run <code>cv4abc()</code> as a cross-validation procedure.</p>
+<p>First, we specify the number of validation datasets
+(<code>N = 100</code>). The function then randomly samples
+<code>N</code> conditions from the simulated summary statistics, treats
+their associated parameter values as known ground truth, and
+re-estimates the parameters using the fitted ABC object under the same
+tolerance level.</p>
+<p>Recovery performance is visualized using
+<code><a href="../reference/plot_cv_recovery.html">plot_cv_recovery()</a></code>, which compares the estimated parameters
+with their true values across validation datasets.</p>
 <p>Good recovery is indicated by a high correlation between estimated
 and true parameters (good:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>≥</mo><mn>0.75</mn></mrow><annotation encoding="application/x-tex">r \ge 0.75</annotation></semantics></math>;
@@ -455,20 +454,29 @@ excellent:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>≥</mo><mn>0.90</mn></mrow><annotation encoding="application/x-tex">r \ge 0.90</annotation></semantics></math>)
 and by estimates clustering closely around the identity line with
 minimal residual dispersion.</p>
-<p>The resid_tol option trims extreme residuals (here retaining the
-central 99%), making the main recovery pattern easier to inspect.</p>
+<p>The <code>resid_tol</code> option trims extreme residuals (here
+retaining the central 99%), making the main recovery pattern easier to
+inspect.</p>
 <p>As shown, the three parameters exhibit excellent recovery.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Parameter recovery check</span></span>
+<span><span class="va">abc_cv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abc_cv.html">abc_cv</a></span><span class="op">(</span></span>
+<span>  abc_input <span class="op">=</span> <span class="va">abc_input</span>,</span>
+<span>  abc_result <span class="op">=</span> <span class="va">abc_fit</span>,</span>
+<span>  nval <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  tols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/plot_cv_recovery.html">plot_cv_recovery</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_cv</span>,</span>
 <span>  n_rows <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  n_cols <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  resid_tol <span class="op">=</span> <span class="fl">0.99</span>,</span>
 <span>  interactive <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error:</span></span>
-<span><span class="co">#&gt; ! object 'abc_cv' not found</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="10-minimal-workflow/unnamed-chunk-9-1.svg" alt="plot of chunk unnamed-chunk-9"><div class="figcaption">plot of chunk unnamed-chunk-9</div>
+</div>
 <hr>
 <p>As a final diagnostic, we perform a posterior predictive check to
 assess the adequacy of the fitted model.</p>
@@ -483,68 +491,21 @@ model is able to reproduce key empirical patterns.</p>
 <span><span class="co"># Posterior predictive check #</span></span>
 <span><span class="co">##############################</span></span>
 <span></span>
-<span><span class="co"># Use posterior median as input</span></span>
-<span><span class="va">prior_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="co"># Decision boundary</span></span>
-<span>  <span class="va">A_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span>,</span>
-<span>  <span class="co"># Drift rate</span></span>
-<span>  <span class="va">V_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">2.10</span>, <span class="fl">2.10</span><span class="op">)</span>,</span>
-<span>  <span class="co"># Non-decision time</span></span>
-<span>  <span class="va">ndt_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0.48</span>,<span class="fl">0.48</span><span class="op">)</span>,</span>
-<span>  <span class="co"># Relative starting point</span></span>
-<span>  <span class="va">rho_0</span> <span class="op">~</span> <span class="fl">0.5</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run the posteior simulation</span></span>
-<span><span class="va">sim_config_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_simulation_config.html">new_simulation_config</a></span><span class="op">(</span></span>
-<span>  prior_formulas <span class="op">=</span> <span class="va">prior_formulas</span>,</span>
-<span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
-<span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># automatic chunking</span></span>
-<span>  n_conditions <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  n_trials_per_condition <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>  n_items <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>  max_reached <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>  max_t <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  dt <span class="op">=</span> <span class="fl">0.001</span>,</span>
-<span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
-<span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
-<span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">t0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_post_output"</span><span class="op">)</span></span>
-<span><span class="va">sim_output_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span>config <span class="op">=</span> <span class="va">sim_config_post</span>, output_dir <span class="op">=</span> <span class="va">temp_output_path</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">post_output</span> <span class="op">&lt;-</span> <span class="va">sim_output_post</span></span>
-<span><span class="va">observed_data</span><span class="op">$</span><span class="va">item_idx</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span></span>
-<span><span class="co"># Plot the posterior rt and accuracy</span></span>
-<span><span class="fu"><a href="../reference/plot_rt.html">plot_rt</a></span><span class="op">(</span></span>
-<span>  <span class="va">post_output</span>,</span>
-<span>  <span class="va">observed_data</span>,</span>
-<span>  facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_idx"</span><span class="op">)</span>,</span>
-<span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/abc_posterior_predictive_check.html">abc_posterior_predictive_check</a></span><span class="op">(</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span>, <span class="co"># Simulation configuration</span></span>
+<span>  abc_result <span class="op">=</span> <span class="va">abc_fit</span>, <span class="co"># ABC fitting result</span></span>
+<span>  observed_df <span class="op">=</span> <span class="va">observed_data</span>,  <span class="co"># Observed dataset for comparison</span></span>
+<span>  n_conditions <span class="op">=</span> <span class="fl">1</span>, <span class="co"># Number of experimental conditions</span></span>
+<span>  n_trials_per_condition <span class="op">=</span> <span class="fl">500</span>, <span class="co"># Number of trials simulated per condition</span></span>
+<span>  rt_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"choice"</span><span class="op">)</span>, <span class="co"># RT plot facet (x)</span></span>
+<span>  rt_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,   <span class="co"># RT plot facet (y)</span></span>
+<span>  accuracy_x <span class="op">=</span> <span class="st">"rank_idx"</span>,  <span class="co"># Accuracy plot x-axis variable</span></span>
+<span>  accuracy_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># Accuracy plot facet (x)</span></span>
+<span>  accuracy_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Accuracy plot facet (y)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="10-minimal-workflow/unnamed-chunk-10-1.svg" alt="plot of chunk unnamed-chunk-10"><div class="figcaption">plot of chunk unnamed-chunk-10</div>
+<p><img src="10-minimal-workflow/unnamed-chunk-10-1.svg" alt="plot of chunk unnamed-chunk-10"><img src="10-minimal-workflow/unnamed-chunk-10-2.svg" alt="plot of chunk unnamed-chunk-10"></p>
+<hr>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="../reference/plot_accuracy.html">plot_accuracy</a></span><span class="op">(</span></span>
-<span>  <span class="va">post_output</span>,</span>
-<span>  <span class="va">observed_data</span>,</span>
-<span>  facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="plot-of-chunk-unnamed-chunk-10">
-<img src="10-minimal-workflow/unnamed-chunk-10-2.svg" alt="plot of chunk unnamed-chunk-10"><a class="anchor" aria-label="anchor" href="#plot-of-chunk-unnamed-chunk-10"></a>
-</h2>
 <div class="section level3">
 <h3 id="step-seven-optional-model-comparison">Step seven (optional): Model comparison<a class="anchor" aria-label="anchor" href="#step-seven-optional-model-comparison"></a>
 </h3>
@@ -560,7 +521,7 @@ us to isolate the contribution of this parameter assumption to overall
 model fit. Synthetic data are then generated under the alternative
 model, and the same summary statistics pipeline is applied to ensure
 comparability across models.</p>
-<p>Model comparison is conducted using the <em>abc_postpr()</em>
+<p>Model comparison is conducted using the <code><a href="../reference/abc_postpr.html">abc_postpr()</a></code>
 function, which estimates posterior model probabilities based on
 Approximate Bayesian Computation. Intuitively, this procedure assesses
 which model is more likely to have generated the observed data by
@@ -573,7 +534,7 @@ quantify the strength of evidence in favor of one model over another.
 Conventionally, Bayes factors greater than 3 or smaller than 1/3 are
 interpreted as providing substantial evidence for one model relative to
 its competitor.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Deliberately change the rho in the alternative model</span></span>
 <span><span class="va">prior_formulas_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="co"># Decision boundary</span></span>
@@ -581,7 +542,7 @@ its competitor.</p>
 <span>  <span class="co"># Drift rate</span></span>
 <span>  <span class="va">V_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Non-decision time</span></span>
-<span>  <span class="va">ndt_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="va">ndt_0</span> <span class="op">~</span> <span class="fu">distributional</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_uniform.html" class="external-link">dist_uniform</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="co"># Relative starting point</span></span>
 <span>  <span class="va">rho_0</span> <span class="op">~</span> <span class="fl">0.7</span></span>
 <span><span class="op">)</span></span>
@@ -589,12 +550,9 @@ its competitor.</p>
 <span><span class="va">sim_config_alt</span> <span class="op">&lt;-</span> <span class="va">sim_config</span></span>
 <span><span class="va">sim_config_alt</span><span class="op">$</span><span class="va">prior_formulas</span> <span class="op">&lt;-</span> <span class="va">prior_formulas_alt</span></span>
 <span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output_alt"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Run the simulation</span></span>
 <span><span class="va">sim_output_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config_alt</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config_alt</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics for the alternative model</span></span>
@@ -605,12 +563,11 @@ its competitor.</p>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">cond_df</span><span class="op">)</span> <span class="fu">summary_pipe</span><span class="op">(</span><span class="va">cond_df</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span></span>
 <span><span class="va">abc_input_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_abc_input.html">build_abc_input</a></span><span class="op">(</span></span>
 <span>  simulation_output <span class="op">=</span> <span class="va">sim_output_alt</span>,</span>
 <span>  simulation_summary <span class="op">=</span> <span class="va">simulation_sumstat_alt</span>,</span>
 <span>  target_summary <span class="op">=</span> <span class="va">target_sumstat</span>,</span>
-<span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_0"</span>,<span class="st">"V_0"</span>,<span class="st">"ndt_0"</span><span class="op">)</span></span>
+<span>  param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_0"</span>, <span class="st">"V_0"</span>, <span class="st">"ndt_0"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run the model comparison</span></span>
@@ -637,12 +594,524 @@ its competitor.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Proportion of accepted simulations (rejection):</span></span>
 <span><span class="co">#&gt; model_1 model_2 </span></span>
-<span><span class="co">#&gt;    0.59    0.41 </span></span>
+<span><span class="co">#&gt;     0.9     0.1 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bayes factors:</span></span>
 <span><span class="co">#&gt;         model_1 model_2</span></span>
-<span><span class="co">#&gt; model_1  1.0000  1.4390</span></span>
-<span><span class="co">#&gt; model_2  0.6949  1.0000</span></span></code></pre></div>
+<span><span class="co">#&gt; model_1  1.0000  9.0000</span></span>
+<span><span class="co">#&gt; model_2  0.1111  1.0000</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="amortized-bayesian-inference-pipleline-point-estimation">Amortized Bayesian Inference Pipleline (Point Estimation)<a class="anchor" aria-label="anchor" href="#amortized-bayesian-inference-pipleline-point-estimation"></a>
+</h2>
+<div class="section level3">
+<h3 id="step-four-prepare-input-features">Step four: Prepare input features<a class="anchor" aria-label="anchor" href="#step-four-prepare-input-features"></a>
+</h3>
+<p>We construct the input matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+from the observed data, containing trial-level choice and reaction time
+(RT).</p>
+<p>The same structure is used for both simulated and observed
+datasets.</p>
+<p>The function <code><a href="../reference/build_abi_input.html">build_abi_input()</a></code> then aligns simulated
+data and parameters into a consistent format for training.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#####################</span></span>
+<span><span class="co"># abc model prepare #</span></span>
+<span><span class="co">#####################</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Z_observed</span> <span class="op">&lt;-</span> <span class="va">observed_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>trial <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">trial</span>, <span class="va">choice</span>, <span class="va">rt</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">choice</span>, <span class="va">rt</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"value"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
+<span>    names_from <span class="op">=</span> <span class="va">trial</span>,</span>
+<span>    values_from <span class="op">=</span> <span class="va">value</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">Z_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">Z_observed</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">Z_observed</span></span>
+<span></span>
+<span><span class="co"># Align the simulated and observed summary statistics</span></span>
+<span><span class="va">abi_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_abi_input.html">build_abi_input</a></span><span class="op">(</span></span>
+<span>  <span class="va">sim_output</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A_0"</span>, <span class="st">"V_0"</span>, <span class="st">"ndt_0"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  Z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"choice"</span>,</span>
+<span>    <span class="st">"rt"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  train_ratio <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  n_test <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-five-fit-the-model-1">Step five: Fit the model<a class="anchor" aria-label="anchor" href="#step-five-fit-the-model-1"></a>
+</h3>
+<p>We train a neural estimator to learn the mapping from observed data
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+to model parameters
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+<p>Here we use a point estimator, which directly predicts parameter
+values from the input data.</p>
+<p>The input dimension <code>d = 2</code> corresponds to the two
+observed variables per trial (choice and RT). The DeepSet encoder maps a
+set of trials into a fixed-length representation, which is then
+transformed into parameter estimates.</p>
+<p>The output dimension equals the number of parameters
+(<code>p = 3</code>), with each parameter predicted by a dedicated
+output unit using a softplus activation to enforce valid (positive)
+values.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">########################</span></span>
+<span><span class="co"># Parameter estimation #</span></span>
+<span><span class="co">########################</span></span>
+<span></span>
+<span><span class="co"># Fit abi model</span></span>
+<span><span class="va">point_estimator</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">  d = 2    # dimension of data</span></span>
+<span><span class="st">  w = 32   # number of neurons in each hidden layer</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  # Layer to ensure valid estimates</span></span>
+<span><span class="st">  final_layer = Parallel(</span></span>
+<span><span class="st">      vcat,</span></span>
+<span><span class="st">      Dense(w, 1, softplus), #first parameter</span></span>
+<span><span class="st">      Dense(w, 1, softplus), #second parameter</span></span>
+<span><span class="st">      Dense(w, 1, softplus)  #third parameter </span></span>
+<span><span class="st">    )</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))</span></span>
+<span><span class="st">  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)</span></span>
+<span><span class="st">  deepset = DeepSet(psi, phi)</span></span>
+<span><span class="st">  estimator = PointEstimator(deepset)</span></span>
+<span><span class="st">"</span></span>
+<span></span>
+<span><span class="va">trained_point_estimator</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_train.html">abi_train</a></span><span class="op">(</span></span>
+<span>  estimator <span class="op">=</span> <span class="va">point_estimator</span>,</span>
+<span>  abi_input <span class="op">=</span> <span class="va">abi_input</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  stopping_epochs <span class="op">=</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<hr>
+<p>After training, we obtain point estimates of the parameters for the
+observed dataset.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Point estimation check</span></span>
+<span><span class="va">point_est</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_estimate.html">abi_estimate</a></span><span class="op">(</span></span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_point_estimator</span>,</span>
+<span>  Z <span class="op">=</span> <span class="va">Z_observed</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">point_est</span></span>
+<span><span class="co">#&gt;        estimate</span></span>
+<span><span class="co">#&gt; A_0   1.8943079</span></span>
+<span><span class="co">#&gt; V_0   1.0716629</span></span>
+<span><span class="co">#&gt; ndt_0 0.4800706</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-six-model-evaluation-1">Step six: Model evaluation<a class="anchor" aria-label="anchor" href="#step-six-model-evaluation-1"></a>
+</h3>
+<p>We evaluate parameter recovery using simulated datasets.</p>
+<p>The function <code><a href="../reference/abi_assess.html">abi_assess()</a></code> performs a validation
+procedure by:</p>
+<ol style="list-style-type: decimal">
+<li>sampling datasets with known parameters</li>
+<li>re-estimating parameters using the trained estimator</li>
+<li>comparing estimated vs true parameters</li>
+</ol>
+<p>Good recovery is indicated by high correlation between estimated and
+true values estimates concentrated around the identity line</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Parameter recovery check</span></span>
+<span><span class="va">assessment</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_assess.html">abi_assess</a></span><span class="op">(</span></span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_point_estimator</span>,</span>
+<span>  estimator_name <span class="op">=</span> <span class="st">"NBE"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;  Running NBE...</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_cv_recovery.html">plot_cv_recovery</a></span><span class="op">(</span><span class="va">assessment</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="10-minimal-workflow/unnamed-chunk-15-1.svg" alt="plot of chunk unnamed-chunk-15"><div class="figcaption">plot of chunk unnamed-chunk-15</div>
+</div>
+<hr>
+<p>We assess model fit by generating simulated data using the estimated
+parameters and comparing them to the observed data.</p>
+<p>This allows us to evaluate whether the model reproduces RT
+distributions and choice proportions</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">##############################</span></span>
+<span><span class="co"># Posterior predictive check #</span></span>
+<span><span class="co">##############################</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/abi_posterior_predictive_check.html">abi_posterior_predictive_check</a></span><span class="op">(</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_point_estimator</span>,</span>
+<span>  estimator_type <span class="op">=</span> <span class="st">"point"</span>,</span>
+<span>  observed_df <span class="op">=</span> <span class="va">observed_data</span>,</span>
+<span>  Z <span class="op">=</span> <span class="va">Z_observed</span>,</span>
+<span>  rt_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"choice"</span><span class="op">)</span>,</span>
+<span>  rt_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  accuracy_x <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  accuracy_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  accuracy_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="10-minimal-workflow/unnamed-chunk-16-1.svg" alt="plot of chunk unnamed-chunk-16"><img src="10-minimal-workflow/unnamed-chunk-16-2.svg" alt="plot of chunk unnamed-chunk-16"></p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="amortized-bayesian-inference-pipleline-posteiror-sample-estimation">Amortized Bayesian Inference Pipleline (Posteiror Sample
+Estimation)<a class="anchor" aria-label="anchor" href="#amortized-bayesian-inference-pipleline-posteiror-sample-estimation"></a>
+</h2>
+<div class="section level3">
+<h3 id="step-four-prepare-input-features-1">Step four: Prepare input features<a class="anchor" aria-label="anchor" href="#step-four-prepare-input-features-1"></a>
+</h3>
+<p>(Same as above)</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#####################</span></span>
+<span><span class="co"># abc model prepare #</span></span>
+<span><span class="co">#####################</span></span>
+<span></span>
+<span><span class="va">Z_observed</span> <span class="op">&lt;-</span> <span class="va">observed_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>trial <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">trial</span>, <span class="va">choice</span>, <span class="va">rt</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">choice</span>, <span class="va">rt</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"value"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
+<span>    names_from <span class="op">=</span> <span class="va">trial</span>,</span>
+<span>    values_from <span class="op">=</span> <span class="va">value</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">Z_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">Z_observed</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">Z_observed</span></span>
+<span><span class="co">#&gt;              1         2       3         4        5       6         7        8        9        10       11        12      13       14       15       16        17        18</span></span>
+<span><span class="co">#&gt; [1,] -1.000000 -1.000000 1.00000 1.0000000 1.000000 1.00000 1.0000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 1.00000 1.000000 1.000000 1.000000 1.0000000 -1.000000</span></span>
+<span><span class="co">#&gt; [2,]  2.171105  2.874676 1.44698 0.8864481 2.104167 1.33265 0.6388183 1.321551 1.614517 0.7877165 1.164669 0.9488214 1.19743 2.197525 1.281529 1.478063 0.8485673  1.444674</span></span>
+<span><span class="co">#&gt;            19      20        21        22        23        24       25       26        27        28        29        30       31       32       33        34       35       36</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.00000 1.0000000 -1.000000 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.000000 -1.000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.177508 1.28913 0.8735773  1.376117 0.9266239 0.7257632 1.024721 1.133488 0.9487213 0.9283505 0.9354072 0.8800024 1.808904 1.053198 1.056073  1.129841 1.827052 1.497014</span></span>
+<span><span class="co">#&gt;            37        38       39       40        41       42       43         44        45       46        47      48        49        50       51        52      53       54</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.0000000 1.000000 1.000000 1.0000000 1.000000 1.000000 -1.0000000 1.0000000 1.000000 1.0000000 1.00000 1.0000000 1.0000000 1.000000 1.0000000 1.00000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.396684 0.8734456 1.280448 1.188907 0.7834405 1.435677 1.175416  0.6914361 0.9424297 1.421005 0.7228091 2.26064 0.9909233 0.7132939 1.560829 0.7846147 1.20881 1.027558</span></span>
+<span><span class="co">#&gt;            55       56       57       58       59       60       61       62     63        64       65       66       67        68        69       70       71       72</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000 1.0000000 1.000000 -1.00000 1.000000 -1.000000 1.0000000 1.000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.144491 1.394592 1.090286 1.542756 2.785503 1.710847 0.689834 1.833253 1.0741 0.7449658 1.613473  1.04188 1.601041  1.772935 0.6690262 1.154254 1.698059 1.331169</span></span>
+<span><span class="co">#&gt;            73      74        75        76       77       78       79      80       81        82        83       84       85         86       87        88       89       90</span></span>
+<span><span class="co">#&gt; [1,] -1.00000 1.00000 1.0000000 1.0000000 1.000000 1.000000 1.000000 1.00000 1.000000 1.0000000 -1.000000 1.000000 1.000000 -1.0000000 1.000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,]  1.78418 2.47989 0.6441206 0.6794174 2.486648 1.379806 1.919547 1.88357 1.362574 0.9551419  1.707419 1.061504 1.679752  0.9527299 1.929886 0.8376262 1.276849 1.849208</span></span>
+<span><span class="co">#&gt;            91        92        93       94      95       96        97        98        99       100     101      102     103      104      105      106       107      108</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.0000000 -1.000000 1.000000 1.00000 1.000000 1.0000000 1.0000000 1.0000000 1.0000000 1.00000 1.000000 1.00000 1.000000 1.000000 1.000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.101254 0.6405702  1.011246 1.026176 1.54184 1.145256 0.6916204 0.9331501 0.7351867 0.9923604 2.53258 1.655325 2.00114 1.023542 2.099968 1.903528 0.9713177 2.103198</span></span>
+<span><span class="co">#&gt;           109       110      111       112       113      114        115       116      117       118       119       120      121      122       123      124      125</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.0000000 1.000000 1.0000000 -1.000000 1.000000 -1.0000000 1.0000000 1.000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 2.449127 0.7708309 3.065289 0.6519502  1.064743 1.377894  0.9729573 0.8147972 1.038793 0.8746318 0.8873199 0.7393402 1.229818 1.053337 0.6293164 1.667285 2.764431</span></span>
+<span><span class="co">#&gt;           126      127     128       129       130       131      132      133      134      135       136      137      138      139       140      141       142        143</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.00000 -1.000000 1.0000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.0000000 1.000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 -1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 2.311841 1.578316 1.33598  1.778064 0.7161018 0.7538894 1.367332 2.740091 1.549038 1.689145 0.9247032 1.170792 1.058673 1.975783 0.7590616 1.032626 0.9819436  0.6598818</span></span>
+<span><span class="co">#&gt;           144       145      146      147      148      149     150       151      152      153      154      155       156      157       158      159       160      161</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 -1.000000 1.000000 1.000000 1.000000 1.000000 1.00000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.0000000 1.000000 -1.000000 1.000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.284501  1.032159 1.240627 1.167132 0.892737 1.264202 2.38195 0.8716598 0.640808 1.032892 2.845445 1.456882 0.8551658 2.294695  1.255088 2.408252 0.9186813 1.281062</span></span>
+<span><span class="co">#&gt;           162      163      164       165       166      167      168      169      170      171       172      173      174       175       176       177      178      179</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 -1.000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000 1.000000 1.000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.333723 1.324158 1.285586  1.385572 0.8907498 2.140454 1.101117 1.127781 2.016101 1.754016 0.5877378 1.562053 2.404201 0.7844429 0.8287129 0.6761349 1.081599 3.912172</span></span>
+<span><span class="co">#&gt;            180       181       182      183       184      185       186      187       188       189      190       191      192       193      194      195      196</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 -1.000000 1.0000000 1.000000 1.0000000 1.000000 1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.0000000 1.000000 1.0000000 1.000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.7510748  1.564603 0.6625367 2.455425 0.7986929 2.407532 0.6606578 0.807257 0.9885072 0.6464956 1.091372 0.8836803 2.196935 0.9983479 2.151196 1.012072 1.557134</span></span>
+<span><span class="co">#&gt;            197      198       199       200      201      202       203      204       205     206      207        208      209       210       211      212      213       214</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 1.00000 1.000000 -1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.000000 -1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.8634909 1.160625 0.9217073 0.7398062 1.272722 1.282197 0.7214134 1.092846 0.8815712 1.46154 0.969916  0.7506519 3.548463 0.9084313 0.6935972 1.740247 1.263457  2.879552</span></span>
+<span><span class="co">#&gt;          215      216       217      218      219       220      221      222     223      224      225      226      227      228      229      230      231       232</span></span>
+<span><span class="co">#&gt; [1,] 1.00000 1.000000 -1.000000 1.000000 -1.00000 -1.000000 1.000000 1.000000 1.00000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 1.01567 2.078707  1.187146 1.203234  1.13311  2.069356 1.393215 1.760605 1.47562 1.414235 1.485232 1.399999 1.160262 2.019206 1.049536 1.765198 1.109654 0.8463151</span></span>
+<span><span class="co">#&gt;           233       234      235     236      237        238      239       240      241       242        243      244     245       246       247       248       249      250</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.0000000 1.000000 1.00000 1.000000 -1.0000000 1.000000 1.0000000 1.000000 1.0000000 -1.0000000 1.000000 1.00000 1.0000000 1.0000000 1.0000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.116656 0.9495003 2.014012 1.00382 1.808198  0.6230589 2.221166 0.7887451 0.820566 0.8040881  0.6259442 0.948881 1.11428 0.9692438 0.8186694 0.8688432 0.8744195 1.167972</span></span>
+<span><span class="co">#&gt;           251      252      253      254       255        256       257      258    259        260      261      262      263       264      265       266       267      268</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 1.000000 1.0000000 -1.0000000 1.0000000 1.000000 1.0000 -1.0000000 1.000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.382774 1.280165 1.211849 1.232794 0.9439029  0.8707468 0.7674448 1.342896 1.1276  0.9466259 2.177586 1.116866 1.066886 0.8168489 1.187518 0.9507882 0.7283724 1.168839</span></span>
+<span><span class="co">#&gt;          269       270       271      272       273       274      275        276       277       278       279      280       281       282      283      284      285</span></span>
+<span><span class="co">#&gt; [1,] 1.00000 1.0000000 1.0000000 1.000000 1.0000000 -1.000000 1.000000 -1.0000000 1.0000000 1.0000000 1.0000000 1.000000 1.0000000 1.0000000 -1.00000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.39417 0.8598649 0.7591527 2.745616 0.6791561  1.269233 1.206282  0.7699126 0.9290608 0.8258111 0.8501713 0.682595 0.7216251 0.8400356  2.13129 1.860337 1.182481</span></span>
+<span><span class="co">#&gt;           286      287      288       289       290      291       292      293       294      295   296       297      298       299     300       301      302       303</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 1.0000000 1.0000000 1.000000 1.0000000 1.000000 1.0000000 1.000000 1.000 1.0000000 1.000000 1.0000000 1.00000 1.0000000 -1.00000 1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 2.444108 1.157153 2.415481 0.6086982 0.7959772 1.179815 0.9229961 1.412539 0.7180063 1.352101 1.324 0.9578317 1.194554 0.8953829 1.44325 0.9484618  1.51117 0.7367798</span></span>
+<span><span class="co">#&gt;           304     305      306       307     308      309       310       311       312       313       314       315      316      317       318     319      320       321</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.00000 1.000000 1.0000000 1.00000 1.000000 1.0000000 1.0000000 -1.000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.00000 1.000000 1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 1.282777 0.93147 1.887203 0.9043405 1.13123 1.246261 0.9256799 0.7245828  1.127903 0.8995528 0.9193974 0.7233379 1.690826 1.088046 0.6770533 1.29428 0.770538 0.7029926</span></span>
+<span><span class="co">#&gt;           322        323       324       325       326      327       328      329      330       331      332        333      334       335       336      337      338</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 -1.0000000 1.0000000 1.0000000 1.0000000 1.000000 -1.000000 1.000000 1.000000 1.0000000 1.000000 -1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.350878  0.7846401 0.7381628 0.6859322 0.9523072 1.054655  1.245278 3.512405 1.157403 0.9583143 1.003173  0.6885915 2.059891 0.7801923 0.8408835 1.104157 0.671773</span></span>
+<span><span class="co">#&gt;            339       340      341      342       343      344      345      346      347      348      349       350       351      352       353       354        355      356</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000 1.0000000 1.000000 1.0000000 1.0000000 -1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.6246503 0.9978668 1.527861 1.495263 0.7188819 0.961681 1.281087 2.811163 1.710022 4.873104 1.000689 0.6993053 0.8226579 1.767739 0.7198912 0.9097814  0.7937842 1.312871</span></span>
+<span><span class="co">#&gt;          357      358      359       360      361      362      363      364       365       366      367       368       369      370       371       372      373      374</span></span>
+<span><span class="co">#&gt; [1,] 1.00000 1.000000 1.000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.0000000 1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.85509 1.011745 1.169127 0.7262406 1.671659 1.220343 0.910886 1.952213 0.7327799 0.8989502 1.098039 0.7237378 0.8704998 3.401873 0.8084441 0.9822333 1.206652 1.404113</span></span>
+<span><span class="co">#&gt;           375      376      377      378       379       380       381      382      383      384      385       386        387      388      389      390      391       392</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 1.000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.0000000 -1.0000000 1.000000 1.000000 1.000000 1.000000 -1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.354496 1.793682 1.026665 0.948196 0.7591575 0.9620569 0.8800904 1.663455 1.418435 1.967878 1.739268 0.7007601  0.6403291 1.504143 1.086382 1.055498 1.323515  1.189111</span></span>
+<span><span class="co">#&gt;           393       394       395        396        397      398      399      400       401      402       403      404      405       406     407      408       409      410</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.0000000 1.0000000 -1.0000000 -1.0000000 1.000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 1.000000 1.000000 1.0000000 1.00000 1.000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 1.304705 0.6866777 0.7719847  0.8991733  0.7268541 0.954504 2.409572 3.667136 0.9494891 1.348096 0.8591081 1.001898 1.514299 0.8447454 2.17236 1.374693 0.6429888 1.689681</span></span>
+<span><span class="co">#&gt;            411      412      413      414        415       416      417      418      419       420       421       422      423      424     425      426      427       428</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 1.000000 1.000000 1.000000 -1.0000000 1.0000000 1.000000 1.000000 1.000000 1.0000000 1.0000000 -1.000000 1.000000 1.000000 1.00000 1.000000 1.000000 1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 0.8353193 1.006846 2.255397 1.226885  0.8733312 0.9386368 6.125813 2.095148 2.025008 0.6939201 0.7988952  2.226658 3.334596 1.144079 1.11965 1.988281 2.475565 0.7577963</span></span>
+<span><span class="co">#&gt;           429      430      431      432      433        434      435      436      437    438      439      440       441        442       443      444       445      446</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 1.000000 1.000000 -1.0000000 1.000000 1.000000 1.000000 1.0000 1.000000 1.000000 1.0000000 -1.0000000 1.0000000 1.000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.670837 1.644549 2.341194 1.220665 1.881162  0.7393318 1.527224 1.384478 1.725954 1.6105 1.140011 1.104968 0.6663688  0.8058028 0.8065822 1.507353 0.8804365 0.819616</span></span>
+<span><span class="co">#&gt;            447       448       449       450      451      452       453     454       455      456       457      458      459       460      461       462      463      464</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.0000000 1.00000 1.0000000 1.000000 -1.000000 1.000000 1.000000 1.0000000 1.000000 1.0000000 1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.9863109 0.8416264 0.7088332 0.9078987 1.202899 1.349974 0.9713308 1.14443 0.6104773 1.586141  1.989642 1.143576 1.106855 0.6553859 1.113811 0.8540619 2.247459 1.116734</span></span>
+<span><span class="co">#&gt;           465      466      467        468      469       470       471      472      473      474      475       476        477      478       479       480        481</span></span>
+<span><span class="co">#&gt; [1,] 1.000000 1.000000 1.000000 -1.0000000 1.000000 1.0000000 1.0000000 1.000000 1.000000 1.000000 1.000000 1.0000000 -1.0000000 1.000000 1.0000000 1.0000000 -1.0000000</span></span>
+<span><span class="co">#&gt; [2,] 1.141253 2.003553 1.047106  0.7945936 1.690737 0.7012102 0.8670147 1.933902 1.725109 0.822506 1.557583 0.8392137  0.7639521 1.035096 0.7755938 0.7584468  0.7407887</span></span>
+<span><span class="co">#&gt;            482       483       484       485      486      487       488      489      490       491       492       493      494      495      496       497      498</span></span>
+<span><span class="co">#&gt; [1,] 1.0000000 1.0000000 -1.000000 -1.000000 1.000000 1.000000 1.0000000 1.000000 1.000000 1.0000000 1.0000000 1.0000000 1.000000 1.000000 1.000000 1.0000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,] 0.6044737 0.7125738  1.469313  1.050444 1.215092 1.893114 0.6049086 1.145198 1.733569 0.9138159 0.8729534 0.7427295 1.010904 1.009906 0.873269 0.9532307 1.025469</span></span>
+<span><span class="co">#&gt;            499      500</span></span>
+<span><span class="co">#&gt; [1,] -1.000000 1.000000</span></span>
+<span><span class="co">#&gt; [2,]  1.174725 1.471836</span></span>
+<span></span>
+<span><span class="co"># Align the simulated and observed summary statistics</span></span>
+<span><span class="va">abi_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/build_abi_input.html">build_abi_input</a></span><span class="op">(</span></span>
+<span>  <span class="va">sim_output</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"A_0"</span>, <span class="st">"V_0"</span>, <span class="st">"ndt_0"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  Z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"choice"</span>,</span>
+<span>    <span class="st">"rt"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  train_ratio <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  n_test <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-five-fit-the-model-2">Step five: Fit the model<a class="anchor" aria-label="anchor" href="#step-five-fit-the-model-2"></a>
+</h3>
+<p>Instead of predicting a single point estimate, we learn the full
+posterior distribution.</p>
+<p>The input dimension <code>d = 2</code> corresponds to the two
+observed variables per trial (choice and RT).</p>
+<p>The DeepSet encoder maps a set of trials into a fixed-length
+representation.</p>
+<p>The output dimension equals the number of parameters
+(<code>p = 3</code>).</p>
+<p>Instead of producing point estimates, a normalizing flow is used to
+generate samples from the posterior distribution over parameters.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">########################</span></span>
+<span><span class="co"># Parameter estimation #</span></span>
+<span><span class="co">########################</span></span>
+<span></span>
+<span><span class="co"># Fit abi model</span></span>
+<span><span class="va">posterior_estimator</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">  d = 2    # dimension of each replicate</span></span>
+<span><span class="st">  w = 32   # number of neurons in each hidden layer</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  # Layer to ensure valid estimates</span></span>
+<span><span class="st">  final_layer = Parallel(</span></span>
+<span><span class="st">      vcat,</span></span>
+<span><span class="st">      Dense(w, 1, softplus),</span></span>
+<span><span class="st">      Dense(w, 1, softplus),</span></span>
+<span><span class="st">      Dense(w, 1, softplus)</span></span>
+<span><span class="st">    )</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))</span></span>
+<span><span class="st">  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)</span></span>
+<span><span class="st">  deepset = DeepSet(psi, phi)</span></span>
+<span><span class="st">  w = 3</span></span>
+<span><span class="st">  q = NormalisingFlow(w, w)</span></span>
+<span><span class="st">  estimator = PosteriorEstimator(q, deepset)</span></span>
+<span><span class="st">"</span></span>
+<span></span>
+<span><span class="va">trained_posterior_estimator</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_train.html">abi_train</a></span><span class="op">(</span></span>
+<span>  estimator <span class="op">=</span> <span class="va">posterior_estimator</span>,</span>
+<span>  abi_input <span class="op">=</span> <span class="va">abi_input</span>,</span>
+<span>  epochs <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  stopping_epochs <span class="op">=</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Computing the initial validation risk... Initial validation risk = 21.822495</span></span>
+<span><span class="co">#&gt; Computing the initial training risk... Initial training risk = 21.882341</span></span>
+<span><span class="co">#&gt; Epoch: 1  Training risk: 5.609  Validation risk: 3.735  Learning rate: 1.00E-03  Epoch time: 33.25 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 2  Training risk: 3.16  Validation risk: 2.883  Learning rate: 1.00E-03  Epoch time: 0.643 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 3  Training risk: 2.732  Validation risk: 2.419  Learning rate: 1.00E-03  Epoch time: 1.245 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 4  Training risk: 1.877  Validation risk: 1.254  Learning rate: 9.99E-04  Epoch time: 0.645 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 5  Training risk: 1.589  Validation risk: 0.956  Learning rate: 9.98E-04  Epoch time: 1.208 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 6  Training risk: 0.9  Validation risk: 1.091  Learning rate: 9.96E-04  Epoch time: 0.68 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 7  Training risk: 0.604  Validation risk: 0.908  Learning rate: 9.94E-04  Epoch time: 0.571 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 8  Training risk: 0.508  Validation risk: 0.12  Learning rate: 9.91E-04  Epoch time: 1.216 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 9  Training risk: 0.104  Validation risk: 0.164  Learning rate: 9.88E-04  Epoch time: 0.715 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 10  Training risk: 0.002  Validation risk: 0.415  Learning rate: 9.84E-04  Epoch time: 0.577 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 11  Training risk: 0.057  Validation risk: -0.327  Learning rate: 9.80E-04  Epoch time: 1.221 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 12  Training risk: -0.005  Validation risk: -0.136  Learning rate: 9.76E-04  Epoch time: 0.732 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 13  Training risk: -0.255  Validation risk: 0.025  Learning rate: 9.70E-04  Epoch time: 0.786 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 14  Training risk: -0.087  Validation risk: -0.271  Learning rate: 9.65E-04  Epoch time: 0.705 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 15  Training risk: -0.315  Validation risk: -0.114  Learning rate: 9.59E-04  Epoch time: 1.22 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 16  Training risk: -0.436  Validation risk: -0.276  Learning rate: 9.52E-04  Epoch time: 0.696 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 17  Training risk: -0.555  Validation risk: -0.603  Learning rate: 9.46E-04  Epoch time: 0.599 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 18  Training risk: -0.482  Validation risk: -0.006  Learning rate: 9.38E-04  Epoch time: 1.2 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 19  Training risk: -0.409  Validation risk: -0.205  Learning rate: 9.30E-04  Epoch time: 0.7 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 20  Training risk: -0.249  Validation risk: -0.283  Learning rate: 9.22E-04  Epoch time: 0.7 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 21  Training risk: -0.431  Validation risk: -0.13  Learning rate: 9.14E-04  Epoch time: 0.615 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 22  Training risk: -0.464  Validation risk: -0.598  Learning rate: 9.05E-04  Epoch time: 1.255 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 23  Training risk: -0.546  Validation risk: -0.492  Learning rate: 8.95E-04  Epoch time: 0.692 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 24  Training risk: -0.621  Validation risk: 0.178  Learning rate: 8.85E-04  Epoch time: 0.584 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 25  Training risk: -0.64  Validation risk: -0.595  Learning rate: 8.75E-04  Epoch time: 0.642 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 26  Training risk: -0.592  Validation risk: -0.297  Learning rate: 8.64E-04  Epoch time: 0.603 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 27  Training risk: -0.571  Validation risk: -0.438  Learning rate: 8.54E-04  Epoch time: 1.17 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 28  Training risk: -0.687  Validation risk: -0.818  Learning rate: 8.42E-04  Epoch time: 0.719 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 29  Training risk: -0.825  Validation risk: -0.423  Learning rate: 8.31E-04  Epoch time: 0.647 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 30  Training risk: -0.735  Validation risk: -0.399  Learning rate: 8.19E-04  Epoch time: 0.562 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 31  Training risk: -0.758  Validation risk: -0.273  Learning rate: 8.06E-04  Epoch time: 1.235 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 32  Training risk: -0.8  Validation risk: -0.732  Learning rate: 7.94E-04  Epoch time: 0.678 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 33  Training risk: -0.917  Validation risk: -0.714  Learning rate: 7.81E-04  Epoch time: 0.607 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 34  Training risk: -0.576  Validation risk: -0.515  Learning rate: 7.68E-04  Epoch time: 0.557 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 35  Training risk: -0.812  Validation risk: -0.796  Learning rate: 7.55E-04  Epoch time: 1.221 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 36  Training risk: -0.969  Validation risk: -0.112  Learning rate: 7.41E-04  Epoch time: 0.671 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 37  Training risk: -0.842  Validation risk: -0.588  Learning rate: 7.27E-04  Epoch time: 0.669 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 38  Training risk: -1.013  Validation risk: -0.88  Learning rate: 7.13E-04  Epoch time: 0.702 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 39  Training risk: -0.993  Validation risk: -0.837  Learning rate: 6.99E-04  Epoch time: 0.592 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 40  Training risk: -1.089  Validation risk: -0.855  Learning rate: 6.84E-04  Epoch time: 1.252 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 41  Training risk: -1.034  Validation risk: -0.851  Learning rate: 6.69E-04  Epoch time: 0.7 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 42  Training risk: -1.03  Validation risk: -0.883  Learning rate: 6.55E-04  Epoch time: 0.679 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 43  Training risk: -0.953  Validation risk: -0.697  Learning rate: 6.39E-04  Epoch time: 0.621 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 44  Training risk: -1.064  Validation risk: -0.927  Learning rate: 6.24E-04  Epoch time: 1.327 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 45  Training risk: -0.975  Validation risk: -0.756  Learning rate: 6.09E-04  Epoch time: 0.803 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 46  Training risk: -1.087  Validation risk: -0.545  Learning rate: 5.94E-04  Epoch time: 0.756 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 47  Training risk: -0.929  Validation risk: -0.953  Learning rate: 5.78E-04  Epoch time: 0.851 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 48  Training risk: -1.034  Validation risk: -0.994  Learning rate: 5.63E-04  Epoch time: 0.716 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 49  Training risk: -1.124  Validation risk: -1.017  Learning rate: 5.47E-04  Epoch time: 1.452 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 50  Training risk: -1.11  Validation risk: -0.916  Learning rate: 5.31E-04  Epoch time: 0.842 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 51  Training risk: -1.072  Validation risk: -1.009  Learning rate: 5.16E-04  Epoch time: 0.768 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 52  Training risk: -1.073  Validation risk: -0.629  Learning rate: 5.00E-04  Epoch time: 0.739 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 53  Training risk: -1.098  Validation risk: -0.999  Learning rate: 4.84E-04  Epoch time: 1.447 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 54  Training risk: -1.14  Validation risk: -0.85  Learning rate: 4.69E-04  Epoch time: 0.788 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 55  Training risk: -1.034  Validation risk: -0.873  Learning rate: 4.53E-04  Epoch time: 0.774 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 56  Training risk: -1.17  Validation risk: -0.857  Learning rate: 4.37E-04  Epoch time: 1.306 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 57  Training risk: -1.164  Validation risk: -0.954  Learning rate: 4.22E-04  Epoch time: 0.81 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 58  Training risk: -1.233  Validation risk: -0.984  Learning rate: 4.06E-04  Epoch time: 0.751 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 59  Training risk: -1.323  Validation risk: -0.677  Learning rate: 3.91E-04  Epoch time: 0.701 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 60  Training risk: -1.298  Validation risk: -1.024  Learning rate: 3.76E-04  Epoch time: 1.374 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 61  Training risk: -1.225  Validation risk: -1.002  Learning rate: 3.61E-04  Epoch time: 0.854 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 62  Training risk: -1.267  Validation risk: -0.81  Learning rate: 3.45E-04  Epoch time: 0.725 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 63  Training risk: -1.276  Validation risk: -1.072  Learning rate: 3.31E-04  Epoch time: 1.301 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 64  Training risk: -1.322  Validation risk: -0.997  Learning rate: 3.16E-04  Epoch time: 0.835 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 65  Training risk: -1.305  Validation risk: -0.946  Learning rate: 3.01E-04  Epoch time: 0.742 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 66  Training risk: -1.298  Validation risk: -0.987  Learning rate: 2.87E-04  Epoch time: 0.677 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 67  Training risk: -1.241  Validation risk: -1.054  Learning rate: 2.73E-04  Epoch time: 1.382 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 68  Training risk: -1.402  Validation risk: -1.045  Learning rate: 2.59E-04  Epoch time: 0.833 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 69  Training risk: -1.436  Validation risk: -0.911  Learning rate: 2.45E-04  Epoch time: 0.678 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 70  Training risk: -1.393  Validation risk: -0.718  Learning rate: 2.32E-04  Epoch time: 1.339 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 71  Training risk: -1.386  Validation risk: -0.981  Learning rate: 2.19E-04  Epoch time: 0.833 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 72  Training risk: -1.384  Validation risk: -1.099  Learning rate: 2.06E-04  Epoch time: 0.795 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 73  Training risk: -1.378  Validation risk: -0.95  Learning rate: 1.94E-04  Epoch time: 0.785 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 74  Training risk: -1.462  Validation risk: -1.022  Learning rate: 1.81E-04  Epoch time: 1.494 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 75  Training risk: -1.439  Validation risk: -0.782  Learning rate: 1.69E-04  Epoch time: 0.866 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 76  Training risk: -1.449  Validation risk: -1.05  Learning rate: 1.58E-04  Epoch time: 0.761 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 77  Training risk: -1.489  Validation risk: -1.011  Learning rate: 1.46E-04  Epoch time: 1.47 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 78  Training risk: -1.489  Validation risk: -0.966  Learning rate: 1.36E-04  Epoch time: 0.897 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 79  Training risk: -1.446  Validation risk: -0.861  Learning rate: 1.25E-04  Epoch time: 1.028 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 80  Training risk: -1.503  Validation risk: -0.933  Learning rate: 1.15E-04  Epoch time: 0.816 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 81  Training risk: -1.529  Validation risk: -0.963  Learning rate: 1.05E-04  Epoch time: 1.522 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 82  Training risk: -1.441  Validation risk: -0.996  Learning rate: 9.55E-05  Epoch time: 0.892 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 83  Training risk: -1.462  Validation risk: -1.103  Learning rate: 8.65E-05  Epoch time: 0.808 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 84  Training risk: -1.518  Validation risk: -0.807  Learning rate: 7.78E-05  Epoch time: 1.538 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 85  Training risk: -1.526  Validation risk: -1.063  Learning rate: 6.96E-05  Epoch time: 0.995 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 86  Training risk: -1.534  Validation risk: -0.902  Learning rate: 6.18E-05  Epoch time: 0.901 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 87  Training risk: -1.549  Validation risk: -1.066  Learning rate: 5.45E-05  Epoch time: 0.789 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 88  Training risk: -1.559  Validation risk: -0.93  Learning rate: 4.76E-05  Epoch time: 1.525 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 89  Training risk: -1.558  Validation risk: -1.038  Learning rate: 4.11E-05  Epoch time: 0.813 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 90  Training risk: -1.575  Validation risk: -0.91  Learning rate: 3.51E-05  Epoch time: 0.825 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 91  Training risk: -1.555  Validation risk: -0.88  Learning rate: 2.96E-05  Epoch time: 1.315 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 92  Training risk: -1.568  Validation risk: -0.958  Learning rate: 2.45E-05  Epoch time: 0.799 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 93  Training risk: -1.563  Validation risk: -0.935  Learning rate: 1.99E-05  Epoch time: 0.666 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 94  Training risk: -1.571  Validation risk: -1.079  Learning rate: 1.57E-05  Epoch time: 0.634 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 95  Training risk: -1.577  Validation risk: -1.111  Learning rate: 1.20E-05  Epoch time: 1.312 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 96  Training risk: -1.582  Validation risk: -1.013  Learning rate: 8.86E-06  Epoch time: 0.766 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 97  Training risk: -1.587  Validation risk: -0.887  Learning rate: 6.16E-06  Epoch time: 0.676 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 98  Training risk: -1.583  Validation risk: -0.924  Learning rate: 3.94E-06  Epoch time: 1.386 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 99  Training risk: -1.591  Validation risk: -0.97  Learning rate: 2.22E-06  Epoch time: 0.823 seconds</span></span>
+<span><span class="co">#&gt; Epoch: 100  Training risk: -1.592  Validation risk: -1.009  Learning rate: 9.87E-07  Epoch time: 0.656 seconds</span></span></code></pre></div>
+<hr>
+<p>After training, we draw samples from the posterior distribution.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Posterior sample estimation check</span></span>
+<span><span class="va">posterior_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_sample_posterior.html">abi_sample_posterior</a></span><span class="op">(</span></span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_posterior_estimator</span>,</span>
+<span>  Z <span class="op">=</span> <span class="va">Z_observed</span>,</span>
+<span>  N <span class="op">=</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Summarise posterior parameters</span></span>
+<span><span class="va">posterior_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_posterior_parameters.html">summarise_posterior_parameters</a></span><span class="op">(</span><span class="va">posterior_samples</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">posterior_summary</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   dataset_id parameter      mean    median ci_lower_0.025 ci_upper_0.975</span></span>
+<span><span class="co">#&gt; 1          1       A_0 2.0092152 2.0391990     1.20679900       2.785555</span></span>
+<span><span class="co">#&gt; 2          1       V_0 1.0858136 1.0312290     0.72511370       1.732454</span></span>
+<span><span class="co">#&gt; 3          1     ndt_0 0.5056887 0.5168395     0.03210862       0.947208</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="step-six-model-evaluation-2">Step six: Model evaluation<a class="anchor" aria-label="anchor" href="#step-six-model-evaluation-2"></a>
+</h3>
+<p>We evaluate posterior recovery by comparing median of posteiror
+samples of parameters with ground truth.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Parameter recovery check</span></span>
+<span><span class="va">posterior_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abi_sample_posterior.html">abi_sample_posterior</a></span><span class="op">(</span></span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_posterior_estimator</span>,</span>
+<span>  N <span class="op">=</span> <span class="fl">1000</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/plot_cv_recovery.html">plot_cv_recovery</a></span><span class="op">(</span></span>
+<span>  <span class="va">posterior_samples</span>,</span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_posterior_estimator</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="10-minimal-workflow/unnamed-chunk-20-1.svg" alt="plot of chunk unnamed-chunk-20"><div class="figcaption">plot of chunk unnamed-chunk-20</div>
+</div>
+<hr>
+<p>We assess model fit by generating simulated data using the median of
+posteiror samples of parameters and comparing them to the observed
+data.</p>
+<p>This allows us to evaluate whether the model reproduces RT
+distributions and choice proportions</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">##############################</span></span>
+<span><span class="co"># Posterior predictive check #</span></span>
+<span><span class="co">##############################</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/abi_posterior_predictive_check.html">abi_posterior_predictive_check</a></span><span class="op">(</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
+<span>  trained_estimator <span class="op">=</span> <span class="va">trained_posterior_estimator</span>,</span>
+<span>  estimator_type <span class="op">=</span> <span class="st">"posterior"</span>,</span>
+<span>  observed_df <span class="op">=</span> <span class="va">observed_data</span>,</span>
+<span>  Z <span class="op">=</span> <span class="va">Z_observed</span>,</span>
+<span>  posterior_dataset_id <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  posterior_n_samples <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  rt_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"choice"</span><span class="op">)</span>,</span>
+<span>  rt_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  accuracy_x <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  accuracy_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  accuracy_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="10-minimal-workflow/unnamed-chunk-21-1.svg" alt="plot of chunk unnamed-chunk-21"><img src="10-minimal-workflow/unnamed-chunk-21-2.svg" alt="plot of chunk unnamed-chunk-21"></p>
 <p>This is the end of this example.</p>
 <hr>
 <p>This simple DDM example serves as a reference template for the rest

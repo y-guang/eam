@@ -4,7 +4,7 @@ This section introduces the setting for five representative models:
 Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing
 Accumulator (LCA; Usher & McClelland, 2001), Linear Ballistic
 Accumulator (LBA; Brown & Heathcote, 2008), Racing Diffusion Model (RDM;
-Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al., 2020).
+Tillman et al., 2020), Levy Flight Model (LFM; Wieschen et al., 2020).
 Meanwhile, we also provide a tutorial on how to extend them to
 multi-response variants or interget covariates into the simualtion and
 inference.
@@ -45,10 +45,13 @@ empirical RT distributions, explain “fast errors”, and separate
 within-trial noise from between-trial variability.
 
 ``` r
-# Set the number of accumulators in the model
-n_items <-1
+# Load necessary packages
+library(eam)
 
-prior_params <- tibble(
+# Set the number of accumulators in the model
+n_items <- 1
+
+prior_params <- tibble::tibble(
   n_items = n_items
 )
 
@@ -103,7 +106,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -116,19 +118,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -159,7 +157,6 @@ Beyond stochastic fluctuations, the evolution of evidence in each
 accumulator is shaped by a leakage term $kx_{i}$ and a lateral
 inhibition term $\beta\sum_{j \neq i}x_{j}$:
 $$dx_{i}(t) = \left( v_{i} - kx_{i} - \beta\sum\limits_{j \neq i}x_{j} \right) \cdot dt + s \cdot dW_{t},$$$$dW_{t} \sim N(0,\, dt).$$
-
 Here, $k$ is the leakage parameter that governs the rate at which
 accumulated evidence decays over time, $x_{i}$ denotes the accumulated
 evidence in accumulator $i$, $\beta$ controls the strength of lateral
@@ -175,9 +172,9 @@ boundary $a$, and the non-decision time $t_{0}$.
 
 ``` r
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
-prior_params <- tibble(
+prior_params <- tibble::tibble(
   n_items = n_items
 )
 
@@ -221,7 +218,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -236,17 +232,13 @@ sim_config <- new_simulation_config(
   # Specify the model type
   model = "lca",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output_1")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 ```
 
@@ -263,7 +255,7 @@ summary_pipe <-
   ) +
   summarise_by(
     .by = c("condition_idx", "item_idx"),
-    rt_quantiles = quantile(rt, probs = c(0.005, 0.1, 0.3, 0.5, 0.7 ,0.9, 0.995))
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7 ,0.9))
   )
 
 # Calculate simulated summary statistics
@@ -282,31 +274,29 @@ multiple-accumulator EAM with non-decision noise. Without stochastic
 fluctuations moment to moment, the accumulated evidence evolves as a
 straight line with slope equal to the drift rate $v_{i}$, and the
 response and RT is determined by the first accumulator to reach its
-threshold: $$dx(t) = v_{i} \cdot dt.$$
-
-To account for between-trial variability in observed response and RTs,
-the LBA introduces two additional random components. First, on each
-trial, each accumulator begins with a random starting point $z_{i}$
-sampled from a uniform distribution $U(0,Z)$, capturing variability in
-initial bias. Second, on each trial, the drift rate for each accumulator
-is drawn from a Gaussian distribution with mean $V_{i}$ and variance
-$\tau$, representing the variability in quality of evidence:
-$$v_{i} \sim N\left( V_{i},\ \tau \right).$$
-
-For model identifiability, $\tau$ is typically fixed as a constant, or
-constraints are imposed on the mean drift rates (e.g.,
-$V_{1} + V_{2} = 1$). The free parameters of the model thus include the
-mean drift rate for each accumulator $V_{i}$, the decision boundary $a$,
-the upper bound of starting point $Z$, and the non-decision time
-$t_{0}$. This design gives the LBA greater flexibility in capturing
-error RT distributions and allows straightforward extension to tasks
-with more than two options by simply adding more accumulators.
+threshold: $$dx(t) = v_{i} \cdot dt.$$ To account for between-trial
+variability in observed response and RTs, the LBA introduces two
+additional random components. First, on each trial, each accumulator
+begins with a random starting point $z_{i}$ sampled from a uniform
+distribution $U(0,Z)$, capturing variability in initial bias. Second, on
+each trial, the drift rate for each accumulator is drawn from a Gaussian
+distribution with mean $V_{i}$ and variance $\tau$, representing the
+variability in quality of evidence:
+$$v_{i} \sim N\left( V_{i},\ \tau \right).$$ For model identifiability,
+$\tau$ is typically fixed as a constant, or constraints are imposed on
+the mean drift rates (e.g., $V_{1} + V_{2} = 1$). The free parameters of
+the model thus include the mean drift rate for each accumulator $V_{i}$,
+the decision boundary $a$, the upper bound of starting point $Z$, and
+the non-decision time $t_{0}$. This design gives the LBA greater
+flexibility in capturing error RT distributions and allows
+straightforward extension to tasks with more than two options by simply
+adding more accumulators.
 
 ``` r
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
-prior_params <- tibble(
+prior_params <- tibble::tibble(
   n_items = n_items
 )
 
@@ -343,7 +333,7 @@ item_formulas <- list(
 # Specify the diffusion noise
 noise_factory <- function(context) {
   function(n, dt) {
-    0*rnorm(n, mean = 0, sd = sqrt(dt))
+    0 * rnorm(n, mean = 0, sd = sqrt(dt))
   }
 }
 
@@ -353,7 +343,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -366,19 +355,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm",
+  model = "lba",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output_1")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -389,7 +374,7 @@ summary_pipe <-
   ) +
   summarise_by(
     .by = c("condition_idx", "item_idx"),
-    rt_quantiles = quantile(rt, probs = c(0.005, 0.1, 0.3, 0.5, 0.7 ,0.9, 0.995))
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7 ,0.9))
   )
 
 # Calculate simulated summary statistics
@@ -418,9 +403,9 @@ empirical RT distributions.
 
 ``` r
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
-prior_params <- tibble(
+prior_params <- tibble::tibble(
   n_items = n_items
 )
 
@@ -468,7 +453,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -481,19 +465,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm",
+  model = "rdm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -504,7 +484,7 @@ summary_pipe <-
   ) +
   summarise_by(
     .by = c("condition_idx", "item_idx"),
-    rt_quantiles = quantile(rt, probs = c(0.005, 0.1, 0.3, 0.5, 0.7 ,0.9, 0.995))
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7 ,0.9))
   )
 
 # Calculate simulated summary statistics
@@ -516,18 +496,24 @@ simulation_sumstat <- map_by_condition(
 )
 ```
 
-## Lévy flight model
+## Levy flight model
 
-The Lévy flight model (LFM) extends the traditional DDM in a different
-direction by replacing the Gaussian diffusion noise with a Lévy
+The Levy flight model (LFM) extends the traditional DDM in a different
+direction by replacing the Gaussian diffusion noise with a Levy
 $\alpha$-stable distribution, allowing occasional large evidence jumps
 to capture heavy-tailed RT distributions. It is a double-boundary
-single-accumulator EAM with Lévy $\alpha$-stable noise. The
+single-accumulator EAM with Levy $\alpha$-stable noise. The
 moment-to-moment change in accumulated evidence $x(t)$ thus follows the
 rules:
 $$dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),$$$$dL_{\alpha}(t) \sim S_{\alpha}(\gamma,\ \varepsilon,\ \mu),$$
-where $S_{\alpha}( \cdot )$ denotes a Lévy $\alpha$-stable distribution
+where $S_{\alpha}( \cdot )$ denotes a Levy $\alpha$-stable distribution
 parameterized by:
+
+- $\alpha \in (0,2\rbrack$: stability index controlling tail heaviness
+- $\gamma \in \lbrack - 1,1\rbrack$: skewness parameter ($\gamma = 0$
+  indicates symmetry)
+- $\varepsilon > 0$: scale parameter
+- $\mu \in {\mathbb{R}}$: location parameter
 
 In the LFM, the stability parameter $\alpha$ is free to be estimated
 from the data, whereas the skewness ($\gamma$), scale ($\varepsilon$),
@@ -539,13 +525,10 @@ variability in drift rates ($s_{v}$), starting points ($s_{z}$), and
 non-decision time ($s_{t0}$).
 
 ``` r
-# Load the package for Lévy alpha-stable distribution
-library(stabledist)
-
 # Set the number of accumulators in the model
-n_items <-1
+n_items <- 1
 
-prior_params <- tibble(
+prior_params <- tibble::tibble(
   n_items = n_items
 )
 
@@ -591,8 +574,8 @@ item_formulas <- list(
 
 # Specify the diffusion noise
 noise_factory <- function(context) {
-    alpha <- context$alpha
-    function(n, dt) sqrt(dt)*rstable(n, alpha = alpha, beta = 0, gamma = 1/sqrt(2), delta = 0)
+  alpha <- context$alpha
+  function(n, dt) sqrt(dt) * stabledist::rstable(n, alpha = alpha, beta = 0, gamma = 1 / sqrt(2), delta = 0)
 }
 
 sim_config <- new_simulation_config(
@@ -601,7 +584,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -614,19 +596,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "lfm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -637,7 +615,7 @@ summary_pipe <-
   ) +
   summarise_by(
     .by = c("condition_idx", "choice"),
-    rt_quantiles = quantile(rt, probs = c(0.005, 0.1, 0.3, 0.5, 0.7 ,0.9, 0.995))
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7 ,0.9))
   )
 
 # Calculate simulated summary statistics
@@ -668,9 +646,7 @@ is linked to output position rather than item index, items with lower
 drift rates may reach the lower boundary by chance.
 
 Second, drift rates were specified as a linear decreasing function of
-item index $i$:
-
-$$v(i) = v_{0} + v_{1} \cdot i,$$
+item index $i$: $$v(i) = v_{0} + v_{1} \cdot i,$$
 
 where $v_{0}$ represents the drift rate for the first item and
 $v_{1} < 0$ reflects the decline in evidence strength across positions.
@@ -683,7 +659,7 @@ multi-response version:
 
 ``` r
 # Set the number of accumulators in the model
-n_items <-3
+n_items <- 3
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -739,7 +715,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -752,19 +727,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -795,14 +766,12 @@ models.
 In the first approach, model parameters are allowed to vary
 systematically as a function of group or trial-level covariates.
 Specifically, parameters are generated according to
-
-$$\theta_{i} = \theta_{0} + \theta_{cov}\, X_{i},$$
-
-where $\theta$ denotes the model parameters (e.g., drift rate, decision
-boundary, or non-decision time), $X_{i}$ is the covariate value on trial
-$i$, $\theta_{0}$ is the baseline (intercept) parameter, and
-$\theta_{cov}$ quantifies the effect of the covariate. This formulation
-is flexible and accommodates both continuous and discrete covariates.
+$$\theta_{i} = \theta_{0} + \theta_{cov}\, X_{i},$$ where $\theta$
+denotes the model parameters (e.g., drift rate, decision boundary, or
+non-decision time), $X_{i}$ is the covariate value on trial $i$,
+$\theta_{0}$ is the baseline (intercept) parameter, and $\theta_{cov}$
+quantifies the effect of the covariate. This formulation is flexible and
+accommodates both continuous and discrete covariates.
 
 When using simulation-based inference, the choice of summary statistics
 must reflect the structure of the covariate. For continuous covariates,
@@ -817,7 +786,7 @@ together with accuracy measures for double-boundary EAMs.
 n_items <- 1
 
 # Set the covariate
-cov1 <- rbinom(100,1,0.5)
+cov1 <- rbinom(100, 1, 0.5)
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -868,7 +837,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -881,19 +849,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -939,7 +903,7 @@ $$\theta_{i} \sim \mathcal{N}(s \cdot P_{i},\,\tau^{2}).$$
 n_items <- 1
 
 # Set the covariate
-cov1 <- rnorm(100,1,0.5)
+cov1 <- rnorm(100, 1, 0.5)
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -959,7 +923,7 @@ prior_formulas <- list(
 between_trial_formulas <- list(
   # Covariate
   rlang::expr(cov1 ~ !!cov1),
-  V_latent ~ V_coef * stats::rnorm(1,mean=cov1,sd=V_sigma)
+  V_latent ~ V_coef * stats::rnorm(1, mean = cov1, sd = V_sigma)
 )
 
 # Specify the item-level parameters
@@ -988,7 +952,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -1001,19 +964,15 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE,
+  parallel = TRUE,
   n_cores = NULL, # Will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -1025,7 +984,7 @@ summary_pipe <-
   ) +
   summarise_by(
     .by = c("condition_idx", "choice"),
-    rt_quantiles = quantile(rt, probs = c(0.005, 0.1, 0.3, 0.5, 0.7, 0.9, 0.995))
+    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7, 0.9))
   )
 
 # Calculate simulated summary statistics
@@ -1040,22 +999,22 @@ simulation_sumstat <- map_by_condition(
 Reference:
 
 Ratcliff, R. (1978). A theory of memory retrieval. Psychological Review,
-85 (2), 59–108. <https://doi.org/10.1037/0033-295X.85.2.59>
+85 (2), 59-108. <https://doi.org/10.1037/0033-295X.85.2.59>
 
 Usher, M., & McClelland, J. L. (2001). The time course of perceptual
 choice: The leaky, competing accumulator model. Psychological Review,
-108 (3), 550–592. <https://doi.org/10.1037/0033-295X.108.3.550>
+108 (3), 550-592. <https://doi.org/10.1037/0033-295X.108.3.550>
 
 Brown, S. D., & Heathcote, A. (2008). The simplest complete model of
 choice response time: Linear ballistic accumulation. Cognitive
-Psychology, 57 (3), 153–178.
+Psychology, 57 (3), 153-178.
 <https://doi.org/10.1016/j.cogpsych.2007.12.002>
 
 Tillman, G., Van Zandt, T., & Logan, G. D. (2020). Sequential sampling
 models without random between-trial variability: The racing diffusion
 model of speeded decision making. Psychonomic Bulletin & Review, 27 (5),
-911–936. <https://doi.org/10.3758/s13423-020-01719-6>
+911-936. <https://doi.org/10.3758/s13423-020-01719-6>
 
 Wieschen, E. M., Voss, A., & Radev, S. T. (2020). Jumping to conclusion?
-A Lévy flight model of decision making. The Quantitative Methods for
-Psychology, 16 (2), 120–132. <https://doi.org/10.20982/tqmp.16.2.p120>
+A Levy flight model of decision making. The Quantitative Methods for
+Psychology, 16 (2), 120-132. <https://doi.org/10.20982/tqmp.16.2.p120>

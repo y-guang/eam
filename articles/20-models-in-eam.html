@@ -92,7 +92,7 @@ Zhu</h4>
 Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing
 Accumulator (LCA; Usher &amp; McClelland, 2001), Linear Ballistic
 Accumulator (LBA; Brown &amp; Heathcote, 2008), Racing Diffusion Model
-(RDM; Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al.,
+(RDM; Tillman et al., 2020), Levy Flight Model (LFM; Wieschen et al.,
 2020). Meanwhile, we also provide a tutorial on how to extend them to
 multi-response variants or interget covariates into the simualtion and
 inference.</p>
@@ -111,9 +111,9 @@ in accumulated evidence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
 is expressed as:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>ω</mi><mo>⋅</mo><mi>d</mi><msub><mi>W</mi><mi>t</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
-dx(t) = v \cdot dt + \omega \cdot dW_t,
+  dx(t) = v \cdot dt + \omega \cdot dW_t,
 </annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>W</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-dW_t \sim N(0,\, dt),
+  dW_t \sim N(0,\, dt),
 </annotation></semantics></math> where the diffusion noise term
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>W</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">dW_t</annotation></semantics></math>
 at each time step is drawn from a Gaussian distribution with mean 0 and
@@ -126,7 +126,7 @@ is typically fixed at 1. The starting point
 in the DDM is often expressed as a proportion of the decision boundary
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mi>ρ</mi><mo>⋅</mo><mi>a</mi><mo>,</mo><mspace width="2.0em"></mspace><mi>ρ</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mspace width="0.167em"></mspace><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-z = \rho \cdot a, \qquad \rho \in [0,\, 1],
+  z = \rho \cdot a, \qquad \rho \in [0,\, 1],
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
 denotes relative bias toward the upper boundary
@@ -157,10 +157,13 @@ These components are optional, yet including them enables the model to
 better capture empirical RT distributions, explain “fast errors”, and
 separate within-trial noise from between-trial variability.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">1</span></span>
+<code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam/">eam</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="co"># Set the number of accumulators in the model</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  n_items <span class="op">=</span> <span class="va">n_items</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -215,7 +218,6 @@ separate within-trial noise from between-trial variability.</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -228,19 +230,15 @@ separate within-trial noise from between-trial variability.</p>
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -273,12 +271,11 @@ accumulator is shaped by a leakage term
 and a lateral inhibition term
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><msub><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>i</mi></mrow></msub><msub><mi>x</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\beta \sum_{j \neq i} x_j</annotation></semantics></math>:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>x</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>v</mi><mi>i</mi></msub><mo>−</mo><mi>k</mi><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>β</mi><munder><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>i</mi></mrow></munder><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>s</mi><mo>⋅</mo><mi>d</mi><msub><mi>W</mi><mi>t</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
-dx_i(t) = \left(v_i - k x_i - \beta \sum_{j \neq i} x_j\right)\cdot dt 
-          + s\cdot dW_t,
+    dx_i(t) = \left(v_i - k x_i - \beta \sum_{j \neq i} x_j\right)\cdot dt 
+    + s\cdot dW_t,
 </annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>W</mi><mi>t</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
-dW_t \sim N(0,\, dt).
-</annotation></semantics></math></p>
-<p>Here,
+  dW_t \sim N(0,\, dt).
+</annotation></semantics></math> Here,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
 is the leakage parameter that governs the rate at which accumulated
 evidence decays over time,
@@ -307,9 +304,9 @@ and the non-decision time
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">2</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span></span>
-<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  n_items <span class="op">=</span> <span class="va">n_items</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -353,7 +350,6 @@ and the non-decision time
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -368,17 +364,13 @@ and the non-decision time
 <span>  <span class="co"># Specify the model type</span></span>
 <span>  model <span class="op">=</span> <span class="st">"lca"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output_1"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>It is worth noting that, in the case of LCA, LBA and RDM, due to the
 presence of two items and an upper boundary only, the choice variable
@@ -392,7 +384,7 @@ should be replaced with item_idx, when calculating the accuracy.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"item_idx"</span><span class="op">)</span>,</span>
-<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span>, <span class="fl">0.995</span><span class="op">)</span><span class="op">)</span></span>
+<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics</span></span>
@@ -414,11 +406,11 @@ straight line with slope equal to the drift rate
 and the response and RT is determined by the first accumulator to reach
 its threshold:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>v</mi><mi>i</mi></msub><mo>⋅</mo><mi>d</mi><mi>t</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
-dx(t) = v_i \cdot dt.
-</annotation></semantics></math></p>
-<p>To account for between-trial variability in observed response and
-RTs, the LBA introduces two additional random components. First, on each
-trial, each accumulator begins with a random starting point
+    dx(t) = v_i \cdot dt.
+</annotation></semantics></math> To account for between-trial
+variability in observed response and RTs, the LBA introduces two
+additional random components. First, on each trial, each accumulator
+begins with a random starting point
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
 sampled from a uniform distribution
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">U(0, Z)</annotation></semantics></math>,
@@ -430,9 +422,8 @@ and variance
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>,
 representing the variability in quality of evidence:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mi>i</mi></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>V</mi><mi>i</mi></msub><mo>,</mo><mspace width="0.222em"></mspace><mi>τ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
-v_i \sim N(V_i,\ \tau).
-</annotation></semantics></math></p>
-<p>For model identifiability,
+    v_i \sim N(V_i,\ \tau).
+</annotation></semantics></math> For model identifiability,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>
 is typically fixed as a constant, or constraints are imposed on the mean
 drift rates (e.g.,
@@ -451,9 +442,9 @@ distributions and allows straightforward extension to tasks with more
 than two options by simply adding more accumulators.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">2</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span></span>
-<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  n_items <span class="op">=</span> <span class="va">n_items</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -490,7 +481,7 @@ than two options by simply adding more accumulators.</p>
 <span><span class="co"># Specify the diffusion noise</span></span>
 <span><span class="va">noise_factory</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">context</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">dt</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fl">0</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fl">0</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -500,7 +491,6 @@ than two options by simply adding more accumulators.</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -513,19 +503,15 @@ than two options by simply adding more accumulators.</p>
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"lba"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output_1"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -536,7 +522,7 @@ than two options by simply adding more accumulators.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"item_idx"</span><span class="op">)</span>,</span>
-<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span>, <span class="fl">0.995</span><span class="op">)</span><span class="op">)</span></span>
+<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics</span></span>
@@ -567,9 +553,9 @@ to vary across trials to improve the fit to empirical RT
 distributions.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">2</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span></span>
-<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  n_items <span class="op">=</span> <span class="va">n_items</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -617,7 +603,6 @@ distributions.</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -630,19 +615,15 @@ distributions.</p>
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"rdm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -653,7 +634,7 @@ distributions.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"item_idx"</span><span class="op">)</span>,</span>
-<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span>, <span class="fl">0.995</span><span class="op">)</span><span class="op">)</span></span>
+<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics</span></span>
@@ -665,28 +646,44 @@ distributions.</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="lévy-flight-model">Lévy flight model<a class="anchor" aria-label="anchor" href="#l%C3%A9vy-flight-model"></a>
+<h2 id="levy-flight-model">Levy flight model<a class="anchor" aria-label="anchor" href="#levy-flight-model"></a>
 </h2>
-<p>The Lévy flight model (LFM) extends the traditional DDM in a
+<p>The Levy flight model (LFM) extends the traditional DDM in a
 different direction by replacing the Gaussian diffusion noise with a
-Lévy
+Levy
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>-stable
 distribution, allowing occasional large evidence jumps to capture
 heavy-tailed RT distributions. It is a double-boundary
-single-accumulator EAM with Lévy
+single-accumulator EAM with Levy
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>-stable
 noise. The moment-to-moment change in accumulated evidence
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
 thus follows the rules:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>s</mi><mo>⋅</mo><mi>d</mi><msub><mi>L</mi><mi>α</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),
+  dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),
 </annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>L</mi><mi>α</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msub><mi>S</mi><mi>α</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>γ</mi><mo>,</mo><mspace width="0.222em"></mspace><mi>ε</mi><mo>,</mo><mspace width="0.222em"></mspace><mi>μ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-dL_{\alpha}(t) \sim S_{\alpha}(\gamma,\ \varepsilon,\ \mu),
+  dL_{\alpha}(t) \sim S_{\alpha}(\gamma,\ \varepsilon,\ \mu),
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>α</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_{\alpha}(\cdot)</annotation></semantics></math>
-denotes a Lévy
+denotes a Levy
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>-stable
 distribution parameterized by:</p>
+<ul>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\alpha \in (0,2]</annotation></semantics></math>:
+stability index controlling tail heaviness</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mo>−</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\gamma \in [-1,1]</annotation></semantics></math>:
+skewness parameter
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\gamma = 0</annotation></semantics></math>
+indicates symmetry)</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon &gt; 0</annotation></semantics></math>:
+scale parameter</li>
+<li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>∈</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\mu \in \mathbb{R}</annotation></semantics></math>:
+location parameter</li>
+</ul>
 <p>In the LFM, the stability parameter
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
 is free to be estimated from the data, whereas the skewness
@@ -713,13 +710,10 @@ starting points
 and non-decision time
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mrow><mi>t</mi><mn>0</mn></mrow></msub><annotation encoding="application/x-tex">s_{t0}</annotation></semantics></math>).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load the package for Lévy alpha-stable distribution</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/scm/viewvc.php/pkg/stabledist/?root=rmetrics" class="external-link">stabledist</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
-<span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">1</span></span>
-<span></span>
-<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">prior_params</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  n_items <span class="op">=</span> <span class="va">n_items</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -765,8 +759,8 @@ and non-decision time
 <span></span>
 <span><span class="co"># Specify the diffusion noise</span></span>
 <span><span class="va">noise_factory</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">context</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">alpha</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="va">alpha</span></span>
-<span>    <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">dt</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span><span class="op">*</span><span class="fu">rstable</span><span class="op">(</span><span class="va">n</span>, alpha <span class="op">=</span> <span class="va">alpha</span>, beta <span class="op">=</span> <span class="fl">0</span>, gamma <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, delta <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="va">alpha</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="va">alpha</span></span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">dt</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span> <span class="op">*</span> <span class="fu">stabledist</span><span class="fu">::</span><span class="fu">rstable</span><span class="op">(</span><span class="va">n</span>, alpha <span class="op">=</span> <span class="va">alpha</span>, beta <span class="op">=</span> <span class="fl">0</span>, gamma <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, delta <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">sim_config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_simulation_config.html">new_simulation_config</a></span><span class="op">(</span></span>
@@ -775,7 +769,6 @@ and non-decision time
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -788,19 +781,15 @@ and non-decision time
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"lfm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -811,7 +800,7 @@ and non-decision time
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"choice"</span><span class="op">)</span>,</span>
-<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span>, <span class="fl">0.995</span><span class="op">)</span><span class="op">)</span></span>
+<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span> ,<span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics</span></span>
@@ -832,7 +821,7 @@ item-dependent drift rate function.</p>
 function of output position
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>o</mi><annotation encoding="application/x-tex">o</annotation></semantics></math>:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>o</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>a</mi><mn>0</mn></msub><mo>+</mo><msub><mi>a</mi><mn>1</mn></msub><mo>⋅</mo><mi>o</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
-a(o) = a_{0} + a_{1}\cdot o,
+  a(o) = a_{0} + a_{1}\cdot o,
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mn>0</mn></msub><annotation encoding="application/x-tex">a_{0}</annotation></semantics></math>
 represents the decision boundary for the first-retrieved item and
@@ -846,9 +835,9 @@ boundary is linked to output position rather than item index, items with
 lower drift rates may reach the lower boundary by chance.</p>
 <p>Second, drift rates were specified as a linear decreasing function of
 item index
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>+</mo><msub><mi>v</mi><mn>1</mn></msub><mo>⋅</mo><mi>i</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
-v(i) = v_{0} + v_{1}\cdot i,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>v</mi><mn>0</mn></msub><mo>+</mo><msub><mi>v</mi><mn>1</mn></msub><mo>⋅</mo><mi>i</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+  v(i) = v_{0} + v_{1}\cdot i,
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>v</mi><mn>0</mn></msub><annotation encoding="application/x-tex">v_{0}</annotation></semantics></math>
@@ -862,7 +851,7 @@ tasks.</p>
 multi-response version:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
-<span><span class="va">n_items</span> <span class="op">&lt;-</span><span class="fl">3</span></span>
+<span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span></span>
 <span><span class="co"># Specify the prior distributions for free parameters</span></span>
 <span><span class="va">prior_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -918,7 +907,6 @@ multi-response version:</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -931,19 +919,15 @@ multi-response version:</p>
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -972,11 +956,10 @@ multi-response version:</p>
 the models.</p>
 <p>In the first approach, model parameters are allowed to vary
 systematically as a function of group or trial-level covariates.
-Specifically, parameters are generated according to</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub><mo>+</mo><msub><mi>θ</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">v</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\theta_i = \theta_0 + \theta_{\mathrm{cov}}\, X_i,
-</annotation></semantics></math></p>
-<p>where
+Specifically, parameters are generated according to
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub><mo>+</mo><msub><mi>θ</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">v</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+  \theta_i = \theta_0 + \theta_{\mathrm{cov}}\, X_i,
+</annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 denotes the model parameters (e.g., drift rate, decision boundary, or
 non-decision time),
@@ -1001,7 +984,7 @@ double-boundary EAMs.</p>
 <span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
 <span><span class="co"># Set the covariate</span></span>
-<span><span class="va">cov1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">cov1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specify the prior distributions for free parameters</span></span>
 <span><span class="va">prior_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1052,7 +1035,6 @@ double-boundary EAMs.</p>
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -1065,19 +1047,15 @@ double-boundary EAMs.</p>
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -1120,14 +1098,14 @@ parameter
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math>
 via
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>∼</mo><mi>𝒩</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mi>s</mi><mo>⋅</mo><msub><mi>P</mi><mi>i</mi></msub><mo>,</mo><mspace width="0.167em"></mspace><msup><mi>τ</mi><mn>2</mn></msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\theta_i \sim \mathcal{N}\bigl(s \cdot P_i,\, \tau^{2}\bigr).
+  \theta_i \sim \mathcal{N}\bigl(s \cdot P_i,\, \tau^{2}\bigr).
 </annotation></semantics></math></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set the number of accumulators in the model</span></span>
 <span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
 <span><span class="co"># Set the covariate</span></span>
-<span><span class="va">cov1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">cov1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specify the prior distributions for free parameters</span></span>
 <span><span class="va">prior_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1147,7 +1125,7 @@ via
 <span><span class="va">between_trial_formulas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="co"># Covariate</span></span>
 <span>  <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/expr.html" class="external-link">expr</a></span><span class="op">(</span><span class="va">cov1</span> <span class="op">~</span> <span class="op">!</span><span class="op">!</span><span class="va">cov1</span><span class="op">)</span>,</span>
-<span>  <span class="va">V_latent</span> <span class="op">~</span> <span class="va">V_coef</span> <span class="op">*</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span>,mean<span class="op">=</span><span class="va">cov1</span>,sd<span class="op">=</span><span class="va">V_sigma</span><span class="op">)</span></span>
+<span>  <span class="va">V_latent</span> <span class="op">~</span> <span class="va">V_coef</span> <span class="op">*</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span>, mean <span class="op">=</span> <span class="va">cov1</span>, sd <span class="op">=</span> <span class="va">V_sigma</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specify the item-level parameters</span></span>
@@ -1176,7 +1154,6 @@ via
 <span>  between_trial_formulas <span class="op">=</span> <span class="va">between_trial_formulas</span>,</span>
 <span>  item_formulas <span class="op">=</span> <span class="va">item_formulas</span>,</span>
 <span>  <span class="co"># Specify the simulation conditions and number of trials</span></span>
-<span>  n_conditions_per_chunk <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># NULL = automatic chunking</span></span>
 <span>  n_conditions <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  n_trials_per_condition <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="co"># Specify the number of accumulators and the number of recorded accumulators</span></span>
@@ -1189,19 +1166,15 @@ via
 <span>  noise_mechanism <span class="op">=</span> <span class="st">"add"</span>,</span>
 <span>  noise_factory <span class="op">=</span> <span class="va">noise_factory</span>,</span>
 <span>  <span class="co"># Specify the model type</span></span>
-<span>  model <span class="op">=</span> <span class="st">"ddm-2b"</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"ddm"</span>,</span>
 <span>  <span class="co"># Specify the parallel computing settings</span></span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># Will use default: detectCores() - 1</span></span>
 <span>  rand_seed <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># Will use default random seed</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Output temporary path setup</span></span>
-<span><span class="va">temp_output_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"eam_demo_output"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">sim_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_simulation.html">run_simulation</a></span><span class="op">(</span></span>
-<span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="va">temp_output_path</span></span>
+<span>  config <span class="op">=</span> <span class="va">sim_config</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the summary procedure</span></span>
@@ -1213,7 +1186,7 @@ via
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/summarise_by.html">summarise_by</a></span><span class="op">(</span></span>
 <span>    .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_idx"</span>, <span class="st">"choice"</span><span class="op">)</span>,</span>
-<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.005</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">0.995</span><span class="op">)</span><span class="op">)</span></span>
+<span>    rt_quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">rt</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate simulated summary statistics</span></span>
@@ -1225,20 +1198,20 @@ via
 <span><span class="op">)</span></span></code></pre></div>
 <p>Reference:</p>
 <p>Ratcliff, R. (1978). A theory of memory retrieval. Psychological
-Review, 85 (2), 59–108. <a href="https://doi.org/10.1037/0033-295X.85.2.59" class="external-link uri">https://doi.org/10.1037/0033-295X.85.2.59</a></p>
+Review, 85 (2), 59-108. <a href="https://doi.org/10.1037/0033-295X.85.2.59" class="external-link uri">https://doi.org/10.1037/0033-295X.85.2.59</a></p>
 <p>Usher, M., &amp; McClelland, J. L. (2001). The time course of
 perceptual choice: The leaky, competing accumulator model. Psychological
-Review, 108 (3), 550–592. <a href="https://doi.org/10.1037/0033-295X.108.3.550" class="external-link uri">https://doi.org/10.1037/0033-295X.108.3.550</a></p>
+Review, 108 (3), 550-592. <a href="https://doi.org/10.1037/0033-295X.108.3.550" class="external-link uri">https://doi.org/10.1037/0033-295X.108.3.550</a></p>
 <p>Brown, S. D., &amp; Heathcote, A. (2008). The simplest complete model
 of choice response time: Linear ballistic accumulation. Cognitive
-Psychology, 57 (3), 153–178. <a href="https://doi.org/10.1016/j.cogpsych.2007.12.002" class="external-link uri">https://doi.org/10.1016/j.cogpsych.2007.12.002</a></p>
+Psychology, 57 (3), 153-178. <a href="https://doi.org/10.1016/j.cogpsych.2007.12.002" class="external-link uri">https://doi.org/10.1016/j.cogpsych.2007.12.002</a></p>
 <p>Tillman, G., Van Zandt, T., &amp; Logan, G. D. (2020). Sequential
 sampling models without random between-trial variability: The racing
 diffusion model of speeded decision making. Psychonomic Bulletin &amp;
-Review, 27 (5), 911–936. <a href="https://doi.org/10.3758/s13423-020-01719-6" class="external-link uri">https://doi.org/10.3758/s13423-020-01719-6</a></p>
+Review, 27 (5), 911-936. <a href="https://doi.org/10.3758/s13423-020-01719-6" class="external-link uri">https://doi.org/10.3758/s13423-020-01719-6</a></p>
 <p>Wieschen, E. M., Voss, A., &amp; Radev, S. T. (2020). Jumping to
-conclusion? A Lévy flight model of decision making. The Quantitative
-Methods for Psychology, 16 (2), 120–132. <a href="https://doi.org/10.20982/tqmp.16.2.p120" class="external-link uri">https://doi.org/10.20982/tqmp.16.2.p120</a></p>
+conclusion? A Levy flight model of decision making. The Quantitative
+Methods for Psychology, 16 (2), 120-132. <a href="https://doi.org/10.20982/tqmp.16.2.p120" class="external-link uri">https://doi.org/10.20982/tqmp.16.2.p120</a></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

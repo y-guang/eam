@@ -8,15 +8,17 @@ Encoding and Retrieval Study (PEERS; Kahana et al., 2024). We model the
 recall process using a multi-response Racing Diffusion Model (RDM),
 focusing on RTs for first seven retrievaled items.
 
-------------------------------------------------------------------------
-
 ### Descriptions of the model
 
 The details of this model are listed below:
 
+**Priors on global parameters**
+
 We specify weakly informative priors on the global parameters governing
 decision boundary, drift rate, non-decision time, and between-trial
-variability: $$\begin{aligned}
+variability:
+
+$$\begin{aligned}
 A_{\beta_{0}} & {\sim \text{Uniform}(0.5,5.0),} \\
 A_{\beta_{1}} & {\sim \text{Uniform}(0.01,1.0),} \\
 V_{\beta_{0}} & {\sim \text{Uniform}(0.5,3.0),} \\
@@ -25,11 +27,15 @@ V_{\sigma} & {\sim \text{Uniform}(0.01,1.0),} \\
 {ndt_{\beta_{0}}} & {\sim \text{Uniform}( - 1,1).}
 \end{aligned}$$
 
+**Between-trial variability**
+
 To capture variabilities in recall trajectories and recall strategies
 across trials , we introduce a between-trial variability on the drift
 rate:
 
 $$V_{\text{var}} \sim \mathcal{N}\left( 0,V_{\sigma} \right).$$
+
+**Item-level parameterization**
 
 At the item-level, different model parameters are linked to different
 structural aspects of the task. Specifically, the decision boundary is
@@ -41,8 +47,11 @@ V & {= \max\!\left( V_{\beta_{0}} - \text{item index} \cdot V_{\beta_{1}} + V_{\
 \end{aligned}$$ where $\theta > 0$ is a small constant ensuring
 positivity of the drift rate.
 
+**Evidence accumulation dynamics**
+
 Within each trial, evidence evolves according to a Wiener diffusion
 process:
+
 $$dX(t) = V_{i}\, dt + \sigma\, dW(t),\qquad dW(t) \sim \mathcal{N}(0,dt),$$
 
 A response is generated when one accumulator first reaches the decision
@@ -50,16 +59,13 @@ boundary $A_{i}$. The observed response time for item $i$ is given by
 
 $$RT_{i} = T_{\text{decision},i} + ndt_{i}.$$
 
-------------------------------------------------------------------------
-
-### Step one: Model setup
-
 First, we load the required packages.
 
 ``` r
 # Load necessary packages
 library(eam)
 library(dplyr)
+library(tidyr)
 
 # Set a random seed for reproducibility
 set.seed(1)
@@ -91,17 +97,16 @@ prior_formulas <- list(
   noise_coef ~ 1
 )
 
-
 # Specify the between-trial components 
 between_trial_formulas <- list(
   # random group binomial
-  V_var ~ distributional::dist_normal(0,V_sigma)
+  V_var ~ distributional::dist_normal(0, V_sigma)
 )
 
 # Specify the item-level parameters
 item_formulas <- list(
   A ~ A_beta_0 + seq(1, n_items) * A_beta_1,
-  V ~ pmax(V_beta_0 - seq(1, n_items) * V_beta_1 + V_var,1e-5),
+  V ~ pmax(V_beta_0 - seq(1, n_items) * V_beta_1 + V_var, 1e-5),
   ndt ~ ndt_beta_0
 )
 
@@ -113,15 +118,12 @@ noise_factory <- function(context) {
 }
 ```
 
-------------------------------------------------------------------------
-
 ### Step two: Data simulation
 
-When parallelization is enabled, running the full simulation typically
-takes approximately 30 minutes to 1 hour. Given the computational
-constraints of this tutorial, we do not execute the full pipeline here.
-Interested readers are encouraged to run the code locally to reproduce
-the results.
+We next generate simulated datasets from the specified model.
+
+Depending on computational resources, this step may take approximately
+30 minutes to 1 hour when parallelization is enabled.
 
 ``` r
 ####################
@@ -132,8 +134,8 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 5000,
-  n_trials_per_condition = 1000,
+  n_conditions = 500,
+  n_trials_per_condition = 100,
   n_items = n_items,
   max_reached = n_items,
   max_t = 60,
@@ -146,19 +148,13 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 ##################
 # Run simulation #
 ##################
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 ```
-
-------------------------------------------------------------------------
 
 ### Step three: Load observed data
 
@@ -170,55 +166,54 @@ participant in the PEERS dataset as the observed data in this example.
 # Load Observed data  #
 #######################
 
-observed_data<-read.csv("./30-empirical-example/example_data.csv")
+observed_data <- read.csv("./30-empirical-example/example_data.csv")
+observed_data$condition_idx <- 1
 ```
 
-------------------------------------------------------------------------
+### Step four: Prepare inputs for inference
 
-### Step four: Extract summary statistics
+We construct the input for amortized Bayesian inference by specifying
+the model parameters to be estimated ($\theta$) and the observed
+variables ($Z$). The model is trained on simulated datasets and learns a
+mapping from data to parameters.
 
-Here we calcualte the response time quantiles (0.1–0.9) separately for
-each response position (“rank_idx”).
+Here, we use reaction times (rt) as the input representation and split
+the simulated data into training and test sets.
 
 ``` r
 #####################
-# abc model prepare #
+# abi model prepare #
 #####################
 
-# Define the summary procedure
-summary_pipe <-
-  summarise_by(
-    .by = c("condition_idx", "rank_idx"),
-    rt_quantiles = quantile(rt, probs = c(0.1, 0.3, 0.5, 0.7, 0.9))
-  )
+Z_observed <- observed_data %>%
+  select(session_list, rank_idx, rt) %>%
+  pivot_wider(
+    names_from = session_list,
+    values_from = rt
+  ) %>%
+  arrange(rank_idx)
 
-# Calculate simulated summary statistics
-simulation_sumstat <- map_by_condition(
+Z_observed <- as.matrix(Z_observed[, -1])
+rownames(Z_observed) <- paste0("rank_", observed_data$rank_idx %>% unique(), "_item_idx")
+Z_observed
+
+abi_input <- build_abi_input(
   sim_output,
-  .progress = TRUE,
-  .parallel = FALSE,
-  function(cond_df) summary_pipe(cond_df)
-)
-
-# Calculate observed summary statistics
-target_sumstat <- summary_pipe(observed_data)
-
-# Align the simulated and observed summary statistics
-abc_input <- build_abc_input(
-  simulation_output = sim_output,
-  simulation_summary = simulation_sumstat,
-  target_summary     = target_sumstat,
-  param = c("A_beta_0","A_beta_1","V_beta_0","V_beta_1","V_sigma","ndt_beta_0")
+  theta = c(
+    "A_beta_0", "A_beta_1", "V_beta_0", "V_beta_1", "V_sigma", "ndt_beta_0"
+  ),
+  Z = c(
+    "rt"
+  ),
+  train_ratio = 0.8,
+  n_test = 100
 )
 ```
 
-------------------------------------------------------------------------
-
 ### Step five: Fit the model
 
-As the simulation step is omitted here, the inference code below is
-presented without being executed. Readers can run the complete inference
-pipeline locally once the simulated data have been generated.
+We perform amortized Bayesian inference to estimate the posterior
+distributions of model parameters.
 
 ``` r
 
@@ -226,105 +221,87 @@ pipeline locally once the simulated data have been generated.
 # Model validation and parameter estimation #
 #############################################
 
-abc_fit <- abc::abc(
-  target = abc_input$target,
-  param  = abc_input$param,
-  sumstat= abc_input$sumstat,
-  tol    = 0.05,
-  method = "neuralnet"
+posterior_estimator <- "
+  d = 7    # dimension of each replicate
+  w = 32   # number of neurons in each hidden layer
+
+  # Layer to ensure valid estimates
+  final_layer = Parallel(
+      vcat,
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus),
+      Dense(w, 1, softplus)
+    )
+
+  psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
+  phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
+  deepset = DeepSet(psi, phi)
+  w = 6
+  q = NormalisingFlow(w, w)
+  estimator = PosteriorEstimator(q, deepset)
+"
+
+trained_posterior_estimator <- abi_train(
+  estimator = posterior_estimator,
+  abi_input = abi_input,
+  epochs = 200,
+  stopping_epochs = 50
 )
 
-abc_cv <- abc::cv4abc(
-  param   = abc_input$param,
-  sumstat = abc_input$sumstat,
-  abc.out = abc_fit,
-  nval    = 100,
-  tols    = c(0.05)
+# Sample from posterior distribution
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_posterior_estimator,
+  Z = Z_observed,
+  N = 1000
 )
 
+# Summarise posterior parameters for each dataset
+posterior_summary <- summarise_posterior_parameters(posterior_samples)
+print(posterior_summary)
+
+# Cross-validation
+posterior_samples <- abi_sample_posterior(
+  trained_estimator = trained_posterior_estimator,
+  N = 1000
+)
 
 plot_cv_recovery(
-  abc_cv,
-  n_rows = 3,
-  n_cols = 2,
-  resid_tol = 0.99,
-  interactive = FALSE
-)
-
-summarise_posterior_parameters(
-  abc_fit,
-  # custom summary functions
-  ci_level = 0.95,
-  sd = function(x) sd(x)
-)
-
-plot_posterior_parameters(
-  abc_fit,
-  abc_input
+  posterior_samples,
+  trained_estimator = trained_posterior_estimator
 )
 ```
 
-------------------------------------------------------------------------
+![plot of chunk
+unnamed-chunk-7](30-empirical-example/unnamed-chunk-7-1.svg)![plot of
+chunk unnamed-chunk-7](30-empirical-example/unnamed-chunk-7-2.svg)
 
 ### Step six: Model evaluation
 
-Here, we directly present results from a previously fitted model and
-assess model adequacy by examining the overlap between RTs simulated
-from the posterior median and the RTs.
+We assess model adequacy using posterior predictive checks by comparing
+reaction time distributions simulated from the fitted posterior with the
+observed data.
 
 ``` r
 ##############################
 # Posterior predictive check #
 ##############################
 
-prior_formulas <- list(
-  n_items ~ 7,
-  # parameters with distributions
-  A_beta_0 ~ distributional::dist_uniform(3.89, 3.89),
-  A_beta_1 ~ distributional::dist_uniform(0.68, 0.68),
-  # V
-  V_beta_0 ~ distributional::dist_uniform(1.47, 1.47),
-  V_beta_1 ~ distributional::dist_uniform(0.15, 0.15),
-  V_sigma ~ distributional::dist_uniform(0.35, 0.35),
-  # ndt
-  ndt_beta_0 ~ distributional::dist_uniform(0.27, 0.27),
-  # noise param
-  noise_coef ~ 1
-)
-
-temp_output_path <- tempfile("multieam_demo_output")
-if (dir.exists(temp_output_path)) unlink(temp_output_path, recursive = TRUE)
-
-sim_config <- new_simulation_config(
-  prior_formulas = prior_formulas,
-  between_trial_formulas = between_trial_formulas,
-  item_formulas = item_formulas,
-  n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 1,
-  n_trials_per_condition = 500,
-  n_items = n_items,
-  max_reached = n_items,
-  max_t = 60,
-  dt = 0.001,
-  noise_mechanism = "add",
-  noise_factory = noise_factory,
-  model = "ddm",
-  parallel = FALSE,
-  n_cores = NULL, # Will use default: detectCores() - 1
-  rand_seed = NULL # Will use default random seed
-)
-
-t0 <- Sys.time()
-sim_output_post <- run_simulation(config = sim_config, output_dir = temp_output_path)
-
-post_output <- sim_output_post
-observed_data$item_idx <- observed_data$word_idx
-# plot the posterior rt and accuracy
-plot_rt(
-  post_output,
-  observed_data,
-  facet_x = c("rank_idx"),
-  facet_y = c()
+abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_posterior_estimator,
+  estimator_type = "posterior",
+  observed_df = observed_data,
+  Z = Z_observed,
+  posterior_dataset_id = 1,
+  posterior_n_samples = 1000,
+  rt_facet_x = c("rank_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "rank_idx",
+  accuracy_facet_x = c("ndt_beta_0"),
+  accuracy_facet_y = c()
 )
 ```
 
@@ -347,4 +324,4 @@ E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera,
 J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn
 Electrophysiology of Encoding and Retrieval Study. Journal of
 Experimental Psychology: Learning, Memory, and Cognition, 50(9),
-1421–1443. <https://doi.org/10.1037/xlm0001319>
+1421-1443. <https://doi.org/10.1037/xlm0001319>
