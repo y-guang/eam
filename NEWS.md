@@ -8,19 +8,30 @@
   - `abi_assess()`: Assess trained estimator performance
   - `abi_sample_posterior()`: Sample from posterior distribution
   - Enhanced `build_abi_input()` with theta and Z outputs, test set support
-  
-- **Visualization**: New `plot_cv_recovery()` methods for ABI models (`eam_abi_assess` and `eam_abi_posterior_samples` classes)
 
-- **Posterior Summarization**: `summarise_posterior_parameters()` for aggregating posterior samples
+- **ABC helpers**: Add `abc_abc()` and `abc_cv()` wrappers for ABC fitting and cross-validation
+
+- **Posterior predictive workflows**: Add `abc_posterior_predictive_check()`, `abi_posterior_predictive_check()`, and `update_config_from_posterior()` for teaching-oriented posterior simulation workflows
+
+- **Visualization**:
+  - New `plot_cv_recovery()` methods for ABI models (`eam_abi_assess` and `eam_abi_posterior_samples` classes)
+  - Update posterior RT and accuracy plots to compare simulated and observed data more directly
+  - `plot_rt()` now displays simulated RTs as densities and observed RTs as histograms
+
+- **Posterior summarization**: `summarise_posterior_parameters()` for aggregating posterior samples
 
 ## Infrastructure
 
 - Julia environment integration via `init_julia_env()` for neural network backend
+- Add bundled Julia project files under `inst/julia/env/` for ABI setup
 - Add `tibble` dependency for improved output formatting
+- Improve simulation routing, including LFM support and updated LBA routing
 
 ## Documentation
 
 - Add inst/CITATION file with pre-print citation information
+- Add and expand examples for ABC wrappers, posterior predictive helpers, and simulation-config updates
+- Add ABI and ABC demos and refresh tutorial materials
 - Various documentation improvements and formatting fixes
 
 # eam 1.1.0
