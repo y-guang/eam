@@ -70,3 +70,30 @@ or `item_formulas` cannot be replaced automatically. If you need full
 control and clarity over internal parameter structure, rebuild the
 configuration manually using
 [`new_simulation_config`](https://y-guang.github.io/eam/reference/new_simulation_config.md).
+
+## Examples
+
+``` r
+# Load example simulation output and extract its config
+base_dir <- system.file("extdata", "rdm_minimal", package = "eam")
+sim_output <- load_simulation_output(file.path(base_dir, "simulation"))
+sim_config <- sim_output$simulation_config
+
+# Create a simple one-draw posterior parameter data frame
+posterior_params <- data.frame(
+  V_beta_1 = -0.15
+)
+
+# Update the config by replacing the matching prior entry/formula
+updated_config <- update_config_from_posterior(
+  config = sim_config,
+  posterior_params = posterior_params,
+  n_conditions = 1,
+  n_trials_per_condition = 500
+)
+
+# Inspect the updated fixed prior values
+updated_config$prior_params
+#>   n_items V_beta_1
+#> 1       3    -0.15
+```

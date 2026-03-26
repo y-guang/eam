@@ -50,3 +50,52 @@ This is a thin wrapper around the
 When `abc_result` is provided, cv4abc extracts the method, transf, and
 other settings from the fitted ABC object. Users should refer to the abc
 package documentation for detailed parameter descriptions and options.
+
+## Examples
+
+``` r
+# \donttest{
+# Load example simulation output and observed data
+rdm_minimal_example <- system.file("extdata", "rdm_minimal", package = "eam")
+sim_output <- load_simulation_output(file.path(rdm_minimal_example, "simulation"))
+obs_df <- read.csv(file.path(rdm_minimal_example, "observation", "observation_data.csv"))
+
+# Define a summary-statistics pipeline
+summary_pipe <- summarise_by(
+  .by = c("condition_idx"),
+  rt_mean = mean(rt)
+)
+
+# Summarise simulation output and observed data
+sim_summary <- map_by_condition(
+  sim_output,
+  .progress = FALSE,
+  .parallel = FALSE,
+  function(cond_df) {
+    summary_pipe(cond_df)
+  }
+)
+obs_summary <- summary_pipe(obs_df)
+
+# Build ABC input and fit an ABC model
+abc_input <- build_abc_input(
+  simulation_output = sim_output,
+  simulation_summary = sim_summary,
+  target_summary = obs_summary,
+  param = c("V_beta_1", "V_beta_group")
+)
+abc_model <- abc_abc(
+  abc_input = abc_input,
+  tol = 0.5,
+  method = "rejection"
+)
+
+# Run cross-validation for the fitted ABC model
+abc_cv_result <- abc_cv(
+  abc_input = abc_input,
+  abc_result = abc_model,
+  nval = 10,
+  tols = c(0.1, 0.5)
+)
+# }
+```

@@ -125,3 +125,70 @@ then
 [`update_config_from_posterior()`](https://y-guang.github.io/eam/reference/update_config_from_posterior.md),
 and
 [`run_simulation()`](https://y-guang.github.io/eam/reference/run_simulation.md).
+
+This wrapper is mainly a teaching tool. It provides a compact end-to-end
+posterior predictive workflow for ABI, but it intentionally hides
+several modeling choices behind a single helper call.
+
+For more serious work, manual posterior predictive simulation is
+preferred. The recommended workflow is to obtain parameter values
+explicitly with
+[`abi_estimate()`](https://y-guang.github.io/eam/reference/abi_estimate.md)
+for point estimators or
+[`abi_sample_posterior()`](https://y-guang.github.io/eam/reference/abi_sample_posterior.md)
+for posterior estimators, inspect or summarise those values, rebuild a
+simulation configuration explicitly with
+[`new_simulation_config`](https://y-guang.github.io/eam/reference/new_simulation_config.md)
+so the parameter structure is fully under your control, run the
+simulation with
+[`run_simulation()`](https://y-guang.github.io/eam/reference/run_simulation.md),
+and then compare simulated and observed data using plotting or summary
+functions.
+[`update_config_from_posterior()`](https://y-guang.github.io/eam/reference/update_config_from_posterior.md)
+can still be useful for quick checks, but rebuilding the config is the
+safer option when you need to know exactly how inferred values are
+mapped back into the model. Following the steps manually makes each
+assumption visible, including which ABI output was used, how posterior
+summaries were constructed, and how the posterior predictive data were
+generated.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Load an observed dataset and a trained ABI estimator prepared in your environment
+observed_data <- sim_output$open_dataset() |>
+  dplyr::filter(chunk_idx == 1, condition_idx == 1) |>
+  dplyr::collect()
+
+# Point-estimate workflow
+abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_point_estimator,
+  estimator_type = "point",
+  observed_df = observed_data,
+  Z = abi_input$Z_test[[1]],
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("ndt_beta_0"),
+  accuracy_facet_y = c()
+)
+
+# Posterior-sampling workflow
+abi_posterior_predictive_check(
+  config = sim_config,
+  trained_estimator = trained_posterior_estimator,
+  estimator_type = "posterior",
+  observed_df = observed_data,
+  Z = abi_input$Z_test,
+  posterior_dataset_id = 1,
+  posterior_n_samples = 1000,
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("ndt_beta_0"),
+  accuracy_facet_y = c()
+)
+} # }
+```

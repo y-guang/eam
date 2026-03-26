@@ -70,17 +70,29 @@
 <code><a href="../reference/abi_sample_posterior.html">abi_sample_posterior()</a></code>: Sample from posterior distribution</li>
 <li>Enhanced <code><a href="../reference/build_abi_input.html">build_abi_input()</a></code> with theta and Z outputs, test set support</li>
 </ul></li>
-<li><p><strong>Visualization</strong>: New <code><a href="../reference/plot_cv_recovery.html">plot_cv_recovery()</a></code> methods for ABI models (<code>eam_abi_assess</code> and <code>eam_abi_posterior_samples</code> classes)</p></li>
-<li><p><strong>Posterior Summarization</strong>: <code><a href="../reference/summarise_posterior_parameters.html">summarise_posterior_parameters()</a></code> for aggregating posterior samples</p></li>
+<li><p><strong>ABC helpers</strong>: Add <code><a href="../reference/abc_abc.html">abc_abc()</a></code> and <code><a href="../reference/abc_cv.html">abc_cv()</a></code> wrappers for ABC fitting and cross-validation</p></li>
+<li><p><strong>Posterior predictive workflows</strong>: Add <code><a href="../reference/abc_posterior_predictive_check.html">abc_posterior_predictive_check()</a></code>, <code><a href="../reference/abi_posterior_predictive_check.html">abi_posterior_predictive_check()</a></code>, and <code><a href="../reference/update_config_from_posterior.html">update_config_from_posterior()</a></code> for teaching-oriented posterior simulation workflows</p></li>
+<li>
+<p><strong>Visualization</strong>:</p>
+<ul><li>New <code><a href="../reference/plot_cv_recovery.html">plot_cv_recovery()</a></code> methods for ABI models (<code>eam_abi_assess</code> and <code>eam_abi_posterior_samples</code> classes)</li>
+<li>Update posterior RT and accuracy plots to compare simulated and observed data more directly</li>
+<li>
+<code><a href="../reference/plot_rt.html">plot_rt()</a></code> now displays simulated RTs as densities and observed RTs as histograms</li>
+</ul></li>
+<li><p><strong>Posterior summarization</strong>: <code><a href="../reference/summarise_posterior_parameters.html">summarise_posterior_parameters()</a></code> for aggregating posterior samples</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="infrastructure-development-version">Infrastructure<a class="anchor" aria-label="anchor" href="#infrastructure-development-version"></a></h3>
 <ul><li>Julia environment integration via <code><a href="../reference/init_julia_env.html">init_julia_env()</a></code> for neural network backend</li>
+<li>Add bundled Julia project files under <code>inst/julia/env/</code> for ABI setup</li>
 <li>Add <code>tibble</code> dependency for improved output formatting</li>
+<li>Improve simulation routing, including LFM support and updated LBA routing</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
 <ul><li>Add inst/CITATION file with pre-print citation information</li>
+<li>Add and expand examples for ABC wrappers, posterior predictive helpers, and simulation-config updates</li>
+<li>Add ABI and ABC demos and refresh tutorial materials</li>
 <li>Various documentation improvements and formatting fixes</li>
 </ul></div>
 </div>

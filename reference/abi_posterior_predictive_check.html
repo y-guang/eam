@@ -170,8 +170,65 @@ selected by <code>estimator_type</code>.
 For step checks, follow these functions:
 <code><a href="abi_estimate.html">abi_estimate()</a></code> or <code><a href="abi_sample_posterior.html">abi_sample_posterior()</a></code>, then
 <code><a href="update_config_from_posterior.html">update_config_from_posterior()</a></code>, and <code><a href="run_simulation.html">run_simulation()</a></code>.</p>
+
+<p>This wrapper is mainly a teaching tool. It provides a compact end-to-end
+posterior predictive workflow for ABI, but it intentionally hides several
+modeling choices behind a single helper call.</p>
+<p>For more serious work, manual posterior predictive simulation is preferred.
+The recommended workflow is to obtain parameter values explicitly with
+<code><a href="abi_estimate.html">abi_estimate()</a></code> for point estimators or <code><a href="abi_sample_posterior.html">abi_sample_posterior()</a></code>
+for posterior estimators, inspect or summarise those values, rebuild a
+simulation configuration explicitly with <code><a href="new_simulation_config.html">new_simulation_config</a></code>
+so the parameter structure is fully under your control, run the simulation
+with <code><a href="run_simulation.html">run_simulation()</a></code>, and then compare simulated and observed data
+using plotting or summary functions. <code><a href="update_config_from_posterior.html">update_config_from_posterior()</a></code>
+can still be useful for quick checks, but rebuilding the config is the
+safer option when you need to know exactly how inferred values are mapped
+back into the model. Following the steps manually makes each assumption
+visible, including which ABI output was used, how posterior summaries were
+constructed, and how the posterior predictive data were generated.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Load an observed dataset and a trained ABI estimator prepared in your environment</span></span></span>
+<span class="r-in"><span><span class="va">observed_data</span> <span class="op">&lt;-</span> <span class="va">sim_output</span><span class="op">$</span><span class="fu">open_dataset</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">chunk_idx</span> <span class="op">==</span> <span class="fl">1</span>, <span class="va">condition_idx</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Point-estimate workflow</span></span></span>
+<span class="r-in"><span><span class="fu">abi_posterior_predictive_check</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span></span>
+<span class="r-in"><span>  trained_estimator <span class="op">=</span> <span class="va">trained_point_estimator</span>,</span></span>
+<span class="r-in"><span>  estimator_type <span class="op">=</span> <span class="st">"point"</span>,</span></span>
+<span class="r-in"><span>  observed_df <span class="op">=</span> <span class="va">observed_data</span>,</span></span>
+<span class="r-in"><span>  Z <span class="op">=</span> <span class="va">abi_input</span><span class="op">$</span><span class="va">Z_test</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  rt_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_idx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  rt_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  accuracy_x <span class="op">=</span> <span class="st">"item_idx"</span>,</span></span>
+<span class="r-in"><span>  accuracy_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ndt_beta_0"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  accuracy_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Posterior-sampling workflow</span></span></span>
+<span class="r-in"><span><span class="fu">abi_posterior_predictive_check</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  config <span class="op">=</span> <span class="va">sim_config</span>,</span></span>
+<span class="r-in"><span>  trained_estimator <span class="op">=</span> <span class="va">trained_posterior_estimator</span>,</span></span>
+<span class="r-in"><span>  estimator_type <span class="op">=</span> <span class="st">"posterior"</span>,</span></span>
+<span class="r-in"><span>  observed_df <span class="op">=</span> <span class="va">observed_data</span>,</span></span>
+<span class="r-in"><span>  Z <span class="op">=</span> <span class="va">abi_input</span><span class="op">$</span><span class="va">Z_test</span>,</span></span>
+<span class="r-in"><span>  posterior_dataset_id <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  posterior_n_samples <span class="op">=</span> <span class="fl">1000</span>,</span></span>
+<span class="r-in"><span>  rt_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"item_idx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  rt_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  accuracy_x <span class="op">=</span> <span class="st">"item_idx"</span>,</span></span>
+<span class="r-in"><span>  accuracy_facet_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ndt_beta_0"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  accuracy_facet_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

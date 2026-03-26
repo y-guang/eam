@@ -42,11 +42,11 @@ posterior_params <- abc_posterior_bootstrap(
 
 # View the first few rows of the bootstrapped posterior parameters
 head(posterior_params)
-#>       V_beta_1 V_beta_group
-#> X234 0.2610105    0.1937525
-#> X458 0.2544680    0.1602703
-#> X232 0.2280897    0.1869761
-#> X61  0.2587934    0.1670919
-#> X150 0.2258720    0.1938078
-#> X318 0.2608088    0.1624729
+#>        V_beta_1 V_beta_group
+#> X150  0.2258720    0.1938078
+#> X186  0.2188160    0.1983776
+#> X61   0.2587934    0.1670919
+#> X61.1 0.2587934    0.1670919
+#> X470  0.2612701    0.1621439
+#> X318  0.2608088    0.1624729
 ```
