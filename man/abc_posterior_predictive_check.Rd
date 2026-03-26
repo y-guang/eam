@@ -61,4 +61,47 @@ It is intentionally specific to one input shape (an \code{abc} object).
 For step checks, follow these functions:
 \code{abc_posterior_bootstrap()}, \code{update_config_from_posterior()},
 and \code{run_simulation()}.
+
+
+This wrapper is mainly a teaching tool. It provides a compact end-to-end
+posterior predictive workflow, but it intentionally hides several modeling
+choices by collapsing the posterior to a single summary and then simulating
+from that reduced representation.
+
+For more serious work, manual posterior predictive simulation is preferred.
+The recommended workflow is to draw posterior parameter values explicitly
+with \code{abc_posterior_bootstrap()}, inspect or modify those draws as
+needed, rebuild a simulation configuration explicitly with
+\code{\link{new_simulation_config}} so the parameter structure is fully under
+your control, run the simulation with \code{run_simulation()}, and then
+compare the simulated output with the observed data using plotting or
+summary functions. \code{update_config_from_posterior()} can still be useful
+for quick checks, but rebuilding the config is the safer option when you
+need to know exactly how posterior values are mapped back into the model.
+Following the steps manually makes each assumption visible, including which
+posterior draw was used, how parameter values entered the simulation config,
+and how the posterior predictive data were generated.
+}
+\examples{
+\donttest{
+# Load example simulation config, fitted ABC model, and observed data
+base_dir <- system.file("extdata", "rdm_minimal", package = "eam")
+sim_output <- load_simulation_output(file.path(base_dir, "simulation"))
+abc_model <- readRDS(file.path(base_dir, "abc", "abc_neuralnet_model.rds"))
+obs_df <- read.csv(file.path(base_dir, "observation", "observation_data.csv"))
+
+# Run a high-level posterior predictive check
+abc_posterior_predictive_check(
+  config = sim_output$simulation_config,
+  abc_result = abc_model,
+  observed_df = obs_df,
+  n_conditions = 1,
+  n_trials_per_condition = 500,
+  rt_facet_x = c("item_idx"),
+  rt_facet_y = c(),
+  accuracy_x = "item_idx",
+  accuracy_facet_x = c("group"),
+  accuracy_facet_y = c()
+)
+}
 }
