@@ -18,13 +18,16 @@
 #' For more serious work, manual posterior predictive simulation is preferred.
 #' The recommended workflow is to draw posterior parameter values explicitly
 #' with \code{abc_posterior_bootstrap()}, inspect or modify those draws as
-#' needed, update the simulation configuration with
-#' \code{update_config_from_posterior()}, run the simulation with
-#' \code{run_simulation()}, and then compare the simulated output with the
-#' observed data using plotting or summary functions. Following the steps
-#' manually makes each assumption visible, including which posterior draw was
-#' used, how parameters were inserted back into the simulation config, and how
-#' the posterior predictive data were generated.
+#' needed, rebuild a simulation configuration explicitly with
+#' \code{\link{new_simulation_config}} so the parameter structure is fully under
+#' your control, run the simulation with \code{run_simulation()}, and then
+#' compare the simulated output with the observed data using plotting or
+#' summary functions. \code{update_config_from_posterior()} can still be useful
+#' for quick checks, but rebuilding the config is the safer option when you
+#' need to know exactly how posterior values are mapped back into the model.
+#' Following the steps manually makes each assumption visible, including which
+#' posterior draw was used, how parameter values entered the simulation config,
+#' and how the posterior predictive data were generated.
 #'
 #' @param config Simulation configuration object.
 #' @param abc_result Fitted object from \code{abc_abc()}.
@@ -127,6 +130,25 @@ abc_posterior_predictive_check <- function(
 #' \code{abi_estimate()} or \code{abi_sample_posterior()}, then
 #' \code{update_config_from_posterior()}, and \code{run_simulation()}.
 #'
+#' @details
+#' This wrapper is mainly a teaching tool. It provides a compact end-to-end
+#' posterior predictive workflow for ABI, but it intentionally hides several
+#' modeling choices behind a single helper call.
+#'
+#' For more serious work, manual posterior predictive simulation is preferred.
+#' The recommended workflow is to obtain parameter values explicitly with
+#' \code{abi_estimate()} for point estimators or \code{abi_sample_posterior()}
+#' for posterior estimators, inspect or summarise those values, rebuild a
+#' simulation configuration explicitly with \code{\link{new_simulation_config}}
+#' so the parameter structure is fully under your control, run the simulation
+#' with \code{run_simulation()}, and then compare simulated and observed data
+#' using plotting or summary functions. \code{update_config_from_posterior()}
+#' can still be useful for quick checks, but rebuilding the config is the
+#' safer option when you need to know exactly how inferred values are mapped
+#' back into the model. Following the steps manually makes each assumption
+#' visible, including which ABI output was used, how posterior summaries were
+#' constructed, and how the posterior predictive data were generated.
+#'
 #' @param config Simulation configuration object.
 #' @param trained_estimator Trained ABI estimator from \code{abi_train()}.
 #' @param estimator_type Character string: \code{"point"} or \code{"posterior"}.
@@ -146,6 +168,43 @@ abc_posterior_predictive_check <- function(
 #' @param accuracy_facet_y Facet columns for \code{plot_accuracy()} y facets.
 #' @return \code{invisible(NULL)}. This function is used for plotting side
 #'   effects only and prints RT and accuracy plots directly.
+#' @examples
+#' \dontrun{
+#' # Load an observed dataset and a trained ABI estimator prepared in your environment
+#' observed_data <- sim_output$open_dataset() |>
+#'   dplyr::filter(chunk_idx == 1, condition_idx == 1) |>
+#'   dplyr::collect()
+#'
+#' # Point-estimate workflow
+#' abi_posterior_predictive_check(
+#'   config = sim_config,
+#'   trained_estimator = trained_point_estimator,
+#'   estimator_type = "point",
+#'   observed_df = observed_data,
+#'   Z = abi_input$Z_test[[1]],
+#'   rt_facet_x = c("item_idx"),
+#'   rt_facet_y = c(),
+#'   accuracy_x = "item_idx",
+#'   accuracy_facet_x = c("ndt_beta_0"),
+#'   accuracy_facet_y = c()
+#' )
+#'
+#' # Posterior-sampling workflow
+#' abi_posterior_predictive_check(
+#'   config = sim_config,
+#'   trained_estimator = trained_posterior_estimator,
+#'   estimator_type = "posterior",
+#'   observed_df = observed_data,
+#'   Z = abi_input$Z_test,
+#'   posterior_dataset_id = 1,
+#'   posterior_n_samples = 1000,
+#'   rt_facet_x = c("item_idx"),
+#'   rt_facet_y = c(),
+#'   accuracy_x = "item_idx",
+#'   accuracy_facet_x = c("ndt_beta_0"),
+#'   accuracy_facet_y = c()
+#' )
+#' }
 #' @export
 abi_posterior_predictive_check <- function(
     config,
