@@ -348,17 +348,19 @@ posterior_predictive_check.run_from_params <- function(
     facet_y = plot_cols$rt_facet_y
   )
 
-  accuracy_plot <- plot_accuracy(
-    simulated_output = post_output,
-    observed_df = observed_df,
-    x = plot_cols$accuracy_x,
-    facet_x = plot_cols$accuracy_facet_x,
-    facet_y = plot_cols$accuracy_facet_y
-  )
-
   # Print plots so they render immediately in R Markdown and interactive use.
   print(rt_plot)
-  print(accuracy_plot)
+
+  if (posterior_predictive_check.can_plot_accuracy(post_output, observed_df)) {
+    accuracy_plot <- plot_accuracy(
+      simulated_output = post_output,
+      observed_df = observed_df,
+      x = plot_cols$accuracy_x,
+      facet_x = plot_cols$accuracy_facet_x,
+      facet_y = plot_cols$accuracy_facet_y
+    )
+    print(accuracy_plot)
+  }
 
   invisible(NULL)
 }
@@ -409,4 +411,10 @@ posterior_predictive_check.resolve_plot_columns <- function(
     accuracy_facet_x = accuracy_facet_x_safe,
     accuracy_facet_y = accuracy_facet_y_safe
   )
+}
+
+
+#' @keywords internal
+posterior_predictive_check.can_plot_accuracy <- function(post_output, observed_df) {
+  "choice" %in% names(observed_df)
 }
