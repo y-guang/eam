@@ -9,6 +9,23 @@
 #' \code{abc_posterior_bootstrap()}, \code{update_config_from_posterior()},
 #' and \code{run_simulation()}.
 #'
+#' @details
+#' This wrapper is mainly a teaching tool. It provides a compact end-to-end
+#' posterior predictive workflow, but it intentionally hides several modeling
+#' choices by collapsing the posterior to a single summary and then simulating
+#' from that reduced representation.
+#'
+#' For more serious work, manual posterior predictive simulation is preferred.
+#' The recommended workflow is to draw posterior parameter values explicitly
+#' with \code{abc_posterior_bootstrap()}, inspect or modify those draws as
+#' needed, update the simulation configuration with
+#' \code{update_config_from_posterior()}, run the simulation with
+#' \code{run_simulation()}, and then compare the simulated output with the
+#' observed data using plotting or summary functions. Following the steps
+#' manually makes each assumption visible, including which posterior draw was
+#' used, how parameters were inserted back into the simulation config, and how
+#' the posterior predictive data were generated.
+#'
 #' @param config Simulation configuration object.
 #' @param abc_result Fitted object from \code{abc_abc()}.
 #' @param observed_df Observed trial-level data frame.
