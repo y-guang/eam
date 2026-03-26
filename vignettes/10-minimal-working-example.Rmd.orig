@@ -81,6 +81,8 @@ First, we load the required packages.
 # Load necessary packages
 library(eam)
 library(dplyr)
+library(rtdists)
+library(tidyr)
 
 # Set a random seed for reproducibility
 set.seed(1)
@@ -189,8 +191,6 @@ The function `rdiffusion()` returns response labels (`"upper"`/`"lower"`) and re
 ############################
 # Observed data generation #
 ############################
-
-library(rtdists)
 
 N <- 500
 
@@ -437,7 +437,6 @@ The function `build_abi_input()` then aligns simulated data and parameters into 
 #####################
 # abc model prepare #
 #####################
-
 library(dplyr)
 library(tidyr)
 
@@ -592,8 +591,6 @@ abi_posterior_predictive_check(
 #####################
 # abc model prepare #
 #####################
-library(dplyr)
-library(tidyr)
 
 Z_observed <- observed_data %>%
   mutate(trial = row_number()) %>%

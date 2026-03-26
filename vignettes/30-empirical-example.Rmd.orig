@@ -80,6 +80,7 @@ First, we load the required packages.
 # Load necessary packages
 library(eam)
 library(dplyr)
+library(tidyr)
 
 # Set a random seed for reproducibility
 set.seed(1)
@@ -191,8 +192,6 @@ Here, we use reaction times (rt) as the input representation and split the simul
 #####################
 # abi model prepare #
 #####################
-library(dplyr)
-library(tidyr)
 
 Z_observed <- observed_data %>%
   select(session_list, rank_idx, rt) %>%

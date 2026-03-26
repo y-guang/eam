@@ -39,6 +39,9 @@ The free parameters of the model thus include the drift rate $v$, the decision b
 Beyond these core parameters, the DDM also incorporates three sources of between-trial variability: variability in drift rate ($s_v$), starting point ($s_z$), and non-decision time ($s_{t0}$). These components are optional, yet including them enables the model to better capture empirical RT distributions, explain "fast errors", and separate within-trial noise from between-trial variability.
 
 ```{r,eval=FALSE}
+# Load necessary packages
+library(eam)
+
 # Set the number of accumulators in the model
 n_items <- 1
 
