@@ -41,6 +41,28 @@
 #' @param accuracy_facet_y Facet columns for \code{plot_accuracy()} y facets.
 #' @return \code{invisible(NULL)}. This function is used for plotting side
 #'   effects only and prints RT and accuracy plots directly.
+#' @examples
+#' \donttest{
+#' # Load example simulation config, fitted ABC model, and observed data
+#' base_dir <- system.file("extdata", "rdm_minimal", package = "eam")
+#' sim_output <- load_simulation_output(file.path(base_dir, "simulation"))
+#' abc_model <- readRDS(file.path(base_dir, "abc", "abc_neuralnet_model.rds"))
+#' obs_df <- read.csv(file.path(base_dir, "observation", "observation_data.csv"))
+#'
+#' # Run a high-level posterior predictive check
+#' abc_posterior_predictive_check(
+#'   config = sim_output$simulation_config,
+#'   abc_result = abc_model,
+#'   observed_df = obs_df,
+#'   n_conditions = 1,
+#'   n_trials_per_condition = 500,
+#'   rt_facet_x = c("item_idx"),
+#'   rt_facet_y = c(),
+#'   accuracy_x = "item_idx",
+#'   accuracy_facet_x = c("group"),
+#'   accuracy_facet_y = c()
+#' )
+#' }
 #' @export
 abc_posterior_predictive_check <- function(
     config,
