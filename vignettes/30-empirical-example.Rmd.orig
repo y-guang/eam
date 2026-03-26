@@ -203,7 +203,6 @@ Z_observed <- observed_data %>%
 
 Z_observed <- as.matrix(Z_observed[, -1])
 rownames(Z_observed) <- paste0("rank_", observed_data$rank_idx %>% unique(), "_item_idx")
-Z_observed
 
 abi_input <- build_abi_input(
   sim_output,
@@ -255,7 +254,8 @@ trained_posterior_estimator <- abi_train(
   estimator = posterior_estimator,
   abi_input = abi_input,
   epochs = 200,
-  stopping_epochs = 50
+  stopping_epochs = 50,
+  verbose = FALSE
 )
 
 # Sample from posterior distribution

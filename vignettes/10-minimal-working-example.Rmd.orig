@@ -454,7 +454,6 @@ Z_observed <- observed_data %>%
   )
 
 Z_observed <- as.matrix(Z_observed[, -1])
-Z_observed
 
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
@@ -512,7 +511,8 @@ trained_point_estimator <- abi_train(
   estimator = point_estimator,
   abi_input = abi_input,
   epochs = 100,
-  stopping_epochs = 20
+  stopping_epochs = 20,
+  verbose = FALSE
 )
 ```
 
@@ -606,7 +606,6 @@ Z_observed <- observed_data %>%
   )
 
 Z_observed <- as.matrix(Z_observed[, -1])
-Z_observed
 
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
@@ -667,7 +666,8 @@ trained_posterior_estimator <- abi_train(
   estimator = posterior_estimator,
   abi_input = abi_input,
   epochs = 100,
-  stopping_epochs = 20
+  stopping_epochs = 20,
+  verbose = FALSE
 )
 ```
 
