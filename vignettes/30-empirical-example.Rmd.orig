@@ -2,8 +2,8 @@
 title: "An Empirical Example: Simulation-Based Inference for Free Recall"
 author: "Guangyu Zhu"
 ---
-  
-  ```{r, include = FALSE}
+
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -17,35 +17,34 @@ This section presents a real-world example illustrating how the proposed simulat
 
 Here, we used the free recall data from Penn Electrophysiology of Encoding and Retrieval Study (PEERS; Kahana et al., 2024). We model the recall process using a multi-response Racing Diffusion Model (RDM), focusing on RTs for first seven retrievaled items.
 
----
-  
-  ### Descriptions of the model
-  
-  The details of this model are listed below:
-  
-  \paragraph{Priors on global parameters}
+### Descriptions of the model
+
+The details of this model are listed below:
+
+**Priors on global parameters**
 
 We specify weakly informative priors on the global parameters governing decision boundary, drift rate, non-decision time, and between-trial variability:
-  \[
-    \begin{aligned}
-    A_{\beta_0} &\sim \text{Uniform}(0.5, 5.0), \\
-    A_{\beta_1} &\sim \text{Uniform}(0.01, 1.0), \\
-    V_{\beta_0} &\sim \text{Uniform}(0.5, 3.0), \\
-    V_{\beta_1} &\sim \text{Uniform}(0.01, 0.3), \\
-    V_{\sigma} &\sim \text{Uniform}(0.01, 1.0), \\
-    ndt_{\beta_0} &\sim \text{Uniform}(-1, 1).
-    \end{aligned}
-    \]
 
-\paragraph{Between-trial variability}
+\[
+  \begin{aligned}
+  A_{\beta_0} &\sim \text{Uniform}(0.5, 5.0), \\
+  A_{\beta_1} &\sim \text{Uniform}(0.01, 1.0), \\
+  V_{\beta_0} &\sim \text{Uniform}(0.5, 3.0), \\
+  V_{\beta_1} &\sim \text{Uniform}(0.01, 0.3), \\
+  V_{\sigma} &\sim \text{Uniform}(0.01, 1.0), \\
+  ndt_{\beta_0} &\sim \text{Uniform}(-1, 1).
+  \end{aligned}
+\]
+
+**Between-trial variability**
 
 To capture variabilities in recall trajectories and recall strategies across trials , we introduce a between-trial variability on the drift rate:
-  
-  \[
-    V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
-    \]
 
-\paragraph{Item-level parameterization}
+\[
+  V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
+\]
+
+**Item-level parameterization**
 
 At the item-level, different model parameters are linked to different structural aspects of the task. Specifically, the decision boundary is assumed to vary with the \emph{output position}, whereas the drift rate varies with the \emph{item index}.
 
@@ -56,29 +55,28 @@ Formally, we define
   V &= \max\!\left( V_{\beta_0} - \text{item index} \cdot V_{\beta_1} + V_{\text{var}}, \;
                     \theta \right)
   \end{aligned}
-  \]
+\]
 where \( \theta > 0 \) is a small constant ensuring positivity of the drift rate.
 
-\paragraph{Evidence accumulation dynamics}
+**Evidence accumulation dynamics**
 
 Within each trial, evidence evolves according to a Wiener diffusion process:
-  \[
-    dX(t) = V_i \, dt + \sigma \, dW(t),
-    \qquad
-    dW(t) \sim \mathcal{N}(0, dt),
-    \]
+
+\[
+  dX(t) = V_i \, dt + \sigma \, dW(t),
+  \qquad
+  dW(t) \sim \mathcal{N}(0, dt),
+\]
 
 A response is generated when one accumulator first reaches the decision boundary \( A_i \). The observed response time for item \( i \) is given by
 
 \[
   RT_i = T_{\text{decision},i} + ndt_i .
-  \]
+\]
 
----
-  
-  ### Step one: Model setup
-  
-  First, we load the required packages.
+### Step one: Model setup
+
+First, we load the required packages.
 
 ```{r}
 # Load necessary packages
@@ -114,17 +112,16 @@ prior_formulas <- list(
   noise_coef ~ 1
 )
 
-
 # Specify the between-trial components 
 between_trial_formulas <- list(
   # random group binomial
-  V_var ~ distributional::dist_normal(0,V_sigma)
+  V_var ~ distributional::dist_normal(0, V_sigma)
 )
 
 # Specify the item-level parameters
 item_formulas <- list(
   A ~ A_beta_0 + seq(1, n_items) * A_beta_1,
-  V ~ pmax(V_beta_0 - seq(1, n_items) * V_beta_1 + V_var,1e-5),
+  V ~ pmax(V_beta_0 - seq(1, n_items) * V_beta_1 + V_var, 1e-5),
   ndt ~ ndt_beta_0
 )
 
@@ -136,11 +133,9 @@ noise_factory <- function(context) {
 }
 ```
 
----
-  
-  ### Step two: Data simulation
-  
-We next generate simulated datasets from the specified model. 
+### Step two: Data simulation
+
+We next generate simulated datasets from the specified model.
 
 Depending on computational resources, this step may take approximately 30 minutes to 1 hour when parallelization is enabled.
 
@@ -179,28 +174,25 @@ sim_output <- run_simulation(
 )
 ```
 
----
-  
-  ### Step three: Load observed data
-  
-  For illustration purposes, we use data from one representative participant in the PEERS dataset as the observed data in this example.
+### Step three: Load observed data
+
+For illustration purposes, we use data from one representative participant in the PEERS dataset as the observed data in this example.
 
 ```{r}
 #######################
 # Load Observed data  #
 #######################
 
-observed_data<-read.csv("./30-empirical-example/example_data.csv")
+observed_data <- read.csv("./30-empirical-example/example_data.csv")
 observed_data$condition_idx <- 1
 ```
 
----
-  
-  ### Step four: Prepare inputs for inference
-  
-We construct the input for amortized Bayesian inference by specifying the model parameters to be estimated (θ) and the observed variables (Z). The model is trained on simulated datasets and learns a mapping from data to parameters.
+### Step four: Prepare inputs for inference
+
+We construct the input for amortized Bayesian inference by specifying the model parameters to be estimated ($\theta$) and the observed variables ($Z$). The model is trained on simulated datasets and learns a mapping from data to parameters.
 
 Here, we use reaction times (rt) as the input representation and split the simulated data into training and test sets.
+
 ```{r,eval=FALSE}
 #####################
 # abi model prepare #
@@ -216,7 +208,7 @@ Z_observed <- observed_data %>%
   ) %>%
   arrange(rank_idx)
 
-Z_observed <- as.matrix(Z_observed[,-1])
+Z_observed <- as.matrix(Z_observed[, -1])
 rownames(Z_observed) <- paste0("rank_", observed_data$rank_idx %>% unique(), "_item_idx")
 Z_observed
 
@@ -233,11 +225,9 @@ abi_input <- build_abi_input(
 )
 ```
 
----
-  
-  ### Step five: Fit the model
-  
-  We perform amortized Bayesian inference to estimate the posterior distributions of model parameters.
+### Step five: Fit the model
+
+We perform amortized Bayesian inference to estimate the posterior distributions of model parameters.
 
 ```{r,eval=FALSE}
 
@@ -265,7 +255,7 @@ posterior_estimator <- "
   deepset = DeepSet(psi, phi)
   w = 6
   q = NormalisingFlow(w, w)
-  estimator = PosteriorEstimator(q,deepset)
+  estimator = PosteriorEstimator(q, deepset)
 "
 
 trained_posterior_estimator <- abi_train(
@@ -281,7 +271,6 @@ posterior_samples <- abi_sample_posterior(
   Z = Z_observed,
   N = 1000
 )
-
 
 # Summarise posterior parameters for each dataset
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
@@ -299,11 +288,9 @@ plot_cv_recovery(
 )
 ```
 
----
-  
-  ### Step six: Model evaluation
-  
-  We assess model adequacy using posterior predictive checks by comparing reaction time distributions simulated from the fitted posterior with the observed data.
+### Step six: Model evaluation
+
+We assess model adequacy using posterior predictive checks by comparing reaction time distributions simulated from the fitted posterior with the observed data.
 
 ```{r}
 ##############################
@@ -330,7 +317,7 @@ The results showed that, when fitted to the model, the estimated parameters accu
 
 ---
   
-  Reference:
+Reference:
   
-  Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A. W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller, N. E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera, J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn Electrophysiology of Encoding and Retrieval Study. Journal of Experimental Psychology: Learning, Memory, and Cognition, 50(9), 1421–1443. https://doi.org/10.1037/xlm0001319
+Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A. W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller, N. E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera, J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn Electrophysiology of Encoding and Retrieval Study. Journal of Experimental Psychology: Learning, Memory, and Cognition, 50(9), 1421–1443. https://doi.org/10.1037/xlm0001319
 

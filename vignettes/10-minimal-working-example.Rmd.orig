@@ -2,7 +2,7 @@
 title: "Getting Started: A Minimal Working Example"
 author: "Guangyu Zhu"
 ---
-  
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -18,24 +18,15 @@ This section aims to help you grasp the basic workflow to run this package. In t
 The workflow implemented in **eam** follows the standard workflow in simulation-based inference. First, we begin by specifying a data-generating process, simulate data under a range of parameter values, and then use simulation-based inference to learn which parameters are most consistent with the observed data.
 
 Concretely, the workflow consists of four steps:
-  
-1. **Model specification and simulation**: Define an evidence accumulation model
-by specifying its structural components (boundaries, drift, noise, and non-decision processes), and simulate synthetic datasets from the prior.
-1. **Summary statistics computation**: Reduce both simulated and observed data
-to informative summary statistics that capture key data patterns.
-1. **Parameter estimation and recovery**: Use ABC (or ABI) to infer posterior distributions
-over parameters, and evaluate whether the inference procedure can reliably
-recover known parameters.
-1. **Model evaluation and comparison**: Assess model adequacy using posterior
-predictive checks, and compare alternative model
-specifications.
 
-The following sections walk through these steps in detail using a simple DDM
-example, before extending the workflow to more complex models.
+1. **Model specification and simulation**: Define an evidence accumulation model by specifying its structural components (boundaries, drift, noise, and non-decision processes), and simulate synthetic datasets from the prior.
+1. **Summary statistics computation**: Reduce both simulated and observed data to informative summary statistics that capture key data patterns.
+1. **Parameter estimation and recovery**: Use ABC (or ABI) to infer posterior distributions over parameters, and evaluate whether the inference procedure can reliably recover known parameters.
+1. **Model evaluation and comparison**: Assess model adequacy using posterior predictive checks, and compare alternative model specifications.
 
----
-  
-  In this example, we start with a simple three-parameter two-boundary Diffusion Decision Model (DDM).
+The following sections walk through these steps in detail using a simple DDM example, before extending the workflow to more complex models.
+
+In this example, we start with a simple three-parameter two-boundary Diffusion Decision Model (DDM).
 
 Although the DDM has a trackable likelihood, we deliberately treat it as a generative model here. This allows us to demonstrate the full simulation-based workflow in a setting where the ground truth is known.
 
@@ -44,8 +35,8 @@ Here, we adopt a slightly different parameterization from the conventional DDM: 
 ### Description of the model
 
 The details of this model is listed below:
-  
-  **Priors on global parameters**
+
+**Priors on global parameters**
 
 $$
 \begin{aligned}
@@ -80,7 +71,6 @@ $$
 RT = T_{\text{decision}} + ndt .
 $$
 
-
 ### Step one: Model setup
 
 First, we load the required packages.
@@ -101,7 +91,7 @@ Then, we specify the model configuration according to the setup described above.
 # Model specification #
 #######################
 # Define the number of accumulators
-n_items <-1
+n_items <- 1
 
 # Set the number of accumulators in the model
 prior_params <- tibble(
@@ -115,22 +105,21 @@ prior_formulas <- list(
   # Drift rate
   V_0 ~ distributional::dist_uniform(0.5, 3),
   # Non-decision time
-  ndt_0 ~ distributional::dist_uniform(0,1),
+  ndt_0 ~ distributional::dist_uniform(0, 1),
   # Relative starting point
   rho_0 ~ 0.5
 )
 
 # Specify the between-trial components (skipped here)
-between_trial_formulas <- list(
-)
+between_trial_formulas <- list()
 
 # Specify the item-level parameters
 item_formulas <- list(
   # Relative starting point
   rho ~ rho_0,
   # Decision boundary
-  A_upper ~ rho*(A_0), # upper 
-  A_lower ~ -rho*(A_0), # lower
+  A_upper ~ rho * (A_0), # upper
+  A_lower ~ -rho * (A_0), # lower
   # Drift rate
   V ~ V_0,
   # Non-decision time
@@ -145,11 +134,9 @@ noise_factory <- function(context) {
 }
 ```
 
----
-  
-  ### Step two: Data simulation
-  
-  Once the model is specified, we can proceed to data simulation. The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
+### Step two: Data simulation
+
+Once the model is specified, we can proceed to data simulation. The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
 
 ```{r,message=FALSE}
 ####################
@@ -193,13 +180,11 @@ sim_output <- run_simulation(
 )
 ```
 
----
-  
 ### Step three: Load observed data
-  
-  For observed data, we create a small dataset using the **rtdists** package, which provides fast simulators for standard DDM. Specifically, we simulate N=500 trials from a two-boundary DDM with fixed parameters ($a$,$v$,$t0$) where a controls boundary separation, $v$ is the drift rate, and $t0$ captures non-decision time.
 
-The function *rdiffusion()* returns response labels (“upper”/“lower”) and response times. For consistency with the data format produced by our simulation engine, we recode responses into a numeric choice variable (1 for the upper boundary and -1 for the lower boundary), and we add a condition_idx field to indicate that all trials belong to a single experimental condition
+For observed data, we create a small dataset using the **rtdists** package, which provides fast simulators for standard DDM. Specifically, we simulate `N = 500` trials from a two-boundary DDM with fixed parameters ($a$, $v$, $t0$) where $a$ controls boundary separation, $v$ is the drift rate, and $t0$ captures non-decision time.
+
+The function `rdiffusion()` returns response labels (`"upper"`/`"lower"`) and response times. For consistency with the data format produced by our simulation engine, we recode responses into a numeric choice variable (1 for the upper boundary and -1 for the lower boundary), and we add a `condition_idx` field to indicate that all trials belong to a single experimental condition.
 
 ```{r,message=FALSE}
 ############################
@@ -207,7 +192,6 @@ The function *rdiffusion()* returns response labels (“upper”/“lower”) an
 ############################
 
 library(rtdists)
-
 
 N <- 500
 
@@ -217,24 +201,21 @@ pars <- list(
   t0 = 0.5  # Non-decision time
 )
 
-# rdiffusion() will return responses and RTs from a standard DDM 
+# rdiffusion() will return responses and RTs from a standard DDM
 observed_data <- rdiffusion(n = N, a = pars$a, v = pars$v, t0 = pars$t0)
 
 # Recode the data to be consistent with simulated data
-observed_data$choice <- ifelse(observed_data $response == "upper", 1, -1)
+observed_data$choice <- ifelse(observed_data$response == "upper", 1, -1)
 observed_data$condition_idx <- 1
 ```
 
----
-
 ## Approximate Bayesian Computation Pipleline
-  
-    
-### Step four: Extract summary statistics
-  
-we define a summary pipeline that extracts two types of common summary statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice category (1 vs. -1).
 
-We then apply the same summary procedure to every simulated dataset to obtain *simulation_sumstat*, and to the observed dataset to obtain *target_sumstat*. Finally, build_abc_input() aligns the simulated and observed summaries into a consistent structure.
+### Step four: Extract summary statistics
+
+We define a summary pipeline that extracts two types of common summary statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice category (1 vs. -1).
+
+We then apply the same summary procedure to every simulated dataset to obtain *simulation_sumstat*, and to the observed dataset to obtain *target_sumstat*. Finally, `build_abc_input()` aligns the simulated and observed summaries into a consistent structure.
 
 ```{r,message=FALSE}
 #####################
@@ -268,21 +249,19 @@ abc_input <- build_abc_input(
   simulation_output = sim_output,
   simulation_summary = simulation_sumstat,
   target_summary     = target_sumstat,
-  param = c("A_0","V_0","ndt_0")
+  param = c("A_0", "V_0", "ndt_0")
 )
 ```
 
----
-  
 ### Step five: Fit the model
-  
+
 With the simulated and observed summary statistics aligned, we can now estimate the posterior distribution of the model parameters using Approximate Bayesian Computation (ABC).
 
-Specifically, we fit an ABC model by comparing the simulated summary statistics to the observed summary statistics. Then we retain (or reweight) parameter draws that best reproduce the observed summaries under a tolerance level (tol=0.05).
+Specifically, we fit an ABC model by comparing the simulated summary statistics to the observed summary statistics. Then we retain (or reweight) parameter draws that best reproduce the observed summaries under a tolerance level (`tol = 0.05`).
 
-Here we use a regression-based-adjusted ABC variant (method = "loclinear"), which learns a flexible mapping from summary statistics to parameters to improve posterior approximation.
+Here we use a regression-based-adjusted ABC variant (`method = "loclinear"`), which learns a flexible mapping from summary statistics to parameters to improve posterior approximation.
 
-These diagnostics help verify whether the posterior concentrates on plausible regions of the parameter space and whether the recovered parameters are consistent with the parameters in the *rdiffusion()* model.
+These diagnostics help verify whether the posterior concentrates on plausible regions of the parameter space and whether the recovered parameters are consistent with the parameters in the `rdiffusion()` model.
 
 ```{r,message=FALSE}
 ########################
@@ -299,9 +278,7 @@ abc_fit <- abc::abc(
 )
 ```
 
----
-  
-  After fitting, we summarize the posterior means/medians and 95% credible intervals and visualize the resulting posterior distributions.
+After fitting, we summarize the posterior means/medians and 95% credible intervals and visualize the resulting posterior distributions.
 
 As shown, the true parameter values underlying the observed data lie well within the 95% credible intervals of the posterior distributions.
 
@@ -318,19 +295,17 @@ plot_posterior_parameters(
 )
 ```
 
----
-  
-  ### Step six: Model evaluation
-  
-  The next step is to evaluate parameter recovery for the model. To do so, we run *cv4abc()* as a cross-validation procedure.
+### Step six: Model evaluation
 
-First, we specify the number of validation datasets (N=100). The function then randomly samples N conditions from the simulated summary statistics, treats their associated parameter values as known ground truth, and re-estimates the parameters using the fitted ABC object under the same tolerance level.
+The next step is to evaluate parameter recovery for the model. To do so, we run `cv4abc()` as a cross-validation procedure.
 
-Recovery performance is visualized using *plot_cv_recovery()*, which compares the estimated parameters with their true values across validation datasets.
+First, we specify the number of validation datasets (`N = 100`). The function then randomly samples `N` conditions from the simulated summary statistics, treats their associated parameter values as known ground truth, and re-estimates the parameters using the fitted ABC object under the same tolerance level.
+
+Recovery performance is visualized using `plot_cv_recovery()`, which compares the estimated parameters with their true values across validation datasets.
 
 Good recovery is indicated by a high correlation between estimated and true parameters (good: $r \ge 0.75$; excellent: $r \ge 0.90$) and by estimates clustering closely around the identity line with minimal residual dispersion.
 
-The resid_tol option trims extreme residuals (here retaining the central 99%), making the main recovery pattern easier to inspect.
+The `resid_tol` option trims extreme residuals (here retaining the central 99%), making the main recovery pattern easier to inspect.
 
 As shown, the three parameters exhibit excellent recovery.
 
@@ -352,8 +327,6 @@ plot_cv_recovery(
 )
 ```
 
----
-  
 As a final diagnostic, we perform a posterior predictive check to assess the adequacy of the fitted model.
 
 Specifically, we generate the posterior data using posterior median estimates obtained from the ABC analysis. The resulting posterior predictive simulations are then compared with the observed dataset.
@@ -378,15 +351,14 @@ abc_posterior_predictive_check(
   accuracy_facet_y = c()  # Accuracy plot facet (y)
 )
 ```
----
-  
+
 ### Step seven (optional): Model comparison
-  
+
 Beyond parameter estimation, the **eam** package also supports model comparison within a simulation-based inference framework.
 
 In this example, we construct an alternative model by deliberately modifying the prior specification of the relative starting point parameter $\rho$, while keeping all other components of the model unchanged. This allows us to isolate the contribution of this parameter assumption to overall model fit. Synthetic data are then generated under the alternative model, and the same summary statistics pipeline is applied to ensure comparability across models.
 
-Model comparison is conducted using the *abc_postpr()* function, which estimates posterior model probabilities based on Approximate Bayesian Computation. Intuitively, this procedure assesses which model is more likely to have generated the observed data by comparing the proximity of simulated summary statistics from each model to the target summary statistics, given a fixed tolerance level.
+Model comparison is conducted using the `abc_postpr()` function, which estimates posterior model probabilities based on Approximate Bayesian Computation. Intuitively, this procedure assesses which model is more likely to have generated the observed data by comparing the proximity of simulated summary statistics from each model to the target summary statistics, given a fixed tolerance level.
 
 The resulting posterior probabilities indicate the relative likelihood that the observed data were generated by each candidate model. These probabilities can be summarized using Bayes factors, which quantify the strength of evidence in favor of one model over another. Conventionally, Bayes factors greater than 3 or smaller than 1/3 are interpreted as providing substantial evidence for one model relative to its competitor.
 
@@ -398,7 +370,7 @@ prior_formulas_alt <- list(
   # Drift rate
   V_0 ~ distributional::dist_uniform(0.5, 3),
   # Non-decision time
-  ndt_0 ~ distributional::dist_uniform(0,1),
+  ndt_0 ~ distributional::dist_uniform(0, 1),
   # Relative starting point
   rho_0 ~ 0.7
 )
@@ -422,12 +394,11 @@ simulation_sumstat_alt <- map_by_condition(
   function(cond_df) summary_pipe(cond_df)
 )
 
-
 abc_input_alt <- build_abc_input(
   simulation_output = sim_output_alt,
   simulation_summary = simulation_sumstat_alt,
   target_summary = target_sumstat,
-  param = c("A_0","V_0","ndt_0")
+  param = c("A_0", "V_0", "ndt_0")
 )
 
 # Run the model comparison
@@ -448,13 +419,11 @@ summary(postpr_result)
 
 ### Step four: Prepare input features
 
-We construct the input matrix 
-𝑍
-Z from the observed data, containing trial-level choice and reaction time (RT).
+We construct the input matrix $Z$ from the observed data, containing trial-level choice and reaction time (RT).
 
 The same structure is used for both simulated and observed datasets.
 
-The function build_abi_input() then aligns simulated data and parameters into a consistent format for training.
+The function `build_abi_input()` then aligns simulated data and parameters into a consistent format for training.
 
 ```{r,message=FALSE}
 #####################
@@ -465,8 +434,8 @@ library(dplyr)
 library(tidyr)
 JuliaConnectoR::juliaEval("Pkg.instantiate()")
 
-Z_observed <- observed_data %>%              
-  mutate(trial = row_number()) %>%   
+Z_observed <- observed_data %>%
+  mutate(trial = row_number()) %>%
   select(trial, choice, rt) %>%
   pivot_longer(
     cols = c(choice, rt),
@@ -478,14 +447,14 @@ Z_observed <- observed_data %>%
     values_from = value
   )
 
-Z_observed <- as.matrix(Z_observed[,-1])
+Z_observed <- as.matrix(Z_observed[, -1])
 Z_observed
 
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
   sim_output,
   theta = c(
-    "A_0","V_0","ndt_0"
+    "A_0", "V_0", "ndt_0"
   ),
   Z = c(
     "choice",
@@ -494,21 +463,18 @@ abi_input <- build_abi_input(
   train_ratio = 0.8,
   n_test = 100
 )
-
 ```
 
----
-  
 ### Step five: Fit the model
-  
-We train a neural estimator to learn the mapping from observed data Z to model parameters θ.
+
+We train a neural estimator to learn the mapping from observed data $Z$ to model parameters $\theta$.
 
 Here we use a point estimator, which directly predicts parameter values from the input data.
 
-The input dimension d=2 corresponds to the two observed variables per trial (choice and RT).
+The input dimension `d = 2` corresponds to the two observed variables per trial (choice and RT).
 The DeepSet encoder maps a set of trials into a fixed-length representation, which is then transformed into parameter estimates.
 
-The output dimension equals the number of parameters (p=3), with each parameter predicted by a dedicated output unit using a softplus activation to enforce valid (positive) values.
+The output dimension equals the number of parameters (`p = 3`), with each parameter predicted by a dedicated output unit using a softplus activation to enforce valid (positive) values.
 
 ```{r,message=FALSE}
 ########################
@@ -516,8 +482,6 @@ The output dimension equals the number of parameters (p=3), with each parameter 
 ########################
 
 # Fit abi model
-
-
 point_estimator <- "
   d = 2    # dimension of data
   w = 32   # number of neurons in each hidden layer
@@ -544,8 +508,6 @@ trained_point_estimator <- abi_train(
 )
 ```
 
----
-  
 After training, we obtain point estimates of the parameters for the observed dataset.
 
 ```{r}
@@ -558,17 +520,15 @@ point_est <- abi_estimate(
 point_est
 ```
 
----
-  
-  ### Step six: Model evaluation
-  
+### Step six: Model evaluation
+
 We evaluate parameter recovery using simulated datasets.
 
-The function abi_assess() performs a validation procedure by:
+The function `abi_assess()` performs a validation procedure by:
 
-  (1)sampling datasets with known parameters
-  (2)re-estimating parameters using the trained estimator
-  (3)comparing estimated vs true parameters
+1. sampling datasets with known parameters
+1. re-estimating parameters using the trained estimator
+1. comparing estimated vs true parameters
 
 Good recovery is indicated by high correlation between estimated and true values estimates concentrated around the identity line
 
@@ -582,11 +542,10 @@ assessment <- abi_assess(
 plot_cv_recovery(assessment)
 ```
 
----
-  
 We assess model fit by generating simulated data using the estimated parameters and comparing them to the observed data.
 
 This allows us to evaluate whether the model reproduces RT distributions and choice proportions
+
 ```{r}
 ##############################
 # Posterior predictive check #
@@ -621,8 +580,8 @@ library(dplyr)
 library(tidyr)
 JuliaConnectoR::juliaEval("Pkg.instantiate()")
 
-Z_observed <- observed_data %>%              
-  mutate(trial = row_number()) %>%   
+Z_observed <- observed_data %>%
+  mutate(trial = row_number()) %>%
   select(trial, choice, rt) %>%
   pivot_longer(
     cols = c(choice, rt),
@@ -634,14 +593,14 @@ Z_observed <- observed_data %>%
     values_from = value
   )
 
-Z_observed <- as.matrix(Z_observed[,-1])
+Z_observed <- as.matrix(Z_observed[, -1])
 Z_observed
 
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
   sim_output,
   theta = c(
-    "A_0","V_0","ndt_0"
+    "A_0", "V_0", "ndt_0"
   ),
   Z = c(
     "choice",
@@ -650,23 +609,19 @@ abi_input <- build_abi_input(
   train_ratio = 0.8,
   n_test = 100
 )
-
 ```
 
----
-  
-  ### Step five: Fit the model
-  
+### Step five: Fit the model
+
 Instead of predicting a single point estimate, we learn the full posterior distribution.
 
-The input dimension d=2 corresponds to the two observed variables per trial (choice and RT).
+The input dimension `d = 2` corresponds to the two observed variables per trial (choice and RT).
 
 The DeepSet encoder maps a set of trials into a fixed-length representation.
 
-The output dimension equals the number of parameters (p=3).
+The output dimension equals the number of parameters (`p = 3`).
 
 Instead of producing point estimates, a normalizing flow is used to generate samples from the posterior distribution over parameters.
-
 
 ```{r,message=FALSE}
 ########################
@@ -674,8 +629,6 @@ Instead of producing point estimates, a normalizing flow is used to generate sam
 ########################
 
 # Fit abi model
-
-
 posterior_estimator <- "
   d = 2    # dimension of each replicate
   w = 32   # number of neurons in each hidden layer
@@ -693,7 +646,7 @@ posterior_estimator <- "
   deepset = DeepSet(psi, phi)
   w = 3
   q = NormalisingFlow(w, w)
-  estimator = PosteriorEstimator(q,deepset)
+  estimator = PosteriorEstimator(q, deepset)
 "
 
 trained_posterior_estimator <- abi_train(
@@ -704,8 +657,6 @@ trained_posterior_estimator <- abi_train(
 )
 ```
 
----
-  
 After training, we draw samples from the posterior distribution.
 
 ```{r}
@@ -716,16 +667,13 @@ posterior_samples <- abi_sample_posterior(
   N = 1000
 )
 
-
 # Summarise posterior parameters
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
 ```
 
----
-  
-  ### Step six: Model evaluation
-  
+### Step six: Model evaluation
+
 We evaluate posterior recovery by comparing median of posteiror samples of parameters with ground truth.
 
 ```{r}
@@ -741,8 +689,6 @@ plot_cv_recovery(
 )
 ```
 
----
-  
 We assess model fit by generating simulated data using the median of posteiror samples of parameters and comparing them to the observed data.
 
 This allows us to evaluate whether the model reproduces RT distributions and choice proportions
@@ -770,7 +716,4 @@ abi_posterior_predictive_check(
 
 This is the end of this example.
 
----
-  
-  This simple DDM example serves as a reference template for the rest of the tutorial. Once this workflow is clear, extending it to more complex models in eam mainly involves modifying the model components, while the overall inference pipeline remains unchanged.
-
+This simple DDM example serves as a reference template for the rest of the tutorial. Once this workflow is clear, extending it to more complex models in eam mainly involves modifying the model components, while the overall inference pipeline remains unchanged.

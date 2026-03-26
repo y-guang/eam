@@ -2,7 +2,7 @@
 title: "Models in eam"
 author: "Guangyu Zhu"
 ---
-  
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -13,26 +13,26 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 This section introduces the setting for five representative models: Diffusion decision model (DDM; Ratcliff, 1978), Leaky Competing Accumulator (LCA; Usher & McClelland, 2001), Linear Ballistic Accumulator (LBA; Brown & Heathcote, 2008), Racing Diffusion Model (RDM; Tillman et al., 2020), Lévy Flight Model (LFM; Wieschen et al., 2020). Meanwhile, we also provide a tutorial on how to extend them to multi-response variants or interget covariates into the simualtion and inference.
 
 In practice, when fitting these models to real data, the simulation-and-summary pipeline shown below can be combined directly with the Section 1 workflow [Getting Started: A Minimal Working Example](./10-minimal-working-example.html) by replacing the simulations models and observed dataset. 
 
 The following sections will introduce each model in detail:
-  
-  ## Diffusion decision model
-  
-  The diffusion decision model (DDM) is is a double-boundary single-accumulator EAM with Gaussian noise. The moment-to-moment change in accumulated evidence $x(t)$ is expressed as:
-  \[
-    dx(t) = v \cdot dt + \omega \cdot dW_t,
-    \]
+
+## Diffusion decision model
+
+The diffusion decision model (DDM) is is a double-boundary single-accumulator EAM with Gaussian noise. The moment-to-moment change in accumulated evidence $x(t)$ is expressed as:
+
+\[
+  dx(t) = v \cdot dt + \omega \cdot dW_t,
+\]
 \[
   dW_t \sim N(0,\, dt),
   \]
 where the diffusion noise term $dW_t$ at each time step is drawn from a Gaussian distribution with mean 0 and variance $dt$. The diffusion scaling parameter $\omega$ is typically fixed at 1. The starting point $z$ in the DDM is often expressed as a proportion of the decision boundary $a$:
-  \[
-    z = \rho \cdot a, \qquad \rho \in [0,\, 1],
-    \]
+\[
+  z = \rho \cdot a, \qquad \rho \in [0,\, 1],
+\]
 where $\rho$ denotes relative bias toward the upper boundary $a$. A larger $\rho$ places the starting point closer to the upper boundary, making it easier and faster for the process to reach it, increasing the probability of a correct response.
 
 The free parameters of the model thus include the drift rate $v$, the decision boundary $a$, the starting point $z$ (or relative bias $\rho$), and the non-decision time $t_0$.
@@ -41,7 +41,7 @@ Beyond these core parameters, the DDM also incorporates three sources of between
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
-n_items <-1
+n_items <- 1
 
 prior_params <- tibble::tibble(
   n_items = n_items
@@ -164,7 +164,7 @@ The LCA adopts a single decision boundary $a$ shared across all accumulators, an
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
 prior_params <- tibble::tibble(
   n_items = n_items
@@ -240,6 +240,7 @@ sim_output <- run_simulation(
 ```
 
 It is worth noting that, in the case of LCA, LBA and RDM, due to the presence of two items and an upper boundary only, the choice variable should be replaced with item_idx, when calculating the accuracy.
+
 ```{r,eval=FALSE}
 # Define the summary procedure
 summary_pipe <-
@@ -278,7 +279,7 @@ For model identifiability, $\tau$ is typically fixed as a constant, or constrain
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
 prior_params <- tibble::tibble(
   n_items = n_items
@@ -317,7 +318,7 @@ item_formulas <- list(
 # Specify the diffusion noise
 noise_factory <- function(context) {
   function(n, dt) {
-    0*rnorm(n, mean = 0, sd = sqrt(dt))
+    0 * rnorm(n, mean = 0, sd = sqrt(dt))
   }
 }
 
@@ -384,7 +385,7 @@ Due to concerns about parameter recovery, the RDM avoids estimating between-tria
 
 ```{r,eval=FALSE}
 # Set the number of accumulators in the model
-n_items <-2
+n_items <- 2
 
 prior_params <- tibble::tibble(
   n_items = n_items
@@ -482,33 +483,30 @@ simulation_sumstat <- map_by_condition(
 )
 
 ```
+
 ## Lévy flight model
 
 The Lévy flight model (LFM) extends the traditional DDM in a different direction by replacing the Gaussian diffusion noise with a Lévy $\alpha$-stable distribution, allowing occasional large evidence jumps to capture heavy-tailed RT distributions. It is a double-boundary single-accumulator EAM with Lévy $\alpha$-stable noise. The moment-to-moment change in accumulated evidence $x(t)$ thus follows the rules:
-  \[
-    dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),
-    \]
+
+\[
+  dx(t) = v \cdot dt + s \cdot dL_{\alpha}(t),
+\]
+
 \[
   dL_{\alpha}(t) \sim S_{\alpha}(\gamma,\ \varepsilon,\ \mu),
-  \]
+ \]
 where $S_{\alpha}(\cdot)$ denotes a Lévy $\alpha$-stable distribution parameterized by:
-  
-  \begin{itemize}
-\setlength{\itemsep}{0pt}     
-\setlength{\parskip}{0pt}      
-\setlength{\parsep}{0pt}       
-\item $\alpha \in (0,2]$: stability index controlling tail heaviness
-\item $\gamma \in [-1,1]$: skewness parameter ($\gamma = 0$ indicates symmetry)
-\item $\varepsilon > 0$: scale parameter
-\item $\mu \in \mathbb{R}$: location parameter
-\end{itemize}
+
+- $\alpha \in (0,2]$: stability index controlling tail heaviness
+- $\gamma \in [-1,1]$: skewness parameter ($\gamma = 0$ indicates symmetry)
+- $\varepsilon > 0$: scale parameter
+- $\mu \in \mathbb{R}$: location parameter
 
 In the LFM, the stability parameter $\alpha$ is free to be estimated from the data, whereas the skewness ($\gamma$), scale ($\varepsilon$), and location ($\mu$) are fixed. Thus, the free parameters of the LFM include the drift rate for a single accumulator $v$, the decision boundary $a$, the starting point $z$, the non-decision time $t_0$, and the stability parameter $\alpha$. The LFM allows between-trial variability in drift rates ($s_v$), starting points ($s_z$), and non-decision time ($s_{t0}$). 
 
 ```{r,eval=FALSE}
-
 # Set the number of accumulators in the model
-n_items <-1
+n_items <- 1
 
 prior_params <- tibble::tibble(
   n_items = n_items
@@ -557,7 +555,7 @@ item_formulas <- list(
 # Specify the diffusion noise
 noise_factory <- function(context) {
   alpha <- context$alpha
-  function(n, dt) sqrt(dt)*stabledist::rstable(n, alpha = alpha, beta = 0, gamma = 1/sqrt(2), delta = 0)
+  function(n, dt) sqrt(dt) * stabledist::rstable(n, alpha = alpha, beta = 0, gamma = 1 / sqrt(2), delta = 0)
 }
 
 sim_config <- new_simulation_config(
@@ -615,33 +613,32 @@ simulation_sumstat <- map_by_condition(
 
 
 ```
-
-
 ## Multi-response EAM
 
 To simulate a multi-response EAM, we introduced two additional components: a position-dependent decision boundary function and an item-dependent drift rate function.
 
 First, the decision boundary was modeled as a linear increasing function of output position $o$:
-  \[
-    a(o) = a_{0} + a_{1}\cdot o,
-    \]
+
+\[
+  a(o) = a_{0} + a_{1}\cdot o,
+\]
 where $a_{0}$ represents the decision boundary for the first-retrieved item and $a_{1} > 0$ captures the rate at which the boundary increases across retrieval positions.
 
 As the recall episode progresses, the criterion for terminating evidence accumulation becomes more stringent. Such an increase may arise from increased caution in memory retrieval. Importantly, because the boundary is linked to output position rather than item index, items with lower drift rates may reach the lower boundary by chance.
 
 Second, drift rates were specified as a linear decreasing function of item index $i$:
-  
-  \[
-    v(i) = v_{0} + v_{1}\cdot i,
-    \]
+
+\[
+  v(i) = v_{0} + v_{1}\cdot i,
+\]
 
 where $v_{0}$ represents the drift rate for the first item and $v_{1} < 0$ reflects the decline in evidence strength across positions. This was intended to capture the reduction in available memory cues or retrieval strength for later items, a pattern commonly observed in free recall tasks. 
 
 The following example use DDM as a template and extend it to a multi-response version:
-  
-  ```{r,eval=FALSE}
+
+```{r,eval=FALSE}
 # Set the number of accumulators in the model
-n_items <-3
+n_items <- 3
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -765,7 +762,7 @@ When using simulation-based inference, the choice of summary statistics must ref
 n_items <- 1
 
 # Set the covariate
-cov1 <- rbinom(100,1,0.5)
+cov1 <- rbinom(100, 1, 0.5)
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -879,7 +876,7 @@ This formulation enables joint modeling of neural and behavioral data, and allow
 n_items <- 1
 
 # Set the covariate
-cov1 <- rnorm(100,1,0.5)
+cov1 <- rnorm(100, 1, 0.5)
 
 # Specify the prior distributions for free parameters
 prior_formulas <- list(
@@ -899,7 +896,7 @@ prior_formulas <- list(
 between_trial_formulas <- list(
   # Covariate
   rlang::expr(cov1 ~ !!cov1),
-  V_latent ~ V_coef * stats::rnorm(1,mean=cov1,sd=V_sigma)
+  V_latent ~ V_coef * stats::rnorm(1, mean = cov1, sd = V_sigma)
 )
 
 # Specify the item-level parameters
@@ -978,11 +975,9 @@ simulation_sumstat <- map_by_condition(
 
 ```
 
-\bigskip
-
 Reference:
-  
-  Ratcliff, R. (1978). A theory of memory retrieval. Psychological Review, 85 (2), 59–108.
+
+Ratcliff, R. (1978). A theory of memory retrieval. Psychological Review, 85 (2), 59–108.
 https://doi.org/10.1037/0033-295X.85.2.59
 
 Usher, M., & McClelland, J. L. (2001). The time course of perceptual choice: The leaky,
