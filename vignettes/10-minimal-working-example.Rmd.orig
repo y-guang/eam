@@ -3,7 +3,7 @@ title: "Getting Started: A Minimal Working Example"
 author: "Guangyu Zhu"
 ---
   
-  ```{r, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -20,14 +20,13 @@ The workflow implemented in **eam** follows the standard workflow in simulation-
 Concretely, the workflow consists of four steps:
   
 1. **Model specification and simulation**: Define an evidence accumulation model
-by specifying its structural components (boundaries, drift, noise, and
-                                         non-decision processes), and simulate synthetic datasets from the prior.
-2. **Summary statistics computation**: Reduce both simulated and observed data
+by specifying its structural components (boundaries, drift, noise, and non-decision processes), and simulate synthetic datasets from the prior.
+1. **Summary statistics computation**: Reduce both simulated and observed data
 to informative summary statistics that capture key data patterns.
-3. **Parameter estimation and recovery**: Use ABC (or ABI) to infer posterior distributions
+1. **Parameter estimation and recovery**: Use ABC (or ABI) to infer posterior distributions
 over parameters, and evaluate whether the inference procedure can reliably
 recover known parameters.
-4. **Model evaluation and comparison**: Assess model adequacy using posterior
+1. **Model evaluation and comparison**: Assess model adequacy using posterior
 predictive checks, and compare alternative model
 specifications.
 
@@ -47,36 +46,39 @@ Here, we adopt a slightly different parameterization from the conventional DDM: 
 The details of this model is listed below:
   
   **Priors on global parameters**
-  \[
-    \begin{aligned}
-    A_0 &\sim \text{Uniform}(1, 5), \\
-    V_0 &\sim \text{Uniform}(0.5, 3), \\
-    ndt_0 &\sim \text{Uniform}(0, 1), \\
-    \rho_0 &= 0.5 .
-    \end{aligned}
-    \]
+
+$$
+\begin{aligned}
+A_0 &\sim \text{Uniform}(1, 5), \\
+V_0 &\sim \text{Uniform}(0.5, 3), \\
+ndt_0 &\sim \text{Uniform}(0, 1), \\
+\rho_0 &= 0.5 .
+\end{aligned}
+$$
 
 **Item-level parameterization**
-  \[
-    \begin{aligned}
-    \rho &= \rho_0, \\
-    A_{\text{upper}} &= \rho A_0, \\
-    A_{\text{lower}} &= -\rho A_0, \\
-    V &= V_0, \\
-    ndt &= ndt_0 .
-    \end{aligned}
-    \]
+
+$$
+\begin{aligned}
+\rho &= \rho_0, \\
+A_{\text{upper}} &= \rho A_0, \\
+A_{\text{lower}} &= -\rho A_0, \\
+V &= V_0, \\
+ndt &= ndt_0 .
+\end{aligned}
+$$
 
 **Evidence accumulation dynamics**
-  \[
-    dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
-    \]
+
+$$
+dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
+$$
 
 A decision is made when $X(t)$ first reaches either $A_{\text{upper}}$ or $A_{\text{lower}}$, and the observed response time is
 
-\[
-  RT = T_{\text{decision}} + ndt .
-  \]
+$$
+RT = T_{\text{decision}} + ndt .
+$$
 
 
 ### Step one: Model setup
@@ -225,7 +227,7 @@ observed_data$condition_idx <- 1
 
 ---
 
-####### Approximate Bayesian Computation Pipleline #######  
+## Approximate Bayesian Computation Pipleline
   
     
 ### Step four: Extract summary statistics
@@ -440,8 +442,9 @@ postpr_result <- abc_postpr(
 )
 
 summary(postpr_result)
+```
 
-####### Amortized Bayesian Inference Pipleline (Point Estimation) #######  
+## Amortized Bayesian Inference Pipleline (Point Estimation)
 
 ### Step four: Prepare input features
 
@@ -601,9 +604,9 @@ abi_posterior_predictive_check(
   accuracy_facet_x = c(),
   accuracy_facet_y = c()
 )
+```
 
-
-####### Amortized Bayesian Inference Pipleline (Posteiror Sample Estimation) #######  
+## Amortized Bayesian Inference Pipleline (Posteiror Sample Estimation)
 
 ### Step four: Prepare input features
 
