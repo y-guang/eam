@@ -138,7 +138,7 @@ We next generate simulated datasets from the specified model.
 
 Depending on computational resources, this step may take approximately 30 minutes to 1 hour when parallelization is enabled.
 
-```{r,eval=FALSE}
+```{r,message=FALSE}
 ####################
 # Simulation setup #
 ####################
@@ -188,7 +188,7 @@ We construct the input for amortized Bayesian inference by specifying the model 
 
 Here, we use reaction times (rt) as the input representation and split the simulated data into training and test sets.
 
-```{r,eval=FALSE}
+```{r,message=FALSE}
 #####################
 # abi model prepare #
 #####################
@@ -222,7 +222,7 @@ abi_input <- build_abi_input(
 
 We perform amortized Bayesian inference to estimate the posterior distributions of model parameters.
 
-```{r,eval=FALSE}
+```{r,message=FALSE}
 
 #############################################
 # Model validation and parameter estimation #
