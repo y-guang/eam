@@ -147,8 +147,8 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 5000,
-  n_trials_per_condition = 1000,
+  n_conditions = 500,
+  n_trials_per_condition = 100,
   n_items = n_items,
   max_reached = n_items,
   max_t = 60,
@@ -188,7 +188,7 @@ We construct the input for amortized Bayesian inference by specifying the model 
 
 Here, we use reaction times (rt) as the input representation and split the simulated data into training and test sets.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 #####################
 # abi model prepare #
 #####################
@@ -222,7 +222,7 @@ abi_input <- build_abi_input(
 
 We perform amortized Bayesian inference to estimate the posterior distributions of model parameters.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 
 #############################################
 # Model validation and parameter estimation #
