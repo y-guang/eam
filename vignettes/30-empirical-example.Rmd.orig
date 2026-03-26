@@ -160,15 +160,11 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 ##################
 # Run simulation #
 ##################
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 ```
 

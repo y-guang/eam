@@ -97,7 +97,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -117,12 +116,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -208,7 +203,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -228,12 +222,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output_1")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 ```
 
@@ -324,7 +314,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -344,12 +333,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output_1")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -431,7 +416,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -451,12 +435,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -558,7 +538,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -578,12 +557,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -686,7 +661,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -706,12 +680,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -803,7 +773,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -823,12 +792,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
@@ -914,7 +879,6 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions_per_chunk = NULL, # NULL = automatic chunking
   n_conditions = 1000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
@@ -934,12 +898,8 @@ sim_config <- new_simulation_config(
   rand_seed = NULL # Will use default random seed
 )
 
-# Output temporary path setup
-temp_output_path <- tempfile("eam_demo_output")
-
 sim_output <- run_simulation(
-  config = sim_config,
-  output_dir = temp_output_path
+  config = sim_config
 )
 
 # Define the summary procedure
