@@ -216,7 +216,7 @@ We define a summary pipeline that extracts two types of common summary statistic
 
 We then apply the same summary procedure to every simulated dataset to obtain `simulation_sumstat`, and to the observed dataset to obtain `target_sumstat`. Finally, `build_abc_input()` aligns the simulated and observed summaries into a consistent structure.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 #####################
 # abc model prepare #
 #####################
@@ -264,7 +264,7 @@ Here we use a regression-based-adjusted ABC variant (`method = "loclinear"`), wh
 
 These diagnostics help verify whether the posterior concentrates on plausible regions of the parameter space and whether the recovered parameters are consistent with the parameters in the `rdiffusion()` model.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 ########################
 # Parameter estimation #
 ########################
@@ -433,7 +433,7 @@ The same structure is used for both simulated and observed datasets.
 
 The function `build_abi_input()` then aligns simulated data and parameters into a consistent format for training.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 #####################
 # abc model prepare #
 #####################
@@ -484,7 +484,7 @@ The DeepSet encoder maps a set of trials into a fixed-length representation, whi
 
 The output dimension equals the number of parameters (`p = 3`), with each parameter predicted by a dedicated output unit using a softplus activation to enforce valid (positive) values.
 
-```{r,message=FALSE}
+```{r,message=FALSE,results='hide'}
 ########################
 # Parameter estimation #
 ########################
