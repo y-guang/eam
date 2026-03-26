@@ -50,7 +50,7 @@ plot_rt <- function(
     facet_x = c("item_idx"),
     facet_y = c()) {
   # NSE variable bindings for R CMD check
-  rt <- source <- NULL
+  density <- rt <- source <- NULL
 
   # Determine all columns to select
   cols_to_select <- unique(c("rt", facet_x, facet_y))
