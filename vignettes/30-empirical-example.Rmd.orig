@@ -25,7 +25,7 @@ The details of this model are listed below:
 
 We specify weakly informative priors on the global parameters governing decision boundary, drift rate, non-decision time, and between-trial variability:
 
-\[
+$$
   \begin{aligned}
   A_{\beta_0} &\sim \text{Uniform}(0.5, 5.0), \\
   A_{\beta_1} &\sim \text{Uniform}(0.01, 1.0), \\
@@ -34,47 +34,45 @@ We specify weakly informative priors on the global parameters governing decision
   V_{\sigma} &\sim \text{Uniform}(0.01, 1.0), \\
   ndt_{\beta_0} &\sim \text{Uniform}(-1, 1).
   \end{aligned}
-\]
+$$
 
 **Between-trial variability**
 
 To capture variabilities in recall trajectories and recall strategies across trials , we introduce a between-trial variability on the drift rate:
 
-\[
+$$
   V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
-\]
+$$
 
 **Item-level parameterization**
 
 At the item-level, different model parameters are linked to different structural aspects of the task. Specifically, the decision boundary is assumed to vary with the \emph{output position}, whereas the drift rate varies with the \emph{item index}.
 
 Formally, we define
-\[
+$$
   \begin{aligned}
   A &= A_{\beta_0} + \text{output position} \cdot A_{\beta_1}, \\
   V &= \max\!\left( V_{\beta_0} - \text{item index} \cdot V_{\beta_1} + V_{\text{var}}, \;
                     \theta \right)
   \end{aligned}
-\]
+$$
 where \( \theta > 0 \) is a small constant ensuring positivity of the drift rate.
 
 **Evidence accumulation dynamics**
 
 Within each trial, evidence evolves according to a Wiener diffusion process:
 
-\[
+$$
   dX(t) = V_i \, dt + \sigma \, dW(t),
   \qquad
   dW(t) \sim \mathcal{N}(0, dt),
-\]
+$$
 
 A response is generated when one accumulator first reaches the decision boundary \( A_i \). The observed response time for item \( i \) is given by
 
-\[
+$$
   RT_i = T_{\text{decision},i} + ndt_i .
-\]
-
-### Step one: Model setup
+$$
 
 First, we load the required packages.
 
@@ -319,5 +317,4 @@ The results showed that, when fitted to the model, the estimated parameters accu
   
 Reference:
   
-Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A. W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller, N. E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera, J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn Electrophysiology of Encoding and Retrieval Study. Journal of Experimental Psychology: Learning, Memory, and Cognition, 50(9), 1421–1443. https://doi.org/10.1037/xlm0001319
-
+Kahana, M. J., Lohnas, L. J., Healey, M. K., Aka, A., Broitman, A. W., Crutchley, P., Crutchley, E., Alm, K. H., Katerman, B. S., Miller, N. E., Kuhn, J. R., Li, Y., Long, N. M., Miller, J., Paron, M. D., Pazdera, J. K., Pedisich, I., Rudoler, J. H., & Weidemann, C. T. (2024). The Penn Electrophysiology of Encoding and Retrieval Study. Journal of Experimental Psychology: Learning, Memory, and Cognition, 50(9), 1421-1443. https://doi.org/10.1037/xlm0001319

@@ -26,6 +26,8 @@ Concretely, the workflow consists of four steps:
 
 The following sections walk through these steps in detail using a simple DDM example, before extending the workflow to more complex models.
 
+---
+
 In this example, we start with a simple three-parameter two-boundary Diffusion Decision Model (DDM).
 
 Although the DDM has a trackable likelihood, we deliberately treat it as a generative model here. This allows us to demonstrate the full simulation-based workflow in a setting where the ground truth is known.
@@ -134,6 +136,7 @@ noise_factory <- function(context) {
 }
 ```
 
+
 ### Step two: Data simulation
 
 Once the model is specified, we can proceed to data simulation. The simulation step generates a large collection of synthetic datasets by sampling parameters from their prior distributions and simulating data from the corresponding generative model. Each simulated dataset represents a possible outcome implied by the assumed model.
@@ -180,6 +183,7 @@ sim_output <- run_simulation(
 )
 ```
 
+
 ### Step three: Load observed data
 
 For observed data, we create a small dataset using the **rtdists** package, which provides fast simulators for standard DDM. Specifically, we simulate `N = 500` trials from a two-boundary DDM with fixed parameters ($a$, $v$, $t0$) where $a$ controls boundary separation, $v$ is the drift rate, and $t0$ captures non-decision time.
@@ -215,7 +219,7 @@ observed_data$condition_idx <- 1
 
 We define a summary pipeline that extracts two types of common summary statistics of the DDM data: (i) the accuracy and (ii) RT quantiles (10%, 30%, 50%, 70%, 90%) computed separately for each choice category (1 vs. -1).
 
-We then apply the same summary procedure to every simulated dataset to obtain *simulation_sumstat*, and to the observed dataset to obtain *target_sumstat*. Finally, `build_abc_input()` aligns the simulated and observed summaries into a consistent structure.
+We then apply the same summary procedure to every simulated dataset to obtain `simulation_sumstat`, and to the observed dataset to obtain `target_sumstat`. Finally, `build_abc_input()` aligns the simulated and observed summaries into a consistent structure.
 
 ```{r,message=FALSE}
 #####################
@@ -253,6 +257,8 @@ abc_input <- build_abc_input(
 )
 ```
 
+---
+
 ### Step five: Fit the model
 
 With the simulated and observed summary statistics aligned, we can now estimate the posterior distribution of the model parameters using Approximate Bayesian Computation (ABC).
@@ -278,6 +284,8 @@ abc_fit <- abc::abc(
 )
 ```
 
+---
+
 After fitting, we summarize the posterior means/medians and 95% credible intervals and visualize the resulting posterior distributions.
 
 As shown, the true parameter values underlying the observed data lie well within the 95% credible intervals of the posterior distributions.
@@ -294,6 +302,8 @@ plot_posterior_parameters(
   abc_input
 )
 ```
+
+---
 
 ### Step six: Model evaluation
 
@@ -327,6 +337,8 @@ plot_cv_recovery(
 )
 ```
 
+---
+
 As a final diagnostic, we perform a posterior predictive check to assess the adequacy of the fitted model.
 
 Specifically, we generate the posterior data using posterior median estimates obtained from the ABC analysis. The resulting posterior predictive simulations are then compared with the observed dataset.
@@ -351,6 +363,8 @@ abc_posterior_predictive_check(
   accuracy_facet_y = c()  # Accuracy plot facet (y)
 )
 ```
+
+---
 
 ### Step seven (optional): Model comparison
 
@@ -415,6 +429,8 @@ postpr_result <- abc_postpr(
 summary(postpr_result)
 ```
 
+---
+
 ## Amortized Bayesian Inference Pipleline (Point Estimation)
 
 ### Step four: Prepare input features
@@ -465,6 +481,8 @@ abi_input <- build_abi_input(
 )
 ```
 
+---
+
 ### Step five: Fit the model
 
 We train a neural estimator to learn the mapping from observed data $Z$ to model parameters $\theta$.
@@ -508,6 +526,8 @@ trained_point_estimator <- abi_train(
 )
 ```
 
+---
+
 After training, we obtain point estimates of the parameters for the observed dataset.
 
 ```{r}
@@ -519,6 +539,8 @@ point_est <- abi_estimate(
 
 point_est
 ```
+
+---
 
 ### Step six: Model evaluation
 
@@ -542,6 +564,8 @@ assessment <- abi_assess(
 plot_cv_recovery(assessment)
 ```
 
+---
+
 We assess model fit by generating simulated data using the estimated parameters and comparing them to the observed data.
 
 This allows us to evaluate whether the model reproduces RT distributions and choice proportions
@@ -564,6 +588,8 @@ abi_posterior_predictive_check(
   accuracy_facet_y = c()
 )
 ```
+
+---
 
 ## Amortized Bayesian Inference Pipleline (Posteiror Sample Estimation)
 
@@ -611,6 +637,8 @@ abi_input <- build_abi_input(
 )
 ```
 
+---
+
 ### Step five: Fit the model
 
 Instead of predicting a single point estimate, we learn the full posterior distribution.
@@ -657,6 +685,8 @@ trained_posterior_estimator <- abi_train(
 )
 ```
 
+---
+
 After training, we draw samples from the posterior distribution.
 
 ```{r}
@@ -671,6 +701,8 @@ posterior_samples <- abi_sample_posterior(
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
 ```
+
+---
 
 ### Step six: Model evaluation
 
@@ -688,6 +720,8 @@ plot_cv_recovery(
   trained_estimator = trained_posterior_estimator
 )
 ```
+
+---
 
 We assess model fit by generating simulated data using the median of posteiror samples of parameters and comparing them to the observed data.
 
@@ -715,5 +749,7 @@ abi_posterior_predictive_check(
 ```
 
 This is the end of this example.
+
+---
 
 This simple DDM example serves as a reference template for the rest of the tutorial. Once this workflow is clear, extending it to more complex models in eam mainly involves modifying the model components, while the overall inference pipeline remains unchanged.
