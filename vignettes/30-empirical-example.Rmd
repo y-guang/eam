@@ -142,8 +142,8 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   n_conditions_per_chunk = NULL, # automatic chunking
-  n_conditions = 500,
-  n_trials_per_condition = 100,
+  n_conditions = 5000,
+  n_trials_per_condition = 1000,
   n_items = n_items,
   max_reached = n_items,
   max_t = 60,

@@ -74,11 +74,12 @@ First, we load the required packages.
 # Load necessary packages
 library(eam)
 library(dplyr)
+#> Warning: 程序包'dplyr'是用R版本4.5.2 来建造的
 library(rtdists)
 library(tidyr)
 
 # Set a random seed for reproducibility
-set.seed(1)
+set.seed(6)
 ```
 
 Then, we specify the model configuration according to the setup described above.
@@ -292,9 +293,9 @@ summarise_posterior_parameters(
   ci_level = 0.95
 )
 #>   parameter      mean    median ci_lower_0.025 ci_upper_0.975
-#> 1       A_0 2.2699966 2.2522988      1.9978171      2.5227772
-#> 2       V_0 1.1104511 1.1080758      0.9895468      1.1966138
-#> 3     ndt_0 0.4130898 0.4182996      0.3370902      0.4748187
+#> 1       A_0 1.9698904 1.9519461      1.8966177      2.0275539
+#> 2       V_0 1.0321699 0.9911414      0.8454838      1.2759599
+#> 3     ndt_0 0.4884696 0.4878729      0.4642443      0.5167056
 
 plot_posterior_parameters(
   abc_fit,
@@ -444,12 +445,12 @@ summary(postpr_result)
 #> 
 #> Proportion of accepted simulations (rejection):
 #> model_1 model_2 
-#>     0.9     0.1 
+#>    0.61    0.39 
 #> 
 #> Bayes factors:
 #>         model_1 model_2
-#> model_1  1.0000  9.0000
-#> model_2  0.1111  1.0000
+#> model_1  1.0000  1.5641
+#> model_2  0.6393  1.0000
 ```
 
 ---
@@ -562,10 +563,10 @@ point_est <- abi_estimate(
 )
 
 point_est
-#>        estimate
-#> A_0   2.1584251
-#> V_0   1.0209848
-#> ndt_0 0.5022107
+#>       estimate
+#> A_0   1.956936
+#> V_0   1.103656
+#> ndt_0 0.504732
 ```
 
 ---
@@ -735,9 +736,9 @@ posterior_samples <- abi_sample_posterior(
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
 #>   dataset_id parameter      mean    median ci_lower_0.025 ci_upper_0.975
-#> 1          1       A_0 1.9897469 1.9767964     1.19440463      2.8884417
-#> 2          1       V_0 1.1220669 1.0459507     0.73613172      1.9455949
-#> 3          1     ndt_0 0.5222758 0.5601937     0.02438583      0.9521827
+#> 1          1       A_0 2.0054221 1.9896193     1.23001648      2.9020143
+#> 2          1       V_0 1.0945738 1.0406917     0.73613393      1.7731912
+#> 3          1     ndt_0 0.4803557 0.4894657     0.05050963      0.8870416
 ```
 
 ---

@@ -85,7 +85,7 @@ library(rtdists)
 library(tidyr)
 
 # Set a random seed for reproducibility
-set.seed(1)
+set.seed(6)
 ```
 
 Then, we specify the model configuration according to the setup described above.
