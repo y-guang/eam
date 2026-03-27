@@ -181,11 +181,12 @@ RT = T_{\text{decision}} + ndt .
 <code class="sourceCode R"><span><span class="co"># Load necessary packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://y-guang.github.io/eam/">eam</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: 程序包'dplyr'是用R版本4.5.2 来建造的</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rtdists/rtdists/" class="external-link">rtdists</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set a random seed for reproducibility</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p>Then, we specify the model configuration according to the setup
 described above.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -420,9 +421,9 @@ distributions.</p>
 <span>  ci_level <span class="op">=</span> <span class="fl">0.95</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   parameter      mean    median ci_lower_0.025 ci_upper_0.975</span></span>
-<span><span class="co">#&gt; 1       A_0 2.2699966 2.2522988      1.9978171      2.5227772</span></span>
-<span><span class="co">#&gt; 2       V_0 1.1104511 1.1080758      0.9895468      1.1966138</span></span>
-<span><span class="co">#&gt; 3     ndt_0 0.4130898 0.4182996      0.3370902      0.4748187</span></span>
+<span><span class="co">#&gt; 1       A_0 1.9698904 1.9519461      1.8966177      2.0275539</span></span>
+<span><span class="co">#&gt; 2       V_0 1.0321699 0.9911414      0.8454838      1.2759599</span></span>
+<span><span class="co">#&gt; 3     ndt_0 0.4884696 0.4878729      0.4642443      0.5167056</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_posterior_parameters.html">plot_posterior_parameters</a></span><span class="op">(</span></span>
 <span>  <span class="va">abc_fit</span>,</span>
@@ -594,12 +595,12 @@ its competitor.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Proportion of accepted simulations (rejection):</span></span>
 <span><span class="co">#&gt; model_1 model_2 </span></span>
-<span><span class="co">#&gt;     0.9     0.1 </span></span>
+<span><span class="co">#&gt;    0.61    0.39 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Bayes factors:</span></span>
 <span><span class="co">#&gt;         model_1 model_2</span></span>
-<span><span class="co">#&gt; model_1  1.0000  9.0000</span></span>
-<span><span class="co">#&gt; model_2  0.1111  1.0000</span></span></code></pre></div>
+<span><span class="co">#&gt; model_1  1.0000  1.5641</span></span>
+<span><span class="co">#&gt; model_2  0.6393  1.0000</span></span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -713,10 +714,10 @@ observed dataset.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">point_est</span></span>
-<span><span class="co">#&gt;        estimate</span></span>
-<span><span class="co">#&gt; A_0   2.1584251</span></span>
-<span><span class="co">#&gt; V_0   1.0209848</span></span>
-<span><span class="co">#&gt; ndt_0 0.5022107</span></span></code></pre></div>
+<span><span class="co">#&gt;       estimate</span></span>
+<span><span class="co">#&gt; A_0   1.956936</span></span>
+<span><span class="co">#&gt; V_0   1.103656</span></span>
+<span><span class="co">#&gt; ndt_0 0.504732</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -873,9 +874,9 @@ generate samples from the posterior distribution over parameters.</p>
 <span><span class="va">posterior_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_posterior_parameters.html">summarise_posterior_parameters</a></span><span class="op">(</span><span class="va">posterior_samples</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">posterior_summary</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   dataset_id parameter      mean    median ci_lower_0.025 ci_upper_0.975</span></span>
-<span><span class="co">#&gt; 1          1       A_0 1.9897469 1.9767964     1.19440463      2.8884417</span></span>
-<span><span class="co">#&gt; 2          1       V_0 1.1220669 1.0459507     0.73613172      1.9455949</span></span>
-<span><span class="co">#&gt; 3          1     ndt_0 0.5222758 0.5601937     0.02438583      0.9521827</span></span></code></pre></div>
+<span><span class="co">#&gt; 1          1       A_0 2.0054221 1.9896193     1.23001648      2.9020143</span></span>
+<span><span class="co">#&gt; 2          1       V_0 1.0945738 1.0406917     0.73613393      1.7731912</span></span>
+<span><span class="co">#&gt; 3          1     ndt_0 0.4803557 0.4894657     0.05050963      0.8870416</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
