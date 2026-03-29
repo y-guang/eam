@@ -34,7 +34,7 @@ Although the DDM has a trackable likelihood, we deliberately treat it as a gener
 
 Here, we adopt a slightly different parameterization from the conventional DDM: instead of assuming accumulation from a positive starting point toward 0 or $a$, evidence is initialized at zero and evolves toward symmetric bounds at $a$ and $-a$.
 
-### Description of the model
+## Description of the model
 
 The details of this model is listed below:
 
@@ -73,6 +73,9 @@ $$
 RT = T_{\text{decision}} + ndt .
 $$
 
+
+## Data Simulation Pipeline
+
 ### Step one: Model setup
 
 First, we load the required packages.
@@ -83,9 +86,6 @@ library(eam)
 library(dplyr)
 library(rtdists)
 library(tidyr)
-
-# Set a random seed for reproducibility
-set.seed(6)
 ```
 
 Then, we specify the model configuration according to the setup described above.
@@ -153,7 +153,7 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions = 1000,
+  n_conditions = 5000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
   n_items = n_items,
@@ -165,9 +165,9 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE, # In tutorial, we disable parallelization, but you are encouraged to enable it locally
+  parallel = TRUE, # In tutorial, we disable parallelization, but you are encouraged to enable it locally
   n_cores = NULL, # When parallel enabled, will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -178,8 +178,35 @@ sim_config <- new_simulation_config(
 sim_output <- run_simulation(
   config = sim_config
 )
+
+
 ```
 
+Here is an example of the simulated dataset.
+
+Each row of the dataset represents a single simulated decision trial. The columns are defined as follows:
+
+condition_idx: Index of the experimental condition under which the trial was simulated.
+
+trial_idx: Index of the trial within each condition.
+
+rank_idx: Rank position associated with the item or response in the simulated task (e.g., output order in recall or decision sequence).
+
+item_idx: Index of the item being evaluated or responded to in that trial.
+
+rt: Simulated response time for the decision in that trial.
+
+choice: Binary decision outcome for the trial (e.g., 1 = correct / upper option; 0 = incorrect / lower option).
+
+model parameters (A_0, V_0, ndt_0, rho_0): Parameters of the underlying decision model used to generate the data
+
+chunk_idx: Index identifying the simulated batch or chunk of data generation, useful for tracking parallel or segmented simulation runs.
+
+```{r}
+sim_output_data <- sim_output$open_dataset() |> dplyr::collect()
+
+head(sim_output_data)
+```
 
 ### Step three: Load observed data
 
@@ -192,7 +219,7 @@ The function `rdiffusion()` returns response labels (`"upper"`/`"lower"`) and re
 # Observed data generation #
 ############################
 
-N <- 500
+N <- 1000
 
 pars <- list(
   a  = 2.0,   # Decision boundary
@@ -208,7 +235,12 @@ observed_data$choice <- ifelse(observed_data$response == "upper", 1, -1)
 observed_data$condition_idx <- 1
 ```
 
-## Approximate Bayesian Computation Pipleline
+Finally, the observed dataset should be organized as follows:
+```{r}
+head(observed_data)
+``` 
+
+## Approximate Bayesian Computation Pipeline
 
 ### Step four: Extract summary statistics
 
@@ -275,7 +307,7 @@ abc_fit <- abc::abc(
   param  = abc_input$param,
   sumstat= abc_input$sumstat,
   tol    = 0.05,
-  method = "loclinear"
+  method = "neuralnet"
 )
 ```
 
@@ -314,7 +346,7 @@ The `resid_tol` option trims extreme residuals (here retaining the central 99%),
 
 As shown, the three parameters exhibit excellent recovery.
 
-```{r}
+```{r,message=FALSE,results='hide'}
 # Parameter recovery check
 abc_cv <- abc_cv(
   abc_input = abc_input,
@@ -322,7 +354,8 @@ abc_cv <- abc_cv(
   nval = 100,
   tols = c(0.05)
 )
-
+```
+```{r}
 plot_cv_recovery(
   abc_cv,
   n_rows = 3,
@@ -423,17 +456,23 @@ summary(postpr_result)
 
 ---
 
-## Amortized Bayesian Inference Pipleline (Point Estimation)
+## Amortized Bayesian Inference Pipeline (Point Estimation)
 
 ### Step four: Prepare input features
 
-We construct the input matrix $Z$ from the observed data, containing trial-level choice and reaction time (RT).
+We construct the input matrix $Z$ from the observed data, containing trial-level choice and reaction time (RT). 
+
+This dataset is organized so that each column corresponds to one trial. For each trial, the first row gives the choice outcome, coded as -1 or 1, and the second row gives the corresponding response time (rt). 
+
+So you can think of each column as a pair of observations: choice and RT for that trial. 
+
+This format directly matches the ABI input structure, where Z is a fixed-dimensional matrix of trial-level data, with rows representing features (here, choice and RT) and columns representing individual trials.
 
 The same structure is used for both simulated and observed datasets.
 
 The function `build_abi_input()` then aligns simulated data and parameters into a consistent format for training.
 
-```{r,message=FALSE,results='hide'}
+```{r}
 #####################
 # abc model prepare #
 #####################
@@ -455,18 +494,20 @@ Z_observed <- observed_data %>%
 
 Z_observed <- as.matrix(Z_observed[, -1])
 
+head(Z_observed[,1:5])
+
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
   sim_output,
   theta = c(
     "A_0", "V_0", "ndt_0"
-  ),
+  ),  # model parameters to be inferred
   Z = c(
     "choice",
     "rt"
-  ),
-  train_ratio = 0.8,
-  n_test = 100
+  ),    # observed data features used for inference
+  train_ratio = 0.8,  # proportion of simulated data used for training and testing (80% for training and 20% for testing)
+  n_test = 100   # number of samples reserved for cross validation
 )
 ```
 
@@ -490,15 +531,15 @@ The output dimension equals the number of parameters (`p = 3`), with each parame
 
 # Fit abi model
 point_estimator <- "
-  d = 2    # dimension of data
+  d = 2    # dimension of data features
   w = 32   # number of neurons in each hidden layer
 
   # Layer to ensure valid estimates
   final_layer = Parallel(
       vcat,
-      Dense(w, 1, softplus), #first parameter
-      Dense(w, 1, softplus), #second parameter
-      Dense(w, 1, softplus)  #third parameter 
+      Dense(w, 1, softplus), #first model parameter
+      Dense(w, 1, softplus), #second model parameter
+      Dense(w, 1, softplus)  #third model parameter 
     )
 
   psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
@@ -510,7 +551,7 @@ point_estimator <- "
 trained_point_estimator <- abi_train(
   estimator = point_estimator,
   abi_input = abi_input,
-  epochs = 100,
+  epochs = 200,
   stopping_epochs = 20,
   verbose = FALSE
 )
@@ -643,21 +684,21 @@ Instead of producing point estimates, a normalizing flow is used to generate sam
 
 # Fit abi model
 posterior_estimator <- "
-  d = 2    # dimension of each replicate
+  d = 2    # dimension of data features
   w = 32   # number of neurons in each hidden layer
 
   # Layer to ensure valid estimates
   final_layer = Parallel(
       vcat,
-      Dense(w, 1, softplus),
-      Dense(w, 1, softplus),
-      Dense(w, 1, softplus)
+      Dense(w, 1, softplus), #first model parameter
+      Dense(w, 1, softplus), #second model parameter
+      Dense(w, 1, softplus)  #third model parameter
     )
 
   psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
   phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
   deepset = DeepSet(psi, phi)
-  w = 3
+  w = 3 #number of model parameter
   q = NormalisingFlow(w, w)
   estimator = PosteriorEstimator(q, deepset)
 "
@@ -665,7 +706,7 @@ posterior_estimator <- "
 trained_posterior_estimator <- abi_train(
   estimator = posterior_estimator,
   abi_input = abi_input,
-  epochs = 100,
+  epochs = 200,
   stopping_epochs = 20,
   verbose = FALSE
 )
