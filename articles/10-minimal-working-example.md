@@ -44,7 +44,7 @@ conventional DDM: instead of assuming accumulation from a positive
 starting point toward 0 or $a$, evidence is initialized at zero and
 evolves toward symmetric bounds at $a$ and $- a$.
 
-### Description of the model
+## Description of the model
 
 The details of this model is listed below:
 
@@ -76,6 +76,8 @@ or $A_{\text{lower}}$, and the observed response time is
 
 $$RT = T_{\text{decision}} + ndt.$$
 
+## Data Simulation Pipeline
+
 ### Step one: Model setup
 
 First, we load the required packages.
@@ -87,9 +89,6 @@ library(dplyr)
 #> Warning: 程序包'dplyr'是用R版本4.5.2 来建造的
 library(rtdists)
 library(tidyr)
-
-# Set a random seed for reproducibility
-set.seed(6)
 ```
 
 Then, we specify the model configuration according to the setup
@@ -161,7 +160,7 @@ sim_config <- new_simulation_config(
   between_trial_formulas = between_trial_formulas,
   item_formulas = item_formulas,
   # Specify the simulation conditions and number of trials
-  n_conditions = 1000,
+  n_conditions = 5000,
   n_trials_per_condition = 100,
   # Specify the number of accumulators and the number of recorded accumulators
   n_items = n_items,
@@ -173,9 +172,9 @@ sim_config <- new_simulation_config(
   noise_mechanism = "add",
   noise_factory = noise_factory,
   # Specify the model type
-  model = "ddm-2b",
+  model = "ddm",
   # Specify the parallel computing settings
-  parallel = FALSE, # In tutorial, we disable parallelization, but you are encouraged to enable it locally
+  parallel = TRUE, # In tutorial, we disable parallelization, but you are encouraged to enable it locally
   n_cores = NULL, # When parallel enabled, will use default: detectCores() - 1
   rand_seed = NULL # Will use default random seed
 )
@@ -186,6 +185,53 @@ sim_config <- new_simulation_config(
 sim_output <- run_simulation(
   config = sim_config
 )
+```
+
+Here is an example of the simulated dataset.
+
+Each row of the dataset represents a single simulated decision trial.
+The columns are defined as follows:
+
+condition_idx: Index of the experimental condition under which the trial
+was simulated.
+
+trial_idx: Index of the trial within each condition.
+
+rank_idx: Rank position associated with the item or response in the
+simulated task (e.g., output order in recall or decision sequence).
+
+item_idx: Index of the item being evaluated or responded to in that
+trial.
+
+rt: Simulated response time for the decision in that trial.
+
+choice: Binary decision outcome for the trial (e.g., 1 = correct / upper
+option; 0 = incorrect / lower option).
+
+model parameters (A_0, V_0, ndt_0, rho_0): Parameters of the underlying
+decision model used to generate the data
+
+chunk_idx: Index identifying the simulated batch or chunk of data
+generation, useful for tracking parallel or segmented simulation runs.
+
+``` r
+sim_output_data <- sim_output$open_dataset() |> dplyr::collect()
+
+head(sim_output_data)
+#>   condition_idx trial_idx rank_idx item_idx        rt choice      A_0      V_0     ndt_0 rho_0
+#> 1             1         1        1        1 0.4260942      1 1.975088 2.109242 0.2750942   0.5
+#> 2             1         2        1        1 0.7960942      1 1.975088 2.109242 0.2750942   0.5
+#> 3             1         3        1        1 0.4510942      1 1.975088 2.109242 0.2750942   0.5
+#> 4             1         4        1        1 0.5060942      1 1.975088 2.109242 0.2750942   0.5
+#> 5             1         5        1        1 0.4760942      1 1.975088 2.109242 0.2750942   0.5
+#> 6             1         6        1        1 0.5180942     -1 1.975088 2.109242 0.2750942   0.5
+#>   chunk_idx
+#> 1         1
+#> 2         1
+#> 3         1
+#> 4         1
+#> 5         1
+#> 6         1
 ```
 
 ### Step three: Load observed data
@@ -208,7 +254,7 @@ trials belong to a single experimental condition.
 # Observed data generation #
 ############################
 
-N <- 500
+N <- 1000
 
 pars <- list(
   a  = 2.0,   # Decision boundary
@@ -224,7 +270,20 @@ observed_data$choice <- ifelse(observed_data$response == "upper", 1, -1)
 observed_data$condition_idx <- 1
 ```
 
-## Approximate Bayesian Computation Pipleline
+Finally, the observed dataset should be organized as follows:
+
+``` r
+head(observed_data)
+#>          rt response choice condition_idx
+#> 1 1.2231327    upper      1             1
+#> 2 1.0655246    upper      1             1
+#> 3 1.0629394    upper      1             1
+#> 4 0.8827105    upper      1             1
+#> 5 1.4909006    upper      1             1
+#> 6 0.8059849    upper      1             1
+```
+
+## Approximate Bayesian Computation Pipeline
 
 ### Step four: Extract summary statistics
 
@@ -308,7 +367,7 @@ abc_fit <- abc::abc(
   param  = abc_input$param,
   sumstat= abc_input$sumstat,
   tol    = 0.05,
-  method = "loclinear"
+  method = "neuralnet"
 )
 #> Warning: All parameters are "none" transformed.
 ```
@@ -328,9 +387,9 @@ summarise_posterior_parameters(
   ci_level = 0.95
 )
 #>   parameter      mean    median ci_lower_0.025 ci_upper_0.975
-#> 1       A_0 1.9698904 1.9519461      1.8966177      2.0275539
-#> 2       V_0 1.0321699 0.9911414      0.8454838      1.2759599
-#> 3     ndt_0 0.4884696 0.4878729      0.4642443      0.5167056
+#> 1       A_0 2.1521676 2.1329682      1.8822137      2.4647523
+#> 2       V_0 0.9994105 0.9967066      0.7438985      1.2538704
+#> 3     ndt_0 0.4429218 0.4499385      0.3326319      0.5312672
 
 plot_posterior_parameters(
   abc_fit,
@@ -339,9 +398,9 @@ plot_posterior_parameters(
 ```
 
 ![plot of chunk
-unnamed-chunk-8](10-minimal-workflow/unnamed-chunk-8-1.svg)
+unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-1.svg)
 
-plot of chunk unnamed-chunk-8
+plot of chunk unnamed-chunk-10
 
 ------------------------------------------------------------------------
 
@@ -379,7 +438,9 @@ abc_cv <- abc_cv(
   nval = 100,
   tols = c(0.05)
 )
+```
 
+``` r
 plot_cv_recovery(
   abc_cv,
   n_rows = 3,
@@ -390,9 +451,9 @@ plot_cv_recovery(
 ```
 
 ![plot of chunk
-unnamed-chunk-9](10-minimal-workflow/unnamed-chunk-9-1.svg)
+unnamed-chunk-12](10-minimal-workflow/unnamed-chunk-12-1.svg)
 
-plot of chunk unnamed-chunk-9
+plot of chunk unnamed-chunk-12
 
 ------------------------------------------------------------------------
 
@@ -427,8 +488,8 @@ abc_posterior_predictive_check(
 ```
 
 ![plot of chunk
-unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-1.svg)![plot of
-chunk unnamed-chunk-10](10-minimal-workflow/unnamed-chunk-10-2.svg)
+unnamed-chunk-13](10-minimal-workflow/unnamed-chunk-13-1.svg)![plot of
+chunk unnamed-chunk-13](10-minimal-workflow/unnamed-chunk-13-2.svg)
 
 ------------------------------------------------------------------------
 
@@ -512,7 +573,7 @@ summary(postpr_result)
 #> abc::postpr(target = target, index = index, sumstat = sumstat, 
 #>     tol = 0.05, method = "rejection")
 #> Data:
-#>  postpr.out$values (100 posterior samples)
+#>  postpr.out$values (500 posterior samples)
 #> Models a priori:
 #>  model_1, model_2
 #> Models a posteriori:
@@ -520,22 +581,34 @@ summary(postpr_result)
 #> 
 #> Proportion of accepted simulations (rejection):
 #> model_1 model_2 
-#>    0.61    0.39 
+#>   0.902   0.098 
 #> 
 #> Bayes factors:
 #>         model_1 model_2
-#> model_1  1.0000  1.5641
-#> model_2  0.6393  1.0000
+#> model_1  1.0000  9.2041
+#> model_2  0.1086  1.0000
 ```
 
 ------------------------------------------------------------------------
 
-## Amortized Bayesian Inference Pipleline (Point Estimation)
+## Amortized Bayesian Inference Pipeline (Point Estimation)
 
 ### Step four: Prepare input features
 
 We construct the input matrix $Z$ from the observed data, containing
 trial-level choice and reaction time (RT).
+
+This dataset is organized so that each column corresponds to one trial.
+For each trial, the first row gives the choice outcome, coded as -1 or
+1, and the second row gives the corresponding response time (rt).
+
+So you can think of each column as a pair of observations: choice and RT
+for that trial.
+
+This format directly matches the ABI input structure, where Z is a
+fixed-dimensional matrix of trial-level data, with rows representing
+features (here, choice and RT) and columns representing individual
+trials.
 
 The same structure is used for both simulated and observed datasets.
 
@@ -566,18 +639,23 @@ Z_observed <- observed_data %>%
 
 Z_observed <- as.matrix(Z_observed[, -1])
 
+head(Z_observed[,1:5])
+#>             1        2        3         4        5
+#> [1,] 1.000000 1.000000 1.000000 1.0000000 1.000000
+#> [2,] 1.223133 1.065525 1.062939 0.8827105 1.490901
+
 # Align the simulated and observed summary statistics
 abi_input <- build_abi_input(
   sim_output,
   theta = c(
     "A_0", "V_0", "ndt_0"
-  ),
+  ),  # model parameters to be inferred
   Z = c(
     "choice",
     "rt"
-  ),
-  train_ratio = 0.8,
-  n_test = 100
+  ),    # observed data features used for inference
+  train_ratio = 0.8,  # proportion of simulated data used for training and testing (80% for training and 20% for testing)
+  n_test = 100   # number of samples reserved for cross validation
 )
 ```
 
@@ -607,15 +685,15 @@ activation to enforce valid (positive) values.
 
 # Fit abi model
 point_estimator <- "
-  d = 2    # dimension of data
+  d = 2    # dimension of data features
   w = 32   # number of neurons in each hidden layer
 
   # Layer to ensure valid estimates
   final_layer = Parallel(
       vcat,
-      Dense(w, 1, softplus), #first parameter
-      Dense(w, 1, softplus), #second parameter
-      Dense(w, 1, softplus)  #third parameter 
+      Dense(w, 1, softplus), #first model parameter
+      Dense(w, 1, softplus), #second model parameter
+      Dense(w, 1, softplus)  #third model parameter 
     )
 
   psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
@@ -627,7 +705,7 @@ point_estimator <- "
 trained_point_estimator <- abi_train(
   estimator = point_estimator,
   abi_input = abi_input,
-  epochs = 100,
+  epochs = 200,
   stopping_epochs = 20,
   verbose = FALSE
 )
@@ -646,10 +724,10 @@ point_est <- abi_estimate(
 )
 
 point_est
-#>       estimate
-#> A_0   1.956936
-#> V_0   1.103656
-#> ndt_0 0.504732
+#>        estimate
+#> A_0   2.0368655
+#> V_0   1.0363948
+#> ndt_0 0.4494624
 ```
 
 ------------------------------------------------------------------------
@@ -681,9 +759,9 @@ plot_cv_recovery(assessment)
 ```
 
 ![plot of chunk
-unnamed-chunk-15](10-minimal-workflow/unnamed-chunk-15-1.svg)
+unnamed-chunk-18](10-minimal-workflow/unnamed-chunk-18-1.svg)
 
-plot of chunk unnamed-chunk-15
+plot of chunk unnamed-chunk-18
 
 ------------------------------------------------------------------------
 
@@ -713,12 +791,12 @@ abi_posterior_predictive_check(
 ```
 
 ![plot of chunk
-unnamed-chunk-16](10-minimal-workflow/unnamed-chunk-16-1.svg)![plot of
-chunk unnamed-chunk-16](10-minimal-workflow/unnamed-chunk-16-2.svg)
+unnamed-chunk-19](10-minimal-workflow/unnamed-chunk-19-1.svg)![plot of
+chunk unnamed-chunk-19](10-minimal-workflow/unnamed-chunk-19-2.svg)
 
 ------------------------------------------------------------------------
 
-## Amortized Bayesian Inference Pipleline (Posteiror Sample Estimation)
+## Amortized Bayesian Inference Pipeline (Posteiror Sample Estimation)
 
 ### Step four: Prepare input features
 
@@ -784,21 +862,21 @@ generate samples from the posterior distribution over parameters.
 
 # Fit abi model
 posterior_estimator <- "
-  d = 2    # dimension of each replicate
+  d = 2    # dimension of data features
   w = 32   # number of neurons in each hidden layer
 
   # Layer to ensure valid estimates
   final_layer = Parallel(
       vcat,
-      Dense(w, 1, softplus),
-      Dense(w, 1, softplus),
-      Dense(w, 1, softplus)
+      Dense(w, 1, softplus), #first model parameter
+      Dense(w, 1, softplus), #second model parameter
+      Dense(w, 1, softplus)  #third model parameter
     )
 
   psi = Chain(Dense(d, w, relu), Dense(w, w, relu), Dense(w, w, relu))
   phi = Chain(Dense(w, w, relu), Dense(w, w, relu), final_layer)
   deepset = DeepSet(psi, phi)
-  w = 3
+  w = 3 #number of model parameter
   q = NormalisingFlow(w, w)
   estimator = PosteriorEstimator(q, deepset)
 "
@@ -806,7 +884,7 @@ posterior_estimator <- "
 trained_posterior_estimator <- abi_train(
   estimator = posterior_estimator,
   abi_input = abi_input,
-  epochs = 100,
+  epochs = 200,
   stopping_epochs = 20,
   verbose = FALSE
 )
@@ -828,9 +906,9 @@ posterior_samples <- abi_sample_posterior(
 posterior_summary <- summarise_posterior_parameters(posterior_samples)
 print(posterior_summary)
 #>   dataset_id parameter      mean    median ci_lower_0.025 ci_upper_0.975
-#> 1          1       A_0 2.0054221 1.9896193     1.23001648      2.9020143
-#> 2          1       V_0 1.0945738 1.0406917     0.73613393      1.7731912
-#> 3          1     ndt_0 0.4803557 0.4894657     0.05050963      0.8870416
+#> 1          1       A_0 2.0424385 2.0357143      1.7971618      2.3020147
+#> 2          1       V_0 0.9913434 0.9835609      0.7950293      1.2071608
+#> 3          1     ndt_0 0.4821002 0.4846332      0.3948782      0.5595917
 ```
 
 ------------------------------------------------------------------------
@@ -854,9 +932,9 @@ plot_cv_recovery(
 ```
 
 ![plot of chunk
-unnamed-chunk-20](10-minimal-workflow/unnamed-chunk-20-1.svg)
+unnamed-chunk-23](10-minimal-workflow/unnamed-chunk-23-1.svg)
 
-plot of chunk unnamed-chunk-20
+plot of chunk unnamed-chunk-23
 
 ------------------------------------------------------------------------
 
@@ -888,8 +966,8 @@ abi_posterior_predictive_check(
 ```
 
 ![plot of chunk
-unnamed-chunk-21](10-minimal-workflow/unnamed-chunk-21-1.svg)![plot of
-chunk unnamed-chunk-21](10-minimal-workflow/unnamed-chunk-21-2.svg)
+unnamed-chunk-24](10-minimal-workflow/unnamed-chunk-24-1.svg)![plot of
+chunk unnamed-chunk-24](10-minimal-workflow/unnamed-chunk-24-2.svg)
 
 This is the end of this example.
 
