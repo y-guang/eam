@@ -2,6 +2,8 @@
 
 ## eam 1.2.0
 
+CRAN release: 2026-03-29
+
 ### New Features
 
 - **ABI (Approximate Bayesian Inference) Module**: Complete neural

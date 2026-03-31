@@ -59,6 +59,8 @@ boundary $A_{i}$. The observed response time for item $i$ is given by
 
 $$RT_{i} = T_{\text{decision},i} + ndt_{i}.$$
 
+### Step one: Model setup
+
 First, we load the required packages.
 
 ``` r
