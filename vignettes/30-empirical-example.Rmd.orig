@@ -74,6 +74,8 @@ $$
   RT_i = T_{\text{decision},i} + ndt_i .
 $$
 
+### Step one: Model setup
+
 First, we load the required packages.
 
 ```{r}
