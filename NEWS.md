@@ -1,3 +1,9 @@
+# eam 1.2.1
+
+## Maintenance
+
+- Move `pbapply` and `abc` from `Suggests` to `Imports` so they are installed with the package, which improves library installation experience and reduces confusion.
+
 # eam 1.2.0
 
 ## New Features
