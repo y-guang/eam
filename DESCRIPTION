@@ -37,11 +37,11 @@ Imports:
   vctrs,
   tibble,
   JuliaConnectoR,
-  NeuralEstimators
-Suggests:
-  testthat (>= 3.0.0),
+  NeuralEstimators,
   pbapply,
   abc
+Suggests:
+  testthat (>= 3.0.0)
 Description: Simulation-based evidence accumulation models for analyzing responses
   and reaction times in single- and multi-response tasks. The package includes
   simulation engines for five representative models: the Diffusion Decision
