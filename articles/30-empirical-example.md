@@ -18,14 +18,16 @@ We specify weakly informative priors on the global parameters governing
 decision boundary, drift rate, non-decision time, and between-trial
 variability:
 
-$$\begin{aligned}
-A_{\beta_{0}} & {\sim \text{Uniform}(0.5,5.0),} \\
-A_{\beta_{1}} & {\sim \text{Uniform}(0.01,1.0),} \\
-V_{\beta_{0}} & {\sim \text{Uniform}(0.5,3.0),} \\
-V_{\beta_{1}} & {\sim \text{Uniform}(0.01,0.3),} \\
-V_{\sigma} & {\sim \text{Uniform}(0.01,1.0),} \\
-{ndt_{\beta_{0}}} & {\sim \text{Uniform}( - 1,1).}
-\end{aligned}$$
+``` math
+  \begin{aligned}
+  A_{\beta_0} &\sim \text{Uniform}(0.5, 5.0), \\
+  A_{\beta_1} &\sim \text{Uniform}(0.01, 1.0), \\
+  V_{\beta_0} &\sim \text{Uniform}(0.5, 3.0), \\
+  V_{\beta_1} &\sim \text{Uniform}(0.01, 0.3), \\
+  V_{\sigma} &\sim \text{Uniform}(0.01, 1.0), \\
+  ndt_{\beta_0} &\sim \text{Uniform}(-1, 1).
+  \end{aligned}
+```
 
 **Between-trial variability**
 
@@ -33,7 +35,9 @@ To capture variabilities in recall trajectories and recall strategies
 across trials , we introduce a between-trial variability on the drift
 rate:
 
-$$V_{\text{var}} \sim \mathcal{N}\left( 0,V_{\sigma} \right).$$
+``` math
+  V_{\text{var}} \sim \mathcal{N}(0, V_{\sigma}).
+```
 
 **Item-level parameterization**
 
@@ -41,29 +45,41 @@ At the item-level, different model parameters are linked to different
 structural aspects of the task. Specifically, the decision boundary is
 assumed to vary with the , whereas the drift rate varies with the .
 
-Formally, we define $$\begin{aligned}
-A & {= A_{\beta_{0}} + \text{output position} \cdot A_{\beta_{1}},} \\
-V & {= \max\!\left( V_{\beta_{0}} - \text{item index} \cdot V_{\beta_{1}} + V_{\text{var}},\;\theta \right)}
-\end{aligned}$$ where $\theta > 0$ is a small constant ensuring
-positivity of the drift rate.
+Formally, we define
+``` math
+  \begin{aligned}
+  A &= A_{\beta_0} + \text{output position} \cdot A_{\beta_1}, \\
+  V &= \max\!\left( V_{\beta_0} - \text{item index} \cdot V_{\beta_1} + V_{\text{var}}, \;
+                    \theta \right)
+  \end{aligned}
+```
+where $`\theta > 0`$ is a small constant ensuring positivity of the
+drift rate.
 
 **Evidence accumulation dynamics**
 
 Within each trial, evidence evolves according to a Wiener diffusion
 process:
 
-$$dX(t) = V_{i}\, dt + \sigma\, dW(t),\qquad dW(t) \sim \mathcal{N}(0,dt),$$
+``` math
+  dX(t) = V_i \, dt + \sigma \, dW(t),
+  \qquad
+  dW(t) \sim \mathcal{N}(0, dt),
+```
 
 A response is generated when one accumulator first reaches the decision
-boundary $A_{i}$. The observed response time for item $i$ is given by
+boundary $`A_i`$. The observed response time for item $`i`$ is given by
 
-$$RT_{i} = T_{\text{decision},i} + ndt_{i}.$$
+``` math
+  RT_i = T_{\text{decision},i} + ndt_i .
+```
 
 ### Step one: Model setup
 
 First, we load the required packages.
 
 ``` r
+
 # Load necessary packages
 library(eam)
 library(dplyr)
@@ -77,6 +93,7 @@ Then, we specify the model configuration according to the setup
 described above.
 
 ``` r
+
 #######################
 # Model specification #
 #######################
@@ -128,6 +145,7 @@ Depending on computational resources, this step may take approximately
 30 minutes to 1 hour when parallelization is enabled.
 
 ``` r
+
 ####################
 # Simulation setup #
 ####################
@@ -164,6 +182,7 @@ For illustration purposes, we use data from one representative
 participant in the PEERS dataset as the observed data in this example.
 
 ``` r
+
 #######################
 # Load Observed data  #
 #######################
@@ -175,14 +194,15 @@ observed_data$condition_idx <- 1
 ### Step four: Prepare inputs for inference
 
 We construct the input for amortized Bayesian inference by specifying
-the model parameters to be estimated ($\theta$) and the observed
-variables ($Z$). The model is trained on simulated datasets and learns a
-mapping from data to parameters.
+the model parameters to be estimated ($`\theta`$) and the observed
+variables ($`Z`$). The model is trained on simulated datasets and learns
+a mapping from data to parameters.
 
 Here, we use reaction times (rt) as the input representation and split
 the simulated data into training and test sets.
 
 ``` r
+
 #####################
 # abi model prepare #
 #####################
@@ -217,6 +237,7 @@ We perform amortized Bayesian inference to estimate the posterior
 distributions of model parameters.
 
 ``` r
+
 
 #############################################
 # Model validation and parameter estimation #
@@ -287,6 +308,7 @@ reaction time distributions simulated from the fitted posterior with the
 observed data.
 
 ``` r
+
 ##############################
 # Posterior predictive check #
 ##############################

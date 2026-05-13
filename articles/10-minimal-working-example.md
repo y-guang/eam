@@ -41,8 +41,8 @@ simulation-based workflow in a setting where the ground truth is known.
 
 Here, we adopt a slightly different parameterization from the
 conventional DDM: instead of assuming accumulation from a positive
-starting point toward 0 or $a$, evidence is initialized at zero and
-evolves toward symmetric bounds at $a$ and $- a$.
+starting point toward 0 or $`a`$, evidence is initialized at zero and
+evolves toward symmetric bounds at $`a`$ and $`-a`$.
 
 ## Description of the model
 
@@ -50,31 +50,40 @@ The details of this model is listed below:
 
 **Priors on global parameters**
 
-$$\begin{aligned}
-A_{0} & {\sim \text{Uniform}(1,5),} \\
-V_{0} & {\sim \text{Uniform}(0.5,3),} \\
-{ndt_{0}} & {\sim \text{Uniform}(0,1),} \\
-\rho_{0} & {= 0.5.}
-\end{aligned}$$
+``` math
+\begin{aligned}
+A_0 &\sim \text{Uniform}(1, 5), \\
+V_0 &\sim \text{Uniform}(0.5, 3), \\
+ndt_0 &\sim \text{Uniform}(0, 1), \\
+\rho_0 &= 0.5 .
+\end{aligned}
+```
 
 **Item-level parameterization**
 
-$$\begin{aligned}
-\rho & {= \rho_{0},} \\
-A_{\text{upper}} & {= \rho A_{0},} \\
-A_{\text{lower}} & {= - \rho A_{0},} \\
-V & {= V_{0},} \\
-{ndt} & {= ndt_{0}.}
-\end{aligned}$$
+``` math
+\begin{aligned}
+\rho &= \rho_0, \\
+A_{\text{upper}} &= \rho A_0, \\
+A_{\text{lower}} &= -\rho A_0, \\
+V &= V_0, \\
+ndt &= ndt_0 .
+\end{aligned}
+```
 
 **Evidence accumulation dynamics**
 
-$$dX(t) = V\, dt + dW(t),\qquad dW(t) \sim \mathcal{N}(0,dt).$$
+``` math
+dX(t) = V \, dt + dW(t), \qquad dW(t) \sim \mathcal{N}(0, dt).
+```
 
-A decision is made when $X(t)$ first reaches either $A_{\text{upper}}$
-or $A_{\text{lower}}$, and the observed response time is
+A decision is made when $`X(t)`$ first reaches either
+$`A_{\text{upper}}`$ or $`A_{\text{lower}}`$, and the observed response
+time is
 
-$$RT = T_{\text{decision}} + ndt.$$
+``` math
+RT = T_{\text{decision}} + ndt .
+```
 
 ## Data Simulation Pipeline
 
@@ -83,6 +92,7 @@ $$RT = T_{\text{decision}} + ndt.$$
 First, we load the required packages.
 
 ``` r
+
 # Load necessary packages
 library(eam)
 library(dplyr)
@@ -95,6 +105,7 @@ Then, we specify the model configuration according to the setup
 described above.
 
 ``` r
+
 #######################
 # Model specification #
 #######################
@@ -151,6 +162,7 @@ from the corresponding generative model. Each simulated dataset
 represents a possible outcome implied by the assumed model.
 
 ``` r
+
 ####################
 # Simulation setup #
 ####################
@@ -215,6 +227,7 @@ chunk_idx: Index identifying the simulated batch or chunk of data
 generation, useful for tracking parallel or segmented simulation runs.
 
 ``` r
+
 sim_output_data <- sim_output$open_dataset() |> dplyr::collect()
 
 head(sim_output_data)
@@ -239,8 +252,9 @@ head(sim_output_data)
 For observed data, we create a small dataset using the **rtdists**
 package, which provides fast simulators for standard DDM. Specifically,
 we simulate `N = 500` trials from a two-boundary DDM with fixed
-parameters ($a$, $v$, $t0$) where $a$ controls boundary separation, $v$
-is the drift rate, and $t0$ captures non-decision time.
+parameters ($`a`$, $`v`$, $`t0`$) where $`a`$ controls boundary
+separation, $`v`$ is the drift rate, and $`t0`$ captures non-decision
+time.
 
 The function `rdiffusion()` returns response labels
 (`"upper"`/`"lower"`) and response times. For consistency with the data
@@ -250,6 +264,7 @@ boundary), and we add a `condition_idx` field to indicate that all
 trials belong to a single experimental condition.
 
 ``` r
+
 ############################
 # Observed data generation #
 ############################
@@ -273,6 +288,7 @@ observed_data$condition_idx <- 1
 Finally, the observed dataset should be organized as follows:
 
 ``` r
+
 head(observed_data)
 #>          rt response choice condition_idx
 #> 1 1.2231327    upper      1             1
@@ -299,6 +315,7 @@ obtain `simulation_sumstat`, and to the observed dataset to obtain
 aligns the simulated and observed summaries into a consistent structure.
 
 ``` r
+
 #####################
 # abc model prepare #
 #####################
@@ -357,6 +374,7 @@ parameters are consistent with the parameters in the `rdiffusion()`
 model.
 
 ``` r
+
 ########################
 # Parameter estimation #
 ########################
@@ -381,6 +399,7 @@ As shown, the true parameter values underlying the observed data lie
 well within the 95% credible intervals of the posterior distributions.
 
 ``` r
+
 # Posterior estimation check
 summarise_posterior_parameters(
   abc_fit,
@@ -421,7 +440,7 @@ which compares the estimated parameters with their true values across
 validation datasets.
 
 Good recovery is indicated by a high correlation between estimated and
-true parameters (good: $r \geq 0.75$; excellent: $r \geq 0.90$) and by
+true parameters (good: $`r \ge 0.75`$; excellent: $`r \ge 0.90`$) and by
 estimates clustering closely around the identity line with minimal
 residual dispersion.
 
@@ -431,6 +450,7 @@ central 99%), making the main recovery pattern easier to inspect.
 As shown, the three parameters exhibit excellent recovery.
 
 ``` r
+
 # Parameter recovery check
 abc_cv <- abc_cv(
   abc_input = abc_input,
@@ -441,6 +461,7 @@ abc_cv <- abc_cv(
 ```
 
 ``` r
+
 plot_cv_recovery(
   abc_cv,
   n_rows = 3,
@@ -469,6 +490,7 @@ distributions and accuracy rates, we can evaluate whether the fitted
 model is able to reproduce key empirical patterns.
 
 ``` r
+
 ##############################
 # Posterior predictive check #
 ##############################
@@ -500,7 +522,7 @@ comparison within a simulation-based inference framework.
 
 In this example, we construct an alternative model by deliberately
 modifying the prior specification of the relative starting point
-parameter $\rho$, while keeping all other components of the model
+parameter $`\rho`$, while keeping all other components of the model
 unchanged. This allows us to isolate the contribution of this parameter
 assumption to overall model fit. Synthetic data are then generated under
 the alternative model, and the same summary statistics pipeline is
@@ -522,6 +544,7 @@ Bayes factors greater than 3 or smaller than 1/3 are interpreted as
 providing substantial evidence for one model relative to its competitor.
 
 ``` r
+
 # Deliberately change the rho in the alternative model
 prior_formulas_alt <- list(
   # Decision boundary
@@ -595,7 +618,7 @@ summary(postpr_result)
 
 ### Step four: Prepare input features
 
-We construct the input matrix $Z$ from the observed data, containing
+We construct the input matrix $`Z`$ from the observed data, containing
 trial-level choice and reaction time (RT).
 
 This dataset is organized so that each column corresponds to one trial.
@@ -618,6 +641,7 @@ then aligns simulated data and parameters into a consistent format for
 training.
 
 ``` r
+
 #####################
 # abc model prepare #
 #####################
@@ -663,8 +687,8 @@ abi_input <- build_abi_input(
 
 ### Step five: Fit the model
 
-We train a neural estimator to learn the mapping from observed data $Z$
-to model parameters $\theta$.
+We train a neural estimator to learn the mapping from observed data
+$`Z`$ to model parameters $`\theta`$.
 
 Here we use a point estimator, which directly predicts parameter values
 from the input data.
@@ -679,6 +703,7 @@ each parameter predicted by a dedicated output unit using a softplus
 activation to enforce valid (positive) values.
 
 ``` r
+
 ########################
 # Parameter estimation #
 ########################
@@ -717,6 +742,7 @@ After training, we obtain point estimates of the parameters for the
 observed dataset.
 
 ``` r
+
 # Point estimation check
 point_est <- abi_estimate(
   trained_estimator = trained_point_estimator,
@@ -748,6 +774,7 @@ Good recovery is indicated by high correlation between estimated and
 true values estimates concentrated around the identity line
 
 ``` r
+
 # Parameter recovery check
 assessment <- abi_assess(
   trained_estimator = trained_point_estimator,
@@ -772,6 +799,7 @@ This allows us to evaluate whether the model reproduces RT distributions
 and choice proportions
 
 ``` r
+
 ##############################
 # Posterior predictive check #
 ##############################
@@ -803,6 +831,7 @@ chunk unnamed-chunk-19](10-minimal-workflow/unnamed-chunk-19-2.svg)
 (Same as above)
 
 ``` r
+
 #####################
 # abc model prepare #
 #####################
@@ -856,6 +885,7 @@ Instead of producing point estimates, a normalizing flow is used to
 generate samples from the posterior distribution over parameters.
 
 ``` r
+
 ########################
 # Parameter estimation #
 ########################
@@ -895,6 +925,7 @@ trained_posterior_estimator <- abi_train(
 After training, we draw samples from the posterior distribution.
 
 ``` r
+
 # Posterior sample estimation check
 posterior_samples <- abi_sample_posterior(
   trained_estimator = trained_posterior_estimator,
@@ -919,6 +950,7 @@ We evaluate posterior recovery by comparing median of posteiror samples
 of parameters with ground truth.
 
 ``` r
+
 # Parameter recovery check
 posterior_samples <- abi_sample_posterior(
   trained_estimator = trained_posterior_estimator,
@@ -945,6 +977,7 @@ This allows us to evaluate whether the model reproduces RT distributions
 and choice proportions
 
 ``` r
+
 ##############################
 # Posterior predictive check #
 ##############################

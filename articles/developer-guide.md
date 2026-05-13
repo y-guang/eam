@@ -39,6 +39,7 @@ vector graphics formats (such as SVG) for better scaling. An example
 configuration:
 
 ``` r
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -66,6 +67,7 @@ Alternatively, you can manually modify and run the following code
 snippet to compile a specific Rmd file:
 
 ``` r
+
 old <- getwd()
 setwd("vignettes")
 
@@ -97,6 +99,7 @@ Afterwards, you can try building the pkgdown site locally to ensure
 everything works correctly:
 
 ``` r
+
 pkgdown::build_site()
 ```
 

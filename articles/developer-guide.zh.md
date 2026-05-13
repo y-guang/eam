@@ -33,6 +33,7 @@ pages 的构建过程。
 SVG）以获得更好的缩放效果。一个示例配置如下：
 
 ``` r
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -58,6 +59,7 @@ Rscript scripts/knit_vignettes.R false
 或，你可以手动修改并运行下面的代码片段以编译某一个特定的 Rmd 文件：
 
 ``` r
+
 old <- getwd()
 setwd("vignettes")
 
@@ -88,6 +90,7 @@ articles:
 之后，你可以尝试在本地构建 pkgdown 网站以确保一切正常：
 
 ``` r
+
 pkgdown::build_site()
 ```
 

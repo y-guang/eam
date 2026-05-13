@@ -32,27 +32,29 @@ The **modular simulation engine** is built upon the generalized evidence
 accumulation framework, within which we assume that decision making is
 characterized as a stochastic process in which evidence is continuously
 collected over time. The accumulation unfolds in infinitesimal
-increments $dt$, which can be approximated in practice with very small
+increments $`dt`$, which can be approximated in practice with very small
 time steps (for example, 1ms}). The moment-to-moment change in
-accumulated evidence $x(t)$ can be expressed as a stochastic
+accumulated evidence $`x(t)`$ can be expressed as a stochastic
 differential:
 
-$$dx(t) = v \cdot dt + s \cdot \sigma,$$
+``` math
+dx(t) = v \cdot dt + s \cdot \sigma,
+```
 
-where $v$ is the drift rate, $dt$ is a time step, $s$ is the noise
-scaling parameter, and $\sigma$ is a diffusion noise term.
+where $`v`$ is the drift rate, $`dt`$ is a time step, $`s`$ is the noise
+scaling parameter, and $`\sigma`$ is a diffusion noise term.
 
-As the process unfolds, the accumulated evidence $x(t)$ continues to
+As the process unfolds, the accumulated evidence $`x(t)`$ continues to
 evolve until it reaches the decision boundaries, at which point a
 response is triggered and the corresponding RT is recorded. The distance
 to reaching the boundary is jointly determined by two parameters: the
-decision boundary ($a$) and the starting point ($z$).
+decision boundary ($`a`$) and the starting point ($`z`$).
 
-As evidence accumulates, the process continues until $x(t) + z$ first
-reaches either the upper boundary $a$ or falls below the lower boundary
-0 (in two-boundary EAMs). The elapsed time from the start of
+As evidence accumulates, the process continues until $`x(t) + z`$ first
+reaches either the upper boundary $`a`$ or falls below the lower
+boundary 0 (in two-boundary EAMs). The elapsed time from the start of
 accumulation to this boundary crossing defines the decision time; adding
-a non-decision time $t_{0}$ yields the observable RT.
+a non-decision time $`t_{0}`$ yields the observable RT.
 
 The **modular simulation engine** allows researchers to flexibly
 simulate different types of data by changing the evidence accumulation
@@ -82,7 +84,7 @@ figure below):
     allowing linking covariates to the item-level parameters.
 
 5.  **Type of noise**: family of diffusion noise (e.g., Gaussian
-    vs. Lévy $\alpha$-stable vs. deterministic ballistic).
+    vs. Lévy $`\alpha`$-stable vs. deterministic ballistic).
 
 6.  **Simulation setting**: the configuration used for model simulation,
     including model equations, number of conditions, number of trials
@@ -90,7 +92,7 @@ figure below):
 
 7.  **Rules to record responses**: the criteria determining when and how
     responses are recorded (e.g., first boundary crossing only, or the
-    first $n$ releases within a time limit).
+    first $`n`$ releases within a time limit).
 
 8.  **Time step**: the discrete increment used to approximate
     continuous-time evidence accumulation (default at 1,).
@@ -130,51 +132,63 @@ likelihood functions.
 
 The Approximate Bayesian Computation (ABC) approximates the posterior
 distribution by comparing summary statistics from simulated data
-$y_{\text{sim}}$ and observed data $y_{\text{obs}}$:
+$`y_{\text{sim}}`$ and observed data $`y_{\text{obs}}`$:
 
-$$p_{\varepsilon}\left( \theta \mid y_{\text{obs}} \right) \propto \pi(\theta)\, K_{\varepsilon}\!\left( \rho\!\left( S\left( y_{\text{sim}} \right),\, S\left( y_{\text{obs}} \right) \right) \right),$$
+``` math
+p_{\varepsilon}(\theta \mid y_{\text{obs}}) \propto 
+\pi(\theta)\, K_{\varepsilon}\!\left(\rho\!\left(S(y_{\text{sim}}),\, 
+S(y_{\text{obs}})\right)\right),
+```
 
-where $S( \cdot )$ denotes a vector of summary statistics,
-$\rho( \cdot )$ is a distance function, and $K_{\varepsilon}$ is a
-kernel with tolerance $\varepsilon$.
+where $`S(\cdot)`$ denotes a vector of summary statistics,
+$`\rho(\cdot)`$ is a distance function, and $`K_{\varepsilon}`$ is a
+kernel with tolerance $`\varepsilon`$.
 
 Here, the intractable likelihood is replaced by a kernel-weighted
 similarity between summary statistics of simulated and observed data,
 such that parameters producing simulations closer to the observed data
-receive higher posterior weight, with the tolerance $\varepsilon$
+receive higher posterior weight, with the tolerance $`\varepsilon`$
 controlling the approximation accuracy.
 
 In the classical Rejection ABC algorithm, for each iteration
-$i = 1,\ldots,N$: (1) draw $\theta_{i} \sim \pi(\theta)$; (2) simulate
-$y_{\text{sim}} \sim M\left( \theta_{i} \right)$; (3) compute
-$d_{i} = \rho\left( S\left( y_{\text{sim}} \right),S\left( y_{\text{obs}} \right) \right)$;
-(4) accept $\theta_{i}$ if $d_{i} \leq \varepsilon$.
+$`i=1,\dots,N`$: (1) draw $`\theta_i \sim \pi(\theta)`$; (2) simulate
+$`y_{\text{sim}} \sim M(\theta_i)`$; (3) compute
+$`d_i = \rho(S(y_{\text{sim}}), S(y_{\text{obs}}))`$; (4) accept
+$`\theta_i`$ if $`d_i \le \varepsilon`$.
 
 This produces the approximate posterior
-$\pi_{\varepsilon}(\theta \mid y)$.
+$`\pi_{\varepsilon}(\theta \mid y)`$.
 
 However, the Rejection ABC algorithm suffers from low acceptance rates
-and a bias–variance trade-off in the tolerance $\varepsilon$. To address
-this, Beaumont et al. (2002) proposed a local linear regression
+and a bias–variance trade-off in the tolerance $`\varepsilon`$. To
+address this, Beaumont et al. (2002) proposed a local linear regression
 adjustment:
-$$\theta_{i} = \alpha + \left( S\left( y_{\text{sim}} \right) - S\left( y_{\text{obs}} \right) \right)^{T}\beta + \zeta_{i},$$
-which is then adjusted toward $S\left( y_{\text{obs}} \right)$:
-$$\theta_{i}^{*} = \theta_{i} - \left( S\left( y_{\text{sim}} \right) - S\left( y_{\text{obs}} \right) \right)^{T}\beta.$$
+``` math
+\theta_i = \alpha + 
+\left(S(y_{\text{sim}}) - S(y_{\text{obs}})\right)^{T}\beta + \zeta_i,
+```
+which is then adjusted toward $`S(y_{\text{obs}})`$:
+``` math
+\theta_i^{\ast} = \theta_i -
+\left(S(y_{\text{sim}}) - S(y_{\text{obs}})\right)^{T}\beta.
+```
 This adjustment allows simulated samples that would otherwise fall
 outside the tolerance to be shifted into the acceptance region, which
 increases the acceptance rate and reduces sensitivity to the choice of
-$\epsilon$.
+$`\epsilon`$.
 
 Following this direction, Ridge regression adjustment extends it by
 projecting summary statistics into a high-dimensional RKHS using kernels
 (e.g., Gaussian RBF), enabling nonlinear estimation of
-${\mathbb{E}}\lbrack\theta \mid s\rbrack$. Blum et al. (2010) proposed a
-nonlinear, heteroscedastic regression model:
-$$\theta = m(s) + \sigma(s) \cdot \zeta,$$ with $m( \cdot )$ and
-$\log\left( \sigma^{2}( \cdot ) \right)$ estimated using neural networks
-with weight decay on accepted $\left( \theta_{i},s_{i} \right)$ pairs.
-This correction improves robustness in high-dimensional summary spaces
-and mitigates the curse of dimensionality.
+$`\mathbb{E}[\theta \mid s]`$. Blum et al. (2010) proposed a nonlinear,
+heteroscedastic regression model:
+``` math
+\theta = m(s) + \sigma(s)\cdot \zeta,
+```
+with $`m(\cdot)`$ and $`\log(\sigma^2(\cdot))`$ estimated using neural
+networks with weight decay on accepted $`(\theta_i, s_i)`$ pairs. This
+correction improves robustness in high-dimensional summary spaces and
+mitigates the curse of dimensionality.
 
 #### Amortized Bayesian Inference (ABI)
 
@@ -188,30 +202,40 @@ Existing implementations of amortized Bayesian inference (ABI) in this
 package are neural Bayes estimators and neural posterior inference.
 
 Neural Bayes estimators aim to find decision rules that minimize the
-Bayes risk under a chosen loss
-$L\left( \theta,\widehat{\theta}(Z) \right)$ and prior $\pi(\theta)$:
-$$\min\limits_{\widehat{\theta}}\int_{\Theta}\int_{Z}L\left( \theta,\widehat{\theta}(Z) \right)\, p(Z \mid \theta)\,\pi(\theta)\, dZ\, d\theta,$$
-where $\theta$ is the latent true parameter and $\widehat{\theta}(Z)$ is
-the estimator produced from data (or summary statistics) $Z$. The loss
-function may be chosen flexibly (e.g., quadratic, absolute, quantile
-loss), leading to different Bayesian optimal decision rules (e.g.,
-posterior mean, median, quantiles). By optimizing the loss function via
-backpropagation and stochastic gradient descent using simulated
-$(\theta,Z)$ pairs, neural Bayes estimators amortize the cost of
-inference. Once trained, the network can be applied repeatedly to new
-observed data to produce fast and accurate point estimates with
-essentially zero additional inference cost.
+Bayes risk under a chosen loss $`L(\theta,\widehat{\theta}(Z))`$ and
+prior $`\pi(\theta)`$:
+``` math
+\min_{\widehat{\theta}}
+\int_{\Theta}\int_{Z}
+L(\theta,\widehat{\theta}(Z))\, p(Z \mid \theta)\,\pi(\theta)\, dZ\, d\theta,
+```
+where $`\theta`$ is the latent true parameter and
+$`\widehat{\theta}(Z)`$ is the estimator produced from data (or summary
+statistics) $`Z`$. The loss function may be chosen flexibly (e.g.,
+quadratic, absolute, quantile loss), leading to different Bayesian
+optimal decision rules (e.g., posterior mean, median, quantiles). By
+optimizing the loss function via backpropagation and stochastic gradient
+descent using simulated $`(\theta, Z)`$ pairs, neural Bayes estimators
+amortize the cost of inference. Once trained, the network can be applied
+repeatedly to new observed data to produce fast and accurate point
+estimates with essentially zero additional inference cost.
 
 Neural posterior estimators, on the other hand, aim to approximate the
-entire posterior distribution $p(\theta \mid Z)$ by learning a mapping
+entire posterior distribution $`p(\theta\mid Z)`$ by learning a mapping
 from data to the parameters of a chosen distribution family
-$\left. \kappa( \cdot ):Z\rightarrow K \right.$ through minimization of
-the expected Kullback–Leibler divergence between the true posterior and
-the approximating distribution:
-$$\kappa^{*}( \cdot ) = \arg\min\limits_{\kappa{( \cdot )}}{\mathbb{E}}_{Z}\!\left\lbrack KL\!\left( p(\theta \mid Z)\;\parallel\; q\left( \theta;\kappa(Z) \right) \right) \right\rbrack,$$
-where $\kappa^{*}( \cdot )$ is the trained neural estimator,
-$q\left( \theta;\kappa(Z) \right)$ is the approximated posterior family,
-and the expectation is taken over all possible realizations of $Z$.
+$`\kappa(\cdot): Z \to K`$ through minimization of the expected
+Kullback–Leibler divergence between the true posterior and the
+approximating distribution:
+``` math
+\kappa^{\ast}(\cdot)
+  = \arg\min_{\kappa(\cdot)}
+    \mathbb{E}_{Z}\!\left[
+      KL\!\left( p(\theta\mid Z)\;\middle\|\; q(\theta;\kappa(Z)) \right)
+    \right],
+```
+where $`\kappa^{\ast}(\cdot)`$ is the trained neural estimator,
+$`q(\theta;\kappa(Z))`$ is the approximated posterior family, and the
+expectation is taken over all possible realizations of $`Z`$.
 
 ------------------------------------------------------------------------
 
@@ -220,15 +244,15 @@ and the expectation is taken over all possible realizations of $Z$.
 A standard procedure of simulation-based inference involves several
 steps:
 
-**First**, a generative model or simulator $M(\theta)$ is defined, which
-specifies how observable data $y$ are generated from underlying
-parameters $\theta$.
+**First**, a generative model or simulator $`M(\theta)`$ is defined,
+which specifies how observable data $`y`$ are generated from underlying
+parameters $`\theta`$.
 
 **Second**, parameters are sampled from a prior distribution
-$\pi(\theta)$, reflecting prior beliefs or theoretical constraints.
+$`\pi(\theta)`$, reflecting prior beliefs or theoretical constraints.
 
 **Third**, for each sampled parameter value, synthetic datasets
-$y_{\text{sim}}$ are simulated from the model, producing pairs of
+$`y_{\text{sim}}`$ are simulated from the model, producing pairs of
 parameters and corresponding simulated observations.
 
 **Fourth**, the similarity between simulated and observed data is
@@ -237,8 +261,8 @@ statistics, as in Approximate Bayesian Computation (ABC) or Amortized
 Bayesian Inference (ABI).
 
 **Finally**, the approximate posterior distribution
-$p\left( \theta \mid y_{\text{obs}} \right)$ is obtained by weighting or
-sampling parameters according to this similarity or likelihood estimate.
+$`p(\theta \mid y_{\text{obs}})`$ is obtained by weighting or sampling
+parameters according to this similarity or likelihood estimate.
 
 ![The standard workflow in the eam
 package](00-framework-overview/workflow.svg)

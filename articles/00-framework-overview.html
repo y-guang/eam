@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">eam</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,9 +120,9 @@ in infinitesimal increments
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">dt</annotation></semantics></math>,
 which can be approximated in practice with very small time steps (for
 example, 1ms}). The moment-to-moment change in accumulated evidence
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
 can be expressed as a stochastic differential:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>s</mi><mo>⋅</mo><mi>σ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>x</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>v</mi><mo>⋅</mo><mi>d</mi><mi>t</mi><mo>+</mo><mi>s</mi><mo>⋅</mo><mi>σ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
 dx(t) = v \cdot dt + s \cdot \sigma,
 </annotation></semantics></math></p>
 <p>where
@@ -135,7 +135,7 @@ is the noise scaling parameter, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
 is a diffusion noise term.</p>
 <p>As the process unfolds, the accumulated evidence
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x(t)</annotation></semantics></math>
 continues to evolve until it reaches the decision boundaries, at which
 point a response is triggered and the corresponding RT is recorded. The
 distance to reaching the boundary is jointly determined by two
@@ -144,7 +144,7 @@ parameters: the decision boundary
 and the starting point
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>).</p>
 <p>As evidence accumulates, the process continues until
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">x(t) + z</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>z</mi></mrow><annotation encoding="application/x-tex">x(t) + z</annotation></semantics></math>
 first reaches either the upper boundary
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
 or falls below the lower boundary 0 (in two-boundary EAMs). The elapsed
@@ -226,15 +226,15 @@ distribution by comparing summary statistics from simulated data
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><annotation encoding="application/x-tex">y_{\text{sim}}</annotation></semantics></math>
 and observed data
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><annotation encoding="application/x-tex">y_{\text{obs}}</annotation></semantics></math>:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>ε</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>∝</mo><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><msub><mi>K</mi><mi>ε</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="0.167em"></mspace><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>ε</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>∝</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>K</mi><mi>ε</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="0.167em"></mspace><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 p_{\varepsilon}(\theta \mid y_{\text{obs}}) \propto 
 \pi(\theta)\, K_{\varepsilon}\!\left(\rho\!\left(S(y_{\text{sim}}),\, 
 S(y_{\text{obs}})\right)\right),
 </annotation></semantics></math></p>
 <p>where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S(\cdot)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(\cdot)</annotation></semantics></math>
 denotes a vector of summary statistics,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\rho(\cdot)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho(\cdot)</annotation></semantics></math>
 is a distance function, and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>ε</mi></msub><annotation encoding="application/x-tex">K_{\varepsilon}</annotation></semantics></math>
 is a kernel with tolerance
@@ -248,28 +248,28 @@ controlling the approximation accuracy.</p>
 <p>In the classical Rejection ABC algorithm, for each iteration
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">i=1,\dots,N</annotation></semantics></math>:
 (1) draw
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>∼</mo><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_i \sim \pi(\theta)</annotation></semantics></math>;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>∼</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\theta_i \sim \pi(\theta)</annotation></semantics></math>;
 (2) simulate
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo>∼</mo><mi>M</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">y_{\text{sim}} \sim M(\theta_i)</annotation></semantics></math>;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo>∼</mo><mi>M</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">y_{\text{sim}} \sim M(\theta_i)</annotation></semantics></math>;
 (3) compute
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>=</mo><mi>ρ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d_i = \rho(S(y_{\text{sim}}), S(y_{\text{obs}}))</annotation></semantics></math>;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>=</mo><mi>ρ</mi><mo stretchy="false" form="prefix">(</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">d_i = \rho(S(y_{\text{sim}}), S(y_{\text{obs}}))</annotation></semantics></math>;
 (4) accept
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\theta_i</annotation></semantics></math>
 if
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>≤</mo><mi>ε</mi></mrow><annotation encoding="application/x-tex">d_i \le \varepsilon</annotation></semantics></math>.</p>
 <p>This produces the approximate posterior
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mi>ε</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi_{\varepsilon}(\theta \mid y)</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mi>ε</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_{\varepsilon}(\theta \mid y)</annotation></semantics></math>.</p>
 <p>However, the Rejection ABC algorithm suffers from low acceptance
 rates and a bias–variance trade-off in the tolerance
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ε</mi><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math>.
 To address this, Beaumont et al. (2002) proposed a local linear
 regression adjustment:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>T</mi></msup><mi>β</mi><mo>+</mo><msub><mi>ζ</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mi>T</mi></msup><mi>β</mi><mo>+</mo><msub><mi>ζ</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \theta_i = \alpha + 
 \left(S(y_{\text{sim}}) - S(y_{\text{obs}})\right)^{T}\beta + \zeta_i,
 </annotation></semantics></math> which is then adjusted toward
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S(y_{\text{obs}})</annotation></semantics></math>:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mo>*</mo></msubsup><mo>=</mo><msub><mi>θ</mi><mi>i</mi></msub><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>T</mi></msup><mi>β</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(y_{\text{obs}})</annotation></semantics></math>:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>θ</mi><mi>i</mi><mo>*</mo></msubsup><mo>=</mo><msub><mi>θ</mi><mi>i</mi></msub><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">sim</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mi>T</mi></msup><mi>β</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \theta_i^{\ast} = \theta_i -
 \left(S(y_{\text{sim}}) - S(y_{\text{obs}})\right)^{T}\beta.
 </annotation></semantics></math> This adjustment allows simulated
@@ -280,17 +280,17 @@ reduces sensitivity to the choice of
 <p>Following this direction, Ridge regression adjustment extends it by
 projecting summary statistics into a high-dimensional RKHS using kernels
 (e.g., Gaussian RBF), enabling nonlinear estimation of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>θ</mi><mo>∣</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}[\theta \mid s]</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mo stretchy="false" form="prefix">[</mo><mi>θ</mi><mo>∣</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}[\theta \mid s]</annotation></semantics></math>.
 Blum et al. (2010) proposed a nonlinear, heteroscedastic regression
 model:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mi>ζ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>ζ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \theta = m(s) + \sigma(s)\cdot \zeta,
 </annotation></semantics></math> with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(\cdot)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(\cdot)</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>σ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log(\sigma^2(\cdot))</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log(\sigma^2(\cdot))</annotation></semantics></math>
 estimated using neural networks with weight decay on accepted
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo>,</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta_i, s_i)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>θ</mi><mi>i</mi></msub><mo>,</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta_i, s_i)</annotation></semantics></math>
 pairs. This correction improves robustness in high-dimensional summary
 spaces and mitigates the curse of dimensionality.</p>
 </div>
@@ -307,17 +307,17 @@ this package are neural Bayes estimators and neural posterior
 inference.</p>
 <p>Neural Bayes estimators aim to find decision rules that minimize the
 Bayes risk under a chosen loss
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L(\theta,\widehat{\theta}(Z))</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">L(\theta,\widehat{\theta}(Z))</annotation></semantics></math>
 and prior
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math>:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>min</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover></munder><msub><mo>∫</mo><mi>Θ</mi></msub><msub><mo>∫</mo><mi>Z</mi></msub><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo>∣</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>d</mi><mi>Z</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>θ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math>:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mi mathvariant="normal">min</mi><mover><mi>θ</mi><mo accent="true">̂</mo></mover></munder><msub><mo>∫</mo><mi mathvariant="normal">Θ</mi></msub><msub><mo>∫</mo><mi>Z</mi></msub><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo>∣</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mi>d</mi><mi>Z</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>θ</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \min_{\widehat{\theta}}
 \int_{\Theta}\int_{Z}
 L(\theta,\widehat{\theta}(Z))\, p(Z \mid \theta)\,\pi(\theta)\, dZ\, d\theta,
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
 is the latent true parameter and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\widehat{\theta}(Z)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>θ</mi><mo accent="true">̂</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\widehat{\theta}(Z)</annotation></semantics></math>
 is the estimator produced from data (or summary statistics)
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>.
 The loss function may be chosen flexibly (e.g., quadratic, absolute,
@@ -325,29 +325,29 @@ quantile loss), leading to different Bayesian optimal decision rules
 (e.g., posterior mean, median, quantiles). By optimizing the loss
 function via backpropagation and stochastic gradient descent using
 simulated
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, Z)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>,</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\theta, Z)</annotation></semantics></math>
 pairs, neural Bayes estimators amortize the cost of inference. Once
 trained, the network can be applied repeatedly to new observed data to
 produce fast and accurate point estimates with essentially zero
 additional inference cost.</p>
 <p>Neural posterior estimators, on the other hand, aim to approximate
 the entire posterior distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\theta\mid Z)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\theta\mid Z)</annotation></semantics></math>
 by learning a mapping from data to the parameters of a chosen
 distribution family
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>:</mo><mi>Z</mi><mo>→</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">\kappa(\cdot): Z \to K</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo><mo>:</mo><mi>Z</mi><mo>→</mo><mi>K</mi></mrow><annotation encoding="application/x-tex">\kappa(\cdot): Z \to K</annotation></semantics></math>
 through minimization of the expected Kullback–Leibler divergence between
 the true posterior and the approximating distribution:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>κ</mi><mo>*</mo></msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>arg</mo><munder><mo>min</mo><mrow><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></munder><msub><mi>𝔼</mi><mi>Z</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><mi>K</mi><mi>L</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo stretchy="true" form="infix">∥</mo><mspace width="0.278em"></mspace><mi>q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>;</mo><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>κ</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">min</mi><mrow><mi>κ</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow></munder><msub><mi>𝔼</mi><mi>Z</mi></msub><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">[</mo><mi>K</mi><mi>L</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.278em"></mspace><mo stretchy="true" form="infix">∥</mo><mspace width="0.278em"></mspace><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>;</mo><mi>κ</mi><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \kappa^{\ast}(\cdot)
   = \arg\min_{\kappa(\cdot)}
     \mathbb{E}_{Z}\!\left[
       KL\!\left( p(\theta\mid Z)\;\middle\|\; q(\theta;\kappa(Z)) \right)
     \right],
 </annotation></semantics></math> where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>κ</mi><mo>*</mo></msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>⋅</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\kappa^{\ast}(\cdot)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>κ</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\kappa^{\ast}(\cdot)</annotation></semantics></math>
 is the trained neural estimator,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>;</mo><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">q(\theta;\kappa(Z))</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>;</mo><mi>κ</mi><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">q(\theta;\kappa(Z))</annotation></semantics></math>
 is the approximated posterior family, and the expectation is taken over
 all possible realizations of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>.</p>
@@ -360,14 +360,14 @@ all possible realizations of
 <p>A standard procedure of simulation-based inference involves several
 steps:</p>
 <p><strong>First</strong>, a generative model or simulator
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">M(\theta)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M(\theta)</annotation></semantics></math>
 is defined, which specifies how observable data
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
 are generated from underlying parameters
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
 <p><strong>Second</strong>, parameters are sampled from a prior
 distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math>,
 reflecting prior beliefs or theoretical constraints.</p>
 <p><strong>Third</strong>, for each sampled parameter value, synthetic
 datasets
@@ -379,7 +379,7 @@ observed data is quantified—either by computing distance metrics between
 summary statistics, as in Approximate Bayesian Computation (ABC) or
 Amortized Bayesian Inference (ABI).</p>
 <p><strong>Finally</strong>, the approximate posterior distribution
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p(\theta \mid y_{\text{obs}})</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><msub><mi>y</mi><mtext mathvariant="normal">obs</mtext></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(\theta \mid y_{\text{obs}})</annotation></semantics></math>
 is obtained by weighting or sampling parameters according to this
 similarity or likelihood estimate.</p>
 <div class="float">
