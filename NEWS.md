@@ -1,3 +1,9 @@
+# eam 1.2.2
+
+## Maintenance
+
+- Resubmit to CRAN with updated build timestamp.
+
 # eam 1.2.1
 
 ## Maintenance
