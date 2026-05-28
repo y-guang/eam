@@ -113,7 +113,7 @@ evaluate_with_dt <- function(formulas, data = list(), n) {
 #' @param noise_mechanism The noise mechanism to use ("add" or "mult")
 #' @param noise_factory A function that takes condition_setting and returns a
 #' noise function with signature function(n, dt)
-#' @param backend The backend implementation to use ("ddm", "ddm-2b", or "lca-gi")
+#' @param backend The backend implementation to use
 #' @param trajectories Whether to return full output including trajectories.
 #' @return A list containing the simulation results and condition parameters
 #' @keywords internal
@@ -131,8 +131,8 @@ run_condition <- function(
     backend,
     trajectories = FALSE) {
   # validate backend parameter
-  if (!backend %in% c("ddm", "ddm-2b", "lca-gi")) {
-    stop("backend must be either 'ddm', 'ddm-2b', or 'lca-gi'")
+  if (!backend %in% c("ddm", "ddm-2b", "lca-gi", "custom-model")) {
+    stop("backend must be one of: ddm, ddm-2b, lca-gi, custom-model")
   }
 
   # prepare
@@ -181,6 +181,17 @@ run_condition <- function(
           max_reached = max_reached,
           max_t = max_t,
           dt = dt,
+          noise_factory = noise_factory,
+          trajectories = trajectories
+        ),
+        "custom-model" = run_trial_custom_model(
+          trial_setting = trial_setting,
+          item_formulas = item_formulas,
+          n_items = n_items,
+          max_reached = max_reached,
+          max_t = max_t,
+          dt = dt,
+          noise_mechanism = noise_mechanism,
           noise_factory = noise_factory,
           trajectories = trajectories
         )
@@ -347,8 +358,10 @@ run_simulation_parallel <- function(config, output_dir) {
     cl, c(
       # functions
       "run_condition", "run_trial_ddm", "run_trial_ddm_2b", "run_trial_lca_gi",
+      "run_trial_custom_model",
       "evaluate_with_dt", "resolve_symbol", "accumulate_evidence_ddm",
       "accumulate_evidence_ddm_2b", "accumulate_evidence_lca_gi",
+      "accumulate_evidence_custom_model",
       "flatten_simulation_results", "run_chunk"
     ),
     envir = environment()

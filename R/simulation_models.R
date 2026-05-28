@@ -187,3 +187,57 @@ run_trial_lca_gi <- function(
 
   sim_result
 }
+
+
+#' Run a single trial of the custom model placeholder
+#'
+#' @param trial_setting A list of named values representing the trial settings
+#' @param item_formulas A list of formulas defining the item parameters
+#' @param n_items The number of items to simulate
+#' @param max_reached The threshold for evidence accumulation
+#' @param max_t The maximum time to simulate
+#' @param dt The step size for each increment
+#' @param noise_mechanism The noise mechanism parameter, unused by this placeholder
+#' @param noise_factory A noise factory parameter, unused by this placeholder
+#' @param trajectories Whether to return full output including trajectories.
+#' @return A list containing the simulation results
+#' @keywords internal
+run_trial_custom_model <- function(
+    trial_setting,
+    item_formulas,
+    n_items,
+    max_reached,
+    max_t,
+    dt,
+    noise_mechanism,
+    noise_factory,
+    trajectories = FALSE) {
+  item_params <- evaluate_with_dt(
+    item_formulas,
+    data = trial_setting,
+    n = n_items
+  )
+
+  # Custom model placeholder:
+  # Keep this layer explicit. Map formula names to C++ arguments here.
+  # Users can replace A/step_size with their own parameters.
+  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
+  noise_fun <- noise_factory(trial_setting)
+
+  sim_result <- accumulate_evidence_custom_model(
+    item_params$A,
+    item_params$step_size,
+    Z,
+    item_params$ndt,
+    max_t,
+    dt,
+    max_reached,
+    noise_fun
+  )
+
+  if (trajectories) {
+    sim_result$.item_params <- item_params
+  }
+
+  sim_result
+}

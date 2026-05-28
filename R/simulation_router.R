@@ -87,6 +87,20 @@ detect_backend_lca_gi <- function(model_lower, config) {
   )
 }
 
+#' Backend detector for the custom model placeholder
+#'
+#' @param model_lower Lowercase model name
+#' @param config A list containing simulation configuration parameters
+#' @return Backend name if this detector handles the config, NULL otherwise
+#' @keywords internal
+detect_backend_custom_model <- function(model_lower, config) {
+  switch(model_lower,
+    "custom" = "custom-model",
+    "custom-model" = "custom-model",
+    NULL
+  )
+}
+
 #' Get all registered backend detectors
 #'
 #' @return A list of backend detector functions
@@ -95,7 +109,8 @@ get_backend_detectors <- function() {
   list(
     detect_backend_ddm_2b, # Check 2-boundary first (more specific)
     detect_backend_ddm,
-    detect_backend_lca_gi
+    detect_backend_lca_gi,
+    detect_backend_custom_model
   )
 }
 
