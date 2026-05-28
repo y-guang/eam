@@ -1,0 +1,258 @@
+---
+title: "扩展一个模型"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## 面向贡献者的目标
+
+这份文档说明在 `eam` 中加入一个新 evidence accumulation backend 时，需要经过哪些接口层。它不是 C++ 或 Rcpp 语法教程，也不试图规定模型内部算法。贡献者应当先把模型的科学定义、参数含义和输出结构想清楚，再把它接入现有模拟管线。
+
+在现有工作流里，用户通常只写一份 simulation config：
+
+```{r, eval = FALSE}
+config <- new_simulation_config(
+  prior_formulas = prior_formulas,
+  between_trial_formulas = between_trial_formulas,
+  item_formulas = item_formulas,
+  n_conditions = 500,
+  n_trials_per_condition = 100,
+  n_items = n_items,
+  max_reached = n_items,
+  max_t = 100,
+  dt = 0.01,
+  noise_mechanism = "add",
+  noise_factory = noise_factory,
+  model = "ddm"
+)
+
+sim_output <- run_simulation(config)
+```
+
+`demo/demo_abc.R` 展示了这个调用链在完整 ABC 工作流里的位置：先通过 `new_simulation_config()` 定义模型、参数公式、噪声机制和模拟规模；再用 `run_simulation()` 生成模拟数据；随后把输出整理成 summary statistics 并交给 ABC 或 posterior predictive check。扩展新模型时，最重要的原则是：新 backend 应该能被这个调用链自然使用，而不是要求用户绕过现有配置系统。
+
+## 当前调用链
+
+扩展模型前，建议先沿着下面的路径读一遍代码：
+
+``` text
+new_simulation_config()
+  -> route_model_to_backend()
+  -> run_simulation()
+  -> run_condition()
+  -> run_trial_*()
+  -> accumulate_evidence_*()
+```
+
+各层的责任如下：
+
+`new_simulation_config()` 负责收集用户给出的公式、模拟规模、噪声设置和 `model` 名称。它会调用 router，把用户级模型名称解析成内部 backend 名称。
+
+`route_model_to_backend()` 位于 `R/simulation_router.R`。它通过 detector 列表决定某个 config 应该交给哪个 backend。现有 backend 包括 `"ddm"`、`"ddm-2b"` 和 `"lca-gi"`。
+
+`run_simulation()` 负责分块、串行或并行执行、写出结果，并返回 simulation output 对象。贡献者通常不需要改变高层输出对象。
+
+`run_condition()` 位于 `R/simulation.R`。它把一个 condition 展开为多个 trial，然后根据 `config$backend` 调用对应的 `run_trial_*()`。
+
+`run_trial_*()` 位于 `R/simulation_models.R`。这一层把 formula system 评估出的参数整理成 C++ backend 需要的参数向量，并负责处理默认值，例如没有提供 `Z` 时使用零向量。
+
+`accumulate_evidence_*()` 是 Rcpp 导出的核心模拟函数，定义在 `src/*.cpp`，并由 `Rcpp::compileAttributes()` 生成 `R/RcppExports.R` 和 `src/RcppExports.cpp` 中的绑定。
+
+## 推荐扩展计划
+
+### 1. 明确模型契约
+
+在写代码前，先决定新模型的最小公共契约：
+
+- backend 名称，例如 `"my-model"`。
+- 用户可以在 `model` 中写哪些别名，例如 `"my"`、`"my-model"`。
+- `item_formulas` 必须提供哪些 item-level 参数。
+- 哪些参数可以有默认值，例如现有模型中的 `Z`。
+- `noise_factory` 的输出如何进入模型。
+- 每个 trial 返回哪些列。
+
+现有下游函数默认依赖模拟输出里有 `item_idx` 和 `rt`。如果模型还能自然表达 response、accuracy、boundary 或其他 trial-level 结果，可以增加列；但应尽量保留现有列名，这样 summary、plot 和 ABC 工作流更容易复用。
+
+### 2. 在 `src/` 中实现 C++ backend
+
+在 `src/` 下新增或扩展一个 C++ 文件，提供一个核心函数，命名建议遵循现有模式：
+
+``` cpp
+// [[Rcpp::export]]
+Rcpp::List accumulate_evidence_my_model(
+  Rcpp::NumericVector A,
+  Rcpp::NumericVector V,
+  Rcpp::NumericVector Z,
+  Rcpp::NumericVector ndt,
+  double max_t,
+  double dt,
+  int max_reached,
+  Rcpp::Function noise_func
+);
+```
+
+这里的签名只是示意。真实参数应由模型契约决定。更重要的是保持几个约定：
+
+- 输入参数来自 R 层 wrapper 已经评估好的向量。
+- 对长度、正值、边界等基本条件做清晰检查。
+- 通过 `Rcpp::stop()` 抛出用户可理解的错误。
+- 返回一个 named `Rcpp::List`，至少包含下游需要的结果列。
+- 使用 `// [[Rcpp::export]]`，让 Rcpp 生成 R 层绑定。
+
+完成 C++ 函数后，运行：
+
+```{r, eval = FALSE}
+Rcpp::compileAttributes()
+```
+
+这会更新 `R/RcppExports.R` 和 `src/RcppExports.cpp`。不要手动编辑这些生成文件。
+
+### 3. 增加 R 层 trial wrapper
+
+在 `R/simulation_models.R` 中增加一个 `run_trial_*()` wrapper。它的职责不是重新实现模型，而是把 config 中的 formula system 与 C++ backend 接起来：
+
+```{r, eval = FALSE}
+run_trial_my_model <- function(
+    trial_setting,
+    item_formulas,
+    n_items,
+    max_reached,
+    max_t,
+    dt,
+    noise_mechanism,
+    noise_factory,
+    trajectories = FALSE) {
+  item_params <- evaluate_with_dt(
+    item_formulas,
+    data = trial_setting,
+    n = n_items
+  )
+  noise_fun <- noise_factory(trial_setting)
+
+  Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
+
+  sim_result <- accumulate_evidence_my_model(
+    item_params$A,
+    item_params$V,
+    Z,
+    item_params$ndt,
+    max_t,
+    dt,
+    max_reached,
+    noise_fun
+  )
+
+  if (trajectories) {
+    sim_result$.item_params <- item_params
+  }
+
+  sim_result
+}
+```
+
+这个 wrapper 是贡献者最应该保持稳定的一层。它决定了用户在 `item_formulas` 里写的参数名，如何映射到 C++ 函数的参数位置。
+
+### 4. 在 router 中注册 backend
+
+在 `R/simulation_router.R` 中新增 detector，并把它加入 `get_backend_detectors()`：
+
+```{r, eval = FALSE}
+detect_backend_my_model <- function(model_lower, config) {
+  switch(model_lower,
+    "my" = "my-model",
+    "my-model" = "my-model",
+    NULL
+  )
+}
+```
+
+如果模型可以通过参数结构自动识别，可以使用 `get_config_env_names(config)` 检查 formula 左侧变量。例如现有 `"ddm"` 会根据 `A` 或 `A_upper` 的存在区分不同 backend。
+
+注册时要避免让多个 detector 同时匹配同一份 config。router 已经会在 ambiguous backend 时停止，所以新增 detector 后应当特别检查常见别名是否与现有模型冲突。
+
+### 5. 接入 `run_condition()`
+
+在 `R/simulation.R` 的 backend 校验和 `switch(backend, ...)` 中加入新 backend：
+
+```{r, eval = FALSE}
+if (!backend %in% c("ddm", "ddm-2b", "lca-gi", "my-model")) {
+  stop("backend must be one of the registered backend names")
+}
+
+switch(backend,
+  "my-model" = run_trial_my_model(...)
+)
+```
+
+如果并行路径使用 `parallel::clusterExport()`，也要把新的 `run_trial_*()` 和 `accumulate_evidence_*()` 加入导出列表。否则串行模拟可能正常，而并行模拟会找不到函数。
+
+### 6. 验证用户级工作流
+
+新增 backend 后，至少用一份很小的 config 验证完整调用链：
+
+```{r, eval = FALSE}
+config <- new_simulation_config(
+  prior_formulas = list(
+    V ~ distributional::dist_uniform(0.1, 1),
+    ndt ~ 0.3,
+    noise_coef ~ 1
+  ),
+  between_trial_formulas = list(),
+  item_formulas = list(
+    A ~ 1,
+    V ~ V
+  ),
+  n_conditions = 2,
+  n_trials_per_condition = 3,
+  n_items = 4,
+  max_reached = 4,
+  max_t = 5,
+  dt = 0.01,
+  noise_factory = noise_factory,
+  model = "my-model",
+  parallel = FALSE
+)
+
+sim_output <- run_simulation(config)
+sim_output$open_dataset()
+```
+
+重点不是生成大量数据，而是确认：
+
+- `new_simulation_config()` 能正确识别 backend。
+- `run_simulation()` 能完成一个最小模拟。
+- 输出列能被 `open_dataset()` 读取。
+- 同一 config 在 `parallel = TRUE` 时也能运行。
+- 错误信息对缺失参数、错误长度和非法取值足够清楚。
+
+### 7. 补测试和文档
+
+测试应覆盖两类风险：
+
+- router 是否把别名和参数结构解析到正确 backend。
+- 一个最小 config 是否能串行、必要时并行地跑通。
+
+如果新模型引入了新的用户可见参数名、输出列或限制，应更新 `new_simulation_config()` 的模型说明、相关 examples，以及面向用户的 model vignette。若只是内部 backend 变化，也应在开发者文档或 NEWS 中说明。
+
+## 贡献前检查清单
+
+- C++ backend 位于 `src/`，并通过 `Rcpp::compileAttributes()` 生成绑定。
+- R wrapper 位于 `R/simulation_models.R`，只负责参数评估、默认值和调用 backend。
+- Router detector 位于 `R/simulation_router.R`，并已加入 `get_backend_detectors()`。
+- `run_condition()` 的 backend 校验和 switch 已更新。
+- 并行执行需要的函数已加入 `parallel::clusterExport()`。
+- 最小 config 能通过 `new_simulation_config()`、`run_simulation()` 和 `open_dataset()`。
+- 输出结构与 ABC、summary 和 plotting 工作流兼容，或已清楚记录差异。
+- 新增或更新了 testthat 测试。
+- 没有手动编辑 `man/` 文件或 Rcpp 生成文件之外的生成内容。
+
+## 何时不需要新 backend
+
+并不是所有模型变化都需要新增 C++ backend。如果只是改变参数的先验、条件层级、trial-level variability、item-level covariate，或改变噪声函数，通常可以直接通过 `prior_formulas`、`between_trial_formulas`、`item_formulas` 和 `noise_factory` 完成。
+
+只有当 evidence accumulation 的核心状态更新、边界判断、竞争机制或 trial 输出结构发生变化时，才建议新增 backend。这样可以保持包的公共接口稳定，也能让贡献集中在真正需要扩展的地方。

@@ -24,6 +24,7 @@ articles:
   contents:
   - about-zh-translation
   - developer-guide.zh
+  - extend-model.zh
 
 reference:
   - title: Reference
