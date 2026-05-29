@@ -43,26 +43,25 @@ knitr::opts_chunk$set(
 
 ## 示例模型
 
-我们用一个刻意简单的单界模型作为占位示例：证据从 `Z` 出发，每一步从 `noise_func` 取得一个噪音大小，并由 `step_size` 缩放。奇数步噪音必定为负，偶数步噪音必定为正。当证据达到单一边界 `A` 时，记录反应。
+我们用一个刻意简单的单界模型作为占位示例：证据从 `Z` 出发，每一步从 `noise_func` 取得一个噪音值。奇数步噪音必定为负，偶数步噪音必定为正。当证据达到单一边界 `A` 时，记录反应。
 
 用户一开始可能只会这样描述：
 
-> 我想要一个一上一下的证据积累过程。第一步总是被负向扰动拉低，第二步总是被正向扰动拉回去。它不是一个真正成熟的心理学模型，只是我想先检查这种 alternating noise 能不能接进模拟管线。
+> 我想要一个一上一下的证据积累过程。第一步总是被负向扰动拉低，第二步总是被正向扰动拉回去。
 
 AI 可以先把它整理成下面的规则，交给用户确认：
 
 1. 对每个 item，证据从 `Z` 开始。
-2. 第 1 步，证据减少 `step_size * abs(noise)`。
-3. 第 2 步，证据增加 `step_size * abs(noise)`。
-4. 第 3 步，再减少 `step_size * abs(noise)`，之后如此交替。
+2. 第 1 步，证据减少 `abs(noise)`。
+3. 第 2 步，证据增加 `abs(noise)`。
+4. 第 3 步，再减少 `abs(noise)`，之后如此交替。
 5. 如果证据达到单一边界 `A`，记录 `item_idx` 和 `rt`。
 6. 示例额外输出 `evidence`，方便测试和诊断；这不是最小惯例的一部分。
 
-用户确认这些规则后，可以先写一个非常草稿的 R 参考实现。它不需要签名完善，也不需要泛化；只要能表达过程即可：
+用户确认这些规则后，可以由 AI 先写一个非常草稿的 R 参考实现。它不需要签名完善，也不需要泛化；只要能表达过程即可：
 
 ```{r, eval = FALSE}
 evidence <- 0
-step_size <- 1
 dt <- 0.1
 A <- 0
 noise_fun <- function() 1
@@ -70,7 +69,7 @@ noise_fun <- function() 1
 for (step_idx in 1:2) {
     direction <- if (step_idx %% 2 == 1) -1 else 1
     noise <- noise_fun()
-    evidence <- evidence + direction * step_size * abs(noise)
+    evidence <- evidence + direction * abs(noise)
 
     if (evidence >= A) {
       rt <- step_idx * dt
@@ -81,11 +80,17 @@ for (step_idx in 1:2) {
 list(rt = rt, evidence = evidence)
 ```
 
-这段 R 代码不是为了性能，也不是最终 API。它的价值是让用户能看懂并确认：第一步下降，第二步上升，第二步后证据回到 `0` 并触发单界反应。确认后，AI 再把这个逻辑翻译到 `accumulate_evidence_custom_model()`。
+这段 R 代码不是为了性能，也不是最终 API。它的价值是让用户能看懂并确认：第一步下降，第二步上升，第二步后证据回到 `0` 并触发单界反应。确认后，由 AI 将这段代码翻译到对应的 cpp 函数，在这个示例里，它是 `cumulate_evidence_custom_model()`。
 
 ## 先写测试
 
-证据积累过程通常很适合用小测试固定行为。不要从大模拟开始测试。先写能手算的 case。
+那么用户如何判断 AI 翻译的 cpp 实现是否忠实于自己的意图呢？我们可以通过测试来解决。
+
+通常，我们非常熟悉一个模型在一些能手算的条件下的特定行为。例如，
+- 如果只有一步，结果是什么？
+- 如果噪音为 0，而固定偏移一定，那么反应时会是什么？
+
+通常，您只需要向 AI 提供几个这样的边界条件，它就可以帮你把它们写成 r 语言的测试用例。您只需要浏览这些测试，确认它们覆盖了你最关心的边界条件，并反映了你的理论直觉。通过测试，你不需要逐行审阅 C++ 代码，就能对它的行为有信心。
 
 对这个“一上一下”单界模型，两个最小 case 已经足够说明核心规则。这里的测试刻意 monkey patch 了 `noise_fun`，让它总是返回 `1`。因此两步回到 `0` 是确定性测试结论；如果你使用随机 noise，就不应该测试单次路径回到 `0`，而应该测试多次重复后的均值是否接近 `0`。
 
@@ -93,7 +98,6 @@ list(rt = rt, evidence = evidence)
 # 只有一步：从 0 出发，第一步向下到 -1，不能达到 A = 0。
 one_step <- accumulate_evidence_custom_model(
   A = c(0),
-  step_size = c(1),
   Z = c(0),
   ndt = c(0),
   max_t = 0.1,
@@ -106,7 +110,6 @@ stopifnot(length(one_step$item_idx) == 0)
 # 两步：第一步 -1，第二步回到 0，并达到 A = 0。
 two_steps <- accumulate_evidence_custom_model(
   A = c(0),
-  step_size = c(1),
   Z = c(0),
   ndt = c(0),
   max_t = 0.2,
@@ -118,7 +121,9 @@ stopifnot(two_steps$item_idx == 1)
 stopifnot(two_steps$evidence == 0)
 ```
 
-包中对应的 testthat 测试位于 `tests/testthat/test-custom-model.R`。这些测试应当像其他 backend 测试一样，直接测试 `accumulate_evidence_custom_model()`，而不是先测试 config、router 或完整 simulation pipe。当你修改自定义积累过程时，建议先改这些直接测试，让测试表达你真正想要的 evidence accumulation 行为，然后再让 LLM 修改 C++ 和 R 接线。
+包中对应的 testthat 测试位于 `tests/testthat/test-custom-model.R`。
+
+一个 AI 需要注意的小细节：这些测试应当像其他 backend 测试一样，直接测试 `accumulate_evidence_*()`，而不是先测试 config、router 或完整 simulation pipe。这些部分由包的开发者维护，用户通常不需要修改它们。
 
 ## 需要修改哪里
 
@@ -132,7 +137,6 @@ stopifnot(two_steps$evidence == 0)
 第二，修改 `R/simulation_models.R` 中的 `run_trial_custom_model()`。这一层负责把用户在 `item_formulas` 中写的参数名，明确映射到 C++ 函数参数。例如当前示例要求：
 
 - `A`
-- `step_size`
 - `ndt`
 - 可选 `Z`
 
@@ -199,7 +203,6 @@ config <- new_simulation_config(
   between_trial_formulas = list(),
   item_formulas = list(
     A ~ 0,
-    step_size ~ 1,
     ndt ~ 0
   ),
   n_conditions = 1,

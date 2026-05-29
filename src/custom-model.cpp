@@ -10,7 +10,6 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 List accumulate_evidence_custom_model(
   NumericVector A,
-  NumericVector step_size,
   NumericVector Z,
   NumericVector ndt,
   double max_t,
@@ -18,10 +17,10 @@ List accumulate_evidence_custom_model(
   int max_reached,
   Function noise_func = R_NilValue
 ) {
-  int n_items = step_size.size();
+  int n_items = A.size();
 
   if (A.size() != n_items || Z.size() != n_items || ndt.size() != n_items) {
-    stop("A, step_size, Z, and ndt must have length n_items");
+    stop("A, Z, and ndt must have length n_items");
   }
   if (max_reached <= 0 || max_reached > n_items) {
     stop("max_reached must be > 0 and <= n_items");
@@ -36,7 +35,6 @@ List accumulate_evidence_custom_model(
   std::vector<int> active_item_idx(n_items);
   std::vector<double> evidence(Z.begin(), Z.end());
   std::vector<double> passed_t(ndt.begin(), ndt.end());
-  std::vector<double> step(step_size.begin(), step_size.end());
   std::iota(active_item_idx.begin(), active_item_idx.end(), 0);
 
   std::vector<int> reached_item_idx;
@@ -60,7 +58,7 @@ List accumulate_evidence_custom_model(
     }
 
     for (size_t i = 0; i < evidence.size(); i++) {
-      evidence[i] += direction * step[i] * std::abs(noise[i]);
+      evidence[i] += direction * std::abs(noise[i]);
       passed_t[i] += dt;
     }
 
@@ -76,12 +74,10 @@ List accumulate_evidence_custom_model(
           std::swap(active_item_idx[i], active_item_idx[last_idx]);
           std::swap(evidence[i], evidence[last_idx]);
           std::swap(passed_t[i], passed_t[last_idx]);
-          std::swap(step[i], step[last_idx]);
         }
         active_item_idx.pop_back();
         evidence.pop_back();
         passed_t.pop_back();
-        step.pop_back();
         break;
       }
     }

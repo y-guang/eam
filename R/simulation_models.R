@@ -220,13 +220,12 @@ run_trial_custom_model <- function(
 
   # Custom model placeholder:
   # Keep this layer explicit. Map formula names to C++ arguments here.
-  # Users can replace A/step_size with their own parameters.
+  # Users can replace A with their own parameters.
   Z <- if (is.null(item_params$Z)) rep(0, n_items) else item_params$Z
   noise_fun <- noise_factory(trial_setting)
 
   sim_result <- accumulate_evidence_custom_model(
     item_params$A,
-    item_params$step_size,
     Z,
     item_params$ndt,
     max_t,
