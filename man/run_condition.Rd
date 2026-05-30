@@ -43,7 +43,7 @@ parameters}
 \item{noise_factory}{A function that takes condition_setting and returns a
 noise function with signature function(n, dt)}
 
-\item{backend}{The backend implementation to use ("ddm", "ddm-2b", or "lca-gi")}
+\item{backend}{The backend implementation to use}
 
 \item{trajectories}{Whether to return full output including trajectories.}
 }
