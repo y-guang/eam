@@ -7,8 +7,10 @@
 <url><loc>https://y-guang.github.io/eam/articles/20-models-in-eam.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/articles/30-empirical-example.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/articles/about-zh-translation.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/articles/custom-model.zh.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/articles/developer-guide.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/articles/developer-guide.zh.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/articles/extend-model.zh.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/articles/index.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/authors.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/index.html</loc></url>
@@ -33,6 +35,7 @@
 <url><loc>https://y-guang.github.io/eam/reference/build_abi_input.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/build_abi_input.theta.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/calculate_total_rows.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/detect_backend_custom_model.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/detect_backend_ddm.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/detect_backend_ddm_2b.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/detect_backend_lca_gi.html</loc></url>
@@ -75,6 +78,7 @@
 <url><loc>https://y-guang.github.io/eam/reference/run_simulation.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/run_simulation_parallel.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/run_simulation_serial.html</loc></url>
+<url><loc>https://y-guang.github.io/eam/reference/run_trial_custom_model.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/run_trial_ddm.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/run_trial_ddm_2b.html</loc></url>
 <url><loc>https://y-guang.github.io/eam/reference/run_trial_lca_gi.html</loc></url>

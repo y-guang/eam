@@ -21,3 +21,6 @@
 - [About Chinese
   Translation](https://y-guang.github.io/eam/articles/about-zh-translation.md):
 - [开发人员引导](https://y-guang.github.io/eam/articles/developer-guide.zh.md):
+- [扩展一个模型](https://y-guang.github.io/eam/articles/extend-model.zh.md):
+- [如何自定义 eam
+  模型](https://y-guang.github.io/eam/articles/custom-model.zh.md):

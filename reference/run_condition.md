@@ -67,7 +67,7 @@ run_condition(
 
 - backend:
 
-  The backend implementation to use ("ddm", "ddm-2b", or "lca-gi")
+  The backend implementation to use
 
 - trajectories:
 

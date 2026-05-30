@@ -2,6 +2,8 @@
 
 ## eam 1.2.2
 
+CRAN release: 2026-05-13
+
 ### Maintenance
 
 - Resubmit to CRAN with updated build timestamp.
