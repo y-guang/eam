@@ -35,6 +35,7 @@ knitr::opts_chunk$set(
 自定义模型不需要一开始就写成通用框架。相反，第一版应该尽量明确、显式、写死。
 
 如果您的模型只有一个特定任务、一个特定 response 规则、几个固定参数名，就直接这样写。不要过早设计“适用于所有模型”的 API。对自定义模型来说，
+
 - 清楚比抽象更重要
 - 明确且可测试比接口的泛型更重要
 
@@ -106,6 +107,7 @@ abline(h = A, lty = 2)
 ```
 
 这段 R 代码不是为了性能，也不是最终 API。它的价值是在我们和AI之间用程序化的语言达成共识：
+
 - 确实是第一步下降，第二步上升。
 - `noise_fun` 为常量 1 确实导致了第一步下降 1，第二步上升 1。
 - 图像也能进一步帮助用户直接检查这条路径是否符合直觉。
@@ -120,6 +122,7 @@ abline(h = A, lty = 2)
 那么用户如何判断 AI 翻译的 cpp 实现是否忠实于自己的意图呢？我们可以通过测试来解决。
 
 通常，我们非常熟悉一个模型在一些能手算的条件下的特定行为。例如，
+
 - 如果只有一步，结果是什么？
 - 如果噪音为 0，而固定偏移一定，那么反应时会是什么？
 
@@ -249,6 +252,7 @@ sim_output$open_dataset()
 第四步：您根据 R 草稿设计几个能手算的 testthat case，并直接测试 accumulate_evidence_custom_model()。先不要测试 config、router 或完整 simulation pipe。
 
 第五步：等我确认测试 case 后，您再做必要接线：
+
 - 修改 src/custom-model.cpp 的 accumulate_evidence_custom_model()；
 - 修改 R/simulation_models.R 的 run_trial_custom_model() 参数映射；
 - 修改 tests/testthat/test-custom-model.R；
